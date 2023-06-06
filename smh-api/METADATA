@@ -1,0 +1,5 @@
+[meta]
+version = 0.9.1
+long_name = Ship Movement History API Service
+description = Ship Movement History Service RESTful API for internal use
+name = smh

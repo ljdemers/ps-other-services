@@ -1,0 +1,62 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.1.0
+    hooks:
+      - id: check-added-large-files
+        args:
+          - --maxkb
+          - "2048"
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-executables-have-shebangs
+      - id: check-json
+      - id: check-merge-conflict
+      - id: check-symlinks
+      - id: check-toml
+      - id: check-xml
+      - id: check-yaml
+        args:
+          - --allow-multiple-documents
+          - --unsafe
+      - id: detect-aws-credentials
+      - id: detect-private-key
+      - id: mixed-line-ending
+      - id: pretty-format-json
+        args:
+          - --autofix
+          - --no-sort-keys
+      - id: no-commit-to-branch
+        args:
+          - --branch
+          - develop
+          - --branch
+          - master
+          - --branch
+          - main
+          - --pattern
+          - release/*
+  - repo: https://github.com/zricethezav/gitleaks
+    rev: v8.14.1
+    hooks:
+      - id: gitleaks-docker
+        name: Gitleaks
+        exclude: .secrets.baseline
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.2.0
+    hooks:
+      - id: detect-secrets
+        args:
+          - --baseline
+          - .secrets.baseline
+        exclude: (package.lock.json|.*tests.*|.*test_.*|.*alembic.*)
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v2.7.1
+    hooks:
+      - id: prettier
+        args:
+          - --parser
+          - yaml
+          - --prose-wrap
+          - preserve
+        types:
+          - yaml

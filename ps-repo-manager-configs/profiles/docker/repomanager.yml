@@ -1,0 +1,3 @@
+description: Provides local tools for help with projects that use docker in any way. E.g. a Dockerfile linter.
+groups:
+  - add-ons

@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "screening-api.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    app: {{ template "screening-api.name" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+data:
+  INI_FILE: {{ .Values.api.iniFile }}
+  JWT_SECRET: {{ .Values.api.jwtSecret }}
+  LOG_LEVEL: {{ .Values.api.logLevel }}
+  {{- if .Values.redis.enabled }}
+  # Redis for Locker, Redbeat & Results
+  CACHEHOST: "{{ template "screening-api.fullname" . }}-redis-master"
+  {{- else }}
+  # External Redis for Locker, Redbeat & Results
+  CACHEHOST: {{ .Values.externalRedis.host | quote }}
+  {{- end }}
+  {{- if .Values.postgresql.enabled }}
+  # PostgreSQL Database
+  DBBACKEND: "postgresql+psycopg2"
+  DBHOST: "{{ template "screening-api.fullname" . }}-postgresql"
+  DBUSER: {{ .Values.postgresql.postgresUser | quote }}
+  DBPASSWORD: {{ .Values.postgresql.postgresPassword | quote }}
+  DBNAME: {{ .Values.postgresql.postgresDatabase  | quote }}
+  {{- else }}
+  # External Database
+  DBBACKEND: {{ .Values.externalDatabase.backend | quote }}
+  DBHOST: {{ .Values.externalDatabase.host | quote }}
+  DBUSER: {{ .Values.externalDatabase.username | quote }}
+  DBPASSWORD: {{ .Values.externalDatabase.password | quote }}
+  DBNAME: {{ .Values.externalDatabase.name  | quote }}
+  {{- end }}
+  {{- if .Values.rabbitmq.enabled }}
+  # RabbitMQ Broker
+  BROKERBACKEND: "amqp"
+  BROKERHOST: ""
+  BROKERUSER: ""
+  BROKERPASSWORD: ""
+  BROKERNAME: ""
+  {{- else }}
+  # External Broker
+  BROKERBACKEND: {{ .Values.externalBroker.backend | quote }}
+  BROKERHOST: {{ .Values.externalBroker.host | quote }}
+  BROKERPORT: {{ .Values.externalBroker.port | quote }}
+  BROKERUSER: {{ .Values.externalBroker.username | quote }}
+  BROKERPASSWORD: {{ .Values.externalBroker.password | quote }}
+  BROKERNAME: {{ .Values.externalBroker.name  | quote }}
+  {{- end }}

@@ -1,0 +1,5 @@
+[meta]
+version = 0.15.3
+description = Screening API
+name = screening-api
+long_name = Screening API REST service

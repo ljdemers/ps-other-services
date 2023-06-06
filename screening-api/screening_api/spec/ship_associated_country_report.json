@@ -1,0 +1,38 @@
+{
+    "type": "object",
+    "properties": {
+        "company": {
+            "type": [
+                "string",
+                "null"
+            ]
+        },
+        "country_of_domicile": {
+            "type": [
+                "string",
+                "null"
+            ]
+        },
+        "country_of_domicile_severity": {
+            "$ref": "openapi.json#/components/schemas/Severity"
+        },
+        "country_of_control": {
+            "type": [
+                "string",
+                "null"
+            ]
+        },
+        "country_of_control_severity": {
+            "$ref": "openapi.json#/components/schemas/Severity"
+        },
+        "country_of_registration": {
+            "type": [
+                "string",
+                "null"
+            ]
+        },
+        "country_of_registration_severity": {
+            "$ref": "openapi.json#/components/schemas/Severity"
+        }
+    }
+}

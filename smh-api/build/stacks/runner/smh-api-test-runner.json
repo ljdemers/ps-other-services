@@ -1,0 +1,76 @@
+{
+	"AWSTemplateFormatVersion": "2010-09-09",
+	"Description": "Test runners for SMH API",
+	"Resources": {
+		"CodeBuild": {
+			"Type": "AWS::CodeBuild::Project",
+			"Properties": {
+				"Name": "smh-api-test-runner",
+				"Artifacts": {
+					"Type": "NO_ARTIFACTS"
+				},
+				"VpcConfig": {
+					"SecurityGroupIds" : ["sg-02a5352806734a199"],
+					"Subnets" : [
+						"subnet-5397f41a",
+						"subnet-d4c32ff8",
+						"subnet-d5c32ff9",
+						"subnet-63823638",
+						"subnet-5097f419",
+						"subnet-6c823637"
+					],
+					"VpcId" : "vpc-d36b9fb5"
+				},
+				"ServiceRole": {
+					"Fn::ImportValue": {
+						"Fn::Sub": "polestar-commons-CommonCodeBuildServiceRole"
+					}
+				},
+				"Environment": {
+					"Type": "LINUX_CONTAINER",
+					"ComputeType": "BUILD_GENERAL1_SMALL",
+					"Image": "aws/codebuild/standard:4.0",
+					"PrivilegedMode": true,
+					"EnvironmentVariables": [
+						{
+							"Name": "COMPOSE_ENV",
+							"Type": "PLAINTEXT",
+							"Value": "test"
+						}
+					]
+				},
+				"Source": {
+					"BuildSpec": "build/buildspec-test-runner.yml",
+					"Type": "GITHUB",
+					"Auth": {
+						"Resource": {
+							"Fn::ImportValue": {
+								"Fn::Sub": "polestar-commons-CodeBuildSourceCredentials"
+							}
+						},
+						"Type": "OAUTH"
+					},
+					"Location": "https://github.com/polestarglobal/smh-api.git"
+				},
+				"Triggers": {
+					"Webhook": true,
+					"FilterGroups": [
+						[
+							{
+								"Type": "EVENT",
+								"Pattern": "PULL_REQUEST_CREATED, PULL_REQUEST_UPDATED, PULL_REQUEST_REOPENED"
+							}
+						]
+					]
+				},
+				"LogsConfig": {
+					"CloudWatchLogs": {
+						"Status": "ENABLED",
+						"GroupName": "smh-api",
+						"StreamName": "test-runner"
+					}
+				}
+			}
+		}
+	}
+}

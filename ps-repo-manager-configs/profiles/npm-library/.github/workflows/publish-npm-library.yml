@@ -1,0 +1,86 @@
+name: publish npm library
+on:
+  workflow_run:
+    workflows: [version]
+    types:
+      - completed
+
+# FIXME review
+permissions:
+  id-token: write # jwt token
+  actions: read # gh actions
+  contents: write # repo
+
+jobs:
+  # FIXME make reusable action (for other workflows linked to version workflow)
+  check:
+    outputs:
+      new_version: ${{ steps.check-version.outputs.new-version }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: Get tags
+        run: git fetch --prune --unshallow --tags
+      - name: Check if new version
+        id: check-version
+        run: |
+          if [ $(git tag --points-at HEAD | wc -l) -gt 1 ]; then
+            echo "Got more than one tag, was not expecting this, bumming out..."
+            exit 1
+          fi
+
+          # Set new version (or empty string)
+          VERSION=$(git tag --points-at HEAD)
+          echo VERSION:$VERSION
+          echo "::set-output name=new-version::${VERSION}"
+
+  publish:
+    needs: check
+    if: needs.check.outputs.new_version
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        with:
+          lfs: true
+
+      - uses: actions/setup-node@v3
+
+      - name: Configure AWS credentials from tools account
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.POLESTAR_TOOLS }}:role/github-publish-role
+          aws-region: us-east-1
+
+      - name: Check versions match
+        run: |
+          VERSION=${{ needs.check.outputs.new_version }}
+
+          echo $VERSION
+          if $(npm pkg get version) != \"$VERSION\"; then
+            echo "Version mismatch".
+            exit 1
+          fi
+
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: npm login
+        run: |
+          aws codeartifact login --tool npm --repository ps-npm --domain polestar-tools --domain-owner 324252367609 --region us-east-1 --namespace=@polestarglobal
+          aws codeartifact login --tool npm --repository ps-npm --domain polestar-tools --domain-owner 324252367609 --region us-east-1 --namespace=@polestar
+
+      - name: install dependencies
+        run: npm install
+
+      - name: Optional makefile pre-publish hook
+        run: |
+          if grep "publish-npm-library-pre-publish" Makefile; then
+            echo "Running pre-publish hook"
+            make publish-npm-library-pre-publish
+          else
+            echo "No pre-publish hook detected"
+          fi
+
+      - name: Build and publish
+        run: npm publish

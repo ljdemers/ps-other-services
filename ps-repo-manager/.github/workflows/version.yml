@@ -1,0 +1,130 @@
+name: version
+on:
+  push:
+    branches:
+      - main
+      - master
+
+permissions:
+  id-token: write # jwt token
+  actions: read # gh actions
+  contents: write # repo
+
+jobs:
+  version:
+    outputs:
+      status: ${{ steps.check-tags.outputs.new-version }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: Set up python
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.8"
+      - uses: actions/setup-node@v3
+        with:
+          node-version: lts/*
+      - name: install poetry
+        run: pip install poetry
+        shell: bash
+
+      - uses: actions/setup-java@v3
+        with:
+          distribution: "temurin" # See 'Supported distributions' for available options
+          java-version: "17"
+
+      - name: install semver
+        run: npm install --location=global semver
+        shell: bash
+      - name: Get tags
+        run: git fetch --prune --unshallow --tags
+
+      # FIXME check for poetry, npm, bump and then make version
+      - name: Set current version var
+        id: get-version
+        run: |
+
+          # Try make first (overrides other mechanisms, only set if language native versioning not working)
+          if make version; then
+            echo "Using make version"
+            VERSION=$(make version)
+
+          # Try ts/js first
+          elif [ -f package.json ]; then
+            echo "Using NPM version"
+            VERSION=$(cat package.json | jq -r '.version')
+
+          # Java
+          elif  [ -f "pom.xml" ] || [ -f "source/pom.xml" ]; then
+            echo "Using maven version"
+
+            if [ -f "source/pom.xml" ]; then
+              POM_PATH=source/pom.xml
+            else
+              echo "Non-standard path used, please use source/pom.xml."
+              POM_PATH=pom.xml
+            fi
+
+            if [ -f "source/settings.xml" ]; then
+              SETTINGS_PATH=source/settings.xml
+            else
+              echo "Non-standard path used, please use source/settings.xml."
+              SETTINGS_PATH=settings.xml
+            fi
+
+
+            VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout -f $POM_PATH --settings $SETTINGS_PATH)
+
+          # Then try bump2version
+          elif [ -f ".bumpversion.cfg" ]; then
+            echo "Using bump2version version"
+            VERSION=$(cat VERSION)
+
+          # Finally try poetry (last as ps-sre/repo-manager uses poetry so it will always be present)
+          else
+            echo "Using poetry version"
+            VERSION=$(poetry version --short)
+          fi
+
+          # Make available everywhere
+          echo $VERSION
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+          echo "::set-output name=version::${VERSION}"
+
+      - name: Check if new version
+        id: check-version
+        run: |
+
+          # Test if the version is a semver
+          semver $VERSION >/dev/null || echo "'$VERSION' is not a valid semver string" && echo "New version: '$VERSION'"
+
+          # Check if the tag exists
+          if $(git tag | grep -xq $VERSION); then
+            echo "Skip publishing '$VERSION' version. It already exists."
+          else
+              # Get the newest version string. We expect our current version to be at
+              # the top of the 'semver' sorted list. 'tail -n 1' will extract that value
+              sorted_versions() { npx semver $(echo "$(git tag) $VERSION"); }
+              NEWEST_VERSION=$(sorted_versions | tail -n 1)
+              echo "========== All 'semver' sorted versions including the current one ============"
+              sorted_versions
+              echo "=============================================================================="
+              echo
+              if [[ "$NEWEST_VERSION" == "$VERSION" ]]; then
+                echo "New version looks correct, tagging..."
+                git tag $VERSION && git push --tags
+                echo "::set-output name=new_version::true"
+              else
+                  echo "A newer version ($NEWEST_VERSION) exists which is greater than '$VERSION'."
+                  echo "Please version the application correctly"
+                  exit 1
+              fi
+          fi
+
+      - name: Release new version
+        uses: softprops/action-gh-release@v0.1.14
+        if: steps.check-version.outputs.new_version == 'true'
+        with:
+          tag_name: ${{ steps.get-version.outputs.version }}
+          generate_release_notes: true

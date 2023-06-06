@@ -1,0 +1,5 @@
+[meta]
+version = 0.21.19
+description = Screening Workers
+name = screening-workers
+long_name = Screening Workers service

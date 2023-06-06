@@ -1,0 +1,44 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v3.1.0
+    hooks:
+      - id: check-ast
+      - id: check-builtin-literals
+      - id: check-byte-order-marker
+      - id: check-docstring-first
+      - id: debug-statements
+
+    # isort 5.10.1 is the last version to support Python 3.6.
+  - repo: https://github.com/timothycrosley/isort
+    rev: 5.10.1
+    hooks:
+      - id: isort
+        # isort 5.10.1 won't run on Python>3.6 anymore.
+        # Workaround for: https://github.com/PyCQA/isort/issues/2077
+        language_version: "3.6"
+
+  - repo: https://github.com/psf/black
+    rev: 22.8.0
+    hooks:
+      - id: black
+        name: Black (Python)
+
+    # blacken-docs v1.12.0 is the last version to support Python 3.6.
+  - repo: https://github.com/asottile/blacken-docs
+    rev: v1.12.0
+    hooks:
+      - id: blacken-docs
+        name: Blacken Docs
+        additional_dependencies:
+          # blacken-docs v1.12.0 won't work with Black versions >21.12b0.
+          - black==21.12b0
+
+    # Flake8 > 4.0.1 (on Python 3.6) won't work with flake8-bandit because of:
+    # https://github.com/tylerwince/flake8-bandit/issues/33
+  - repo: https://github.com/pycqa/flake8
+    rev: 4.0.1
+    hooks:
+      - id: flake8
+        additional_dependencies:
+          - flake8-bugbear
+          - flake8-bandit

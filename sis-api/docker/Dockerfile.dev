@@ -1,0 +1,20 @@
+FROM 178847878690.dkr.ecr.us-east-1.amazonaws.com/python:3.6-alpine
+
+# Install system libraries
+RUN apk --update upgrade && \
+    apk add --no-cache git openssh curl && \
+    apk add postgresql-dev gcc musl-dev linux-headers libffi-dev make cargo && \
+    rm -rf /var/cache/apk/*
+
+WORKDIR /usr/src/app
+
+COPY ./requirements-dev.txt ./requirements.txt /usr/src/app/
+RUN python3 -m pip install -r /usr/src/app/requirements-dev.txt
+
+COPY ./docker/entrypoint.sh /usr/bin/entrypoint
+RUN mkdir -p /var/log/app && mkdir -p /opt/data
+
+ENV TERM linux
+ENV TERMINFO /etc/terminfo
+
+ENTRYPOINT ["entrypoint"]

@@ -1,0 +1,39 @@
+{{- if .Values.migrate.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ template "screening-api.fullname" . }}-migrate
+  labels:
+    app: {{ template "screening-api.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    component: migrate
+  annotations:
+    helm.sh/hook: pre-install,pre-upgrade
+    helm.sh/hook-weight: "10"
+    helm.sh/hook-delete-policy: hook-succeeded
+spec:
+  template:
+    metadata:
+      name: {{ template "screening-api.fullname" . }}-migrate
+      labels:
+        app: {{ template "screening-api.name" . }}
+    spec:
+      containers:
+      - image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        name: {{ .Chart.Name }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        command:
+        - alembic
+        args:
+        - -c
+        - {{ .Values.migrate.iniFile }}
+        - upgrade
+        - head
+        envFrom:
+        - configMapRef:
+            name: {{ template "screening-api.fullname" . }}-migrate
+      restartPolicy: Never
+  backoffLimit: 20
+{{- end }}

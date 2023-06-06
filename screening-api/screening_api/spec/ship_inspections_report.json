@@ -1,0 +1,46 @@
+{
+    "type": "object",
+    "properties": {
+        "inspections": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "inspection_date", "authority", "detained_days",
+                    "defects_count", "port_name", "country_name",
+                    "detained_days_severity", "defects_count_severity"
+                ],
+                "properties": {
+                    "inspection_date": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "authority": {
+                        "type": "string"
+                    },
+                    "detained": {
+                        "type": "boolean"
+                    },
+                    "detained_days": {
+                        "type": "number"
+                    },
+                    "detained_days_severity": {
+                        "$ref": "openapi.json#/components/schemas/Severity"
+                    },
+                    "defects_count": {
+                        "type": "integer"
+                    },
+                    "defects_count_severity": {
+                        "$ref": "openapi.json#/components/schemas/Severity"
+                    },
+                    "port_name": {
+                        "type": ["string", "null"]
+                    },
+                    "country_name": {
+                        "type": ["string", "null"]
+                    }
+                }
+            }
+        }
+    }
+}

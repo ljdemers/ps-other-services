@@ -1,0 +1,3 @@
+description: Runs the now deprecated tslint linting tool. Only kept to aid migration to eslint.
+groups:
+  - add-ons

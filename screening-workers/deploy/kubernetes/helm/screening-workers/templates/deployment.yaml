@@ -1,0 +1,41 @@
+{{- if .Capabilities.APIVersions.Has "apps/v1" }}
+apiVersion: apps/v1
+{{- else }}
+apiVersion: apps/v1beta1
+{{- end }}
+kind: Deployment
+metadata:
+  name: {{ template "screening-workers.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    app: {{ template "screening-workers.name" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.workers.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "screening-workers.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "screening-workers.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        envFrom:
+        - configMapRef:
+            name: {{ template "screening-workers.fullname" . }}
+        env:
+        {{- if .Values.postgresql.enabled }}
+        - name: DBPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-postgresql
+              key: postgres-password
+        {{- end }}

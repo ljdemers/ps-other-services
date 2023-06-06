@@ -1,0 +1,24 @@
+Django==2.2.25
+psycopg2-binary==2.8.6
+django-celery-beat==1.1.0
+django-tastypie==0.14.3
+django-tastypie-swagger==0.1.4
+django-redis==4.8.0
+django-easy-audit==1.1.1
+celery==4.1.1
+kombu==4.5.0
+hiredis==0.2.0
+ujson==1.35
+uWSGI==2.0.19.1
+boto==2.48.0
+setproctitle==1.1.10
+redis==3.2.0
+paramiko==2.7.2
+# Added bcrypt and cryptography upper boundary versions due to issue with building image
+bcrypt>=3.2.2,<4.0.0
+cryptography>=2.5,<38.0.0
+pytz==2020.1
+psutil==5.4.7
+
+# Sentry connection.
+raven==6.10.0

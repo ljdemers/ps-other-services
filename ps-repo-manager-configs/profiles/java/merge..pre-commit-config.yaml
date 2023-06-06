@@ -1,0 +1,28 @@
+repos:
+  - repo: local
+    hooks:
+      - id: maven-checkstyle
+        pass_filenames: false
+        name: Run mvn checkstyle:check
+        language: system
+        entry: |
+          bash -c '
+
+            if [ -f "source/pom.xml" ]; then
+              POM_PATH=source/pom.xml
+            else
+              echo "Non-standard path used, please use source/pom.xml."
+              POM_PATH=pom.xml
+            fi
+
+            if [ -f "source/settings.xml" ]; then
+              SETTINGS_PATH=source/settings.xml
+            else
+              echo "Non-standard path used, please use source/settings.xml."
+              SETTINGS_PATH=settings.xml
+            fi
+
+            export CODEARTIFACT_AUTH_TOKEN_LOCAL=$(aws codeartifact get-authorization-token --domain polestar-tools --domain-owner 324252367609 --region us-east-1 --query authorizationToken --output text --profile polestar-tools)
+
+            docker run --rm -v $(pwd):/opt/maven --env CODEARTIFACT_AUTH_TOKEN=${CODEARTIFACT_AUTH_TOKEN:=$CODEARTIFACT_AUTH_TOKEN_LOCAL} -w /opt/maven maven:3.8.3-openjdk-17 mvn -f $POM_PATH --settings $SETTINGS_PATH checkstyle\:check
+            '

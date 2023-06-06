@@ -1,0 +1,4 @@
+description: Provides a docker build and publishing action when one of the supported version strings are updated. See the version profile for supported version string locations.
+depends_on:
+  - docker
+  - versioning

@@ -1,0 +1,2530 @@
+[
+    {
+        "pk": "ZMB",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Zambia",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "ZM",
+            "world_region": "Eastern Africa"
+        }
+    },
+    {
+        "pk": "MUS",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Mauritius",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "MU",
+            "world_region": "Eastern Africa"
+        }
+    },
+    {
+        "pk": "LBY",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Libyan Arab Jamahiriya",
+            "alt_name": "Libya",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "LY",
+            "world_region": "Northern Africa"
+        }
+    },
+    {
+        "pk": "KNA",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Saint Kitts and Nevis",
+            "alt_name": "St Kitts & Nevis",
+            "world_continent": "North America",
+            "iso_3166_1_alpha_2": "KN",
+            "world_region": "Caribbean"
+        }
+    },
+    {
+        "pk": "BRN",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Brunei Darussalam",
+            "alt_name": "Brunei",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": "BN",
+            "world_region": "South-Eastern Asia"
+        }
+    },
+    {
+        "pk": "MRT",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Mauritania",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "MR",
+            "world_region": "Western Africa"
+        }
+    },
+    {
+        "pk": "HKG",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Hong Kong",
+            "alt_name": "Hong Kong, China",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": "HK",
+            "world_region": "Eastern Asia"
+        }
+    },
+    {
+        "pk": "COL",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Colombia",
+            "world_continent": "South America",
+            "iso_3166_1_alpha_2": "CO",
+            "world_region": "South America"
+        }
+    },
+    {
+        "pk": "NGA",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Nigeria",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "NG",
+            "world_region": "Western Africa"
+        }
+    },
+    {
+        "pk": "LBR",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Liberia",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "LR",
+            "world_region": "Western Africa"
+        }
+    },
+    {
+        "pk": "BIH",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Bosnia and Herzegovina",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": "BA",
+            "world_region": "Southern Europe"
+        }
+    },
+    {
+        "pk": "CRI",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Costa Rica",
+            "world_continent": "North America",
+            "iso_3166_1_alpha_2": "CR",
+            "world_region": "Central America"
+        }
+    },
+    {
+        "pk": "FSM",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Micronesia",
+            "world_continent": "Oceania",
+            "iso_3166_1_alpha_2": "FM",
+            "world_region": "Micronesia"
+        }
+    },
+    {
+        "pk": "GLP",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Guadeloupe",
+            "world_continent": "North America",
+            "iso_3166_1_alpha_2": "GP",
+            "world_region": "Caribbean"
+        }
+    },
+    {
+        "pk": "GNB",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Guinea\u00adBissau",
+            "alt_name": "Guinea-Bissau",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "GW",
+            "world_region": "Western Africa"
+        }
+    },
+    {
+        "pk": "GRL",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Greenland",
+            "world_continent": "North America",
+            "iso_3166_1_alpha_2": "GL",
+            "world_region": "Northern America"
+        }
+    },
+    {
+        "pk": "GUF",
+        "model": "ships.flag",
+        "fields": {
+            "name": "French Guiana",
+            "world_continent": "South America",
+            "iso_3166_1_alpha_2": "GF",
+            "world_region": "South America"
+        }
+    },
+    {
+        "pk": "GUM",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Guam",
+            "world_continent": "Oceania",
+            "iso_3166_1_alpha_2": "GU",
+            "world_region": "Micronesia"
+        }
+    },
+    {
+        "pk": "LAO",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Laos",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": "LA",
+            "world_region": "South-Eastern Asia"
+        }
+    },
+    {
+        "pk": "MKD",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Macedonia",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": "MK",
+            "world_region": "Southern Europe"
+        }
+    },
+    {
+        "pk": "MNP",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Northern Mariana Islands",
+            "world_continent": "Oceania",
+            "iso_3166_1_alpha_2": "MP",
+            "world_region": "Micronesia"
+        }
+    },
+    {
+        "pk": "MTQ",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Martinique",
+            "world_continent": "North America",
+            "iso_3166_1_alpha_2": "MQ",
+            "world_region": "Caribbean"
+        }
+    },
+    {
+        "pk": "MYT",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Mayotte",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "YT",
+            "world_region": "Eastern Africa"
+        }
+    },
+    {
+        "pk": "NCL",
+        "model": "ships.flag",
+        "fields": {
+            "name": "New Caledonia",
+            "world_continent": "Oceania",
+            "iso_3166_1_alpha_2": "NC",
+            "world_region": "Melanesia"
+        }
+    },
+    {
+        "pk": "NPL",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Nepal",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": "NP",
+            "world_region": "Southern Asia"
+        }
+    },
+    {
+        "pk": "NRU",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Nauru",
+            "world_continent": "Oceania",
+            "iso_3166_1_alpha_2": "NR",
+            "world_region": "Micronesia"
+        }
+    },
+    {
+        "pk": "PLW",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Palau",
+            "world_continent": "Oceania",
+            "iso_3166_1_alpha_2": "PW",
+            "world_region": "Micronesia"
+        }
+    },
+    {
+        "pk": "PRI",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Puerto Rico",
+            "world_continent": "North America",
+            "iso_3166_1_alpha_2": "PR",
+            "world_region": "Caribbean"
+        }
+    },
+    {
+        "pk": "PYF",
+        "model": "ships.flag",
+        "fields": {
+            "name": "French Polynesia",
+            "world_continent": "Oceania",
+            "iso_3166_1_alpha_2": "PF",
+            "world_region": "Polynesia"
+        }
+    },
+    {
+        "pk": "SLV",
+        "model": "ships.flag",
+        "fields": {
+            "name": "El Salvador",
+            "world_continent": "North America",
+            "iso_3166_1_alpha_2": "SV",
+            "world_region": "Central America"
+        }
+    },
+    {
+        "pk": "SMR",
+        "model": "ships.flag",
+        "fields": {
+            "name": "San Marino",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": "SM",
+            "world_region": "Southern Europe"
+        }
+    },
+    {
+        "pk": "SOM",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Somalia",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "SO",
+            "world_region": "Eastern Africa"
+        }
+    },
+    {
+        "pk": "SPM",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Saint Pierre and Miquelon",
+            "world_continent": "North America",
+            "iso_3166_1_alpha_2": "PM",
+            "world_region": "Northern America"
+        }
+    },
+    {
+        "pk": "SRB",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Serbia",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": "RS",
+            "world_region": "Southern Europe"
+        }
+    },
+    {
+        "pk": "TLS",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Timor-Leste",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": "TL",
+            "world_region": "South-Eastern Asia"
+        }
+    },
+    {
+        "pk": "UGA",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Uganda",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "UG",
+            "world_region": "Eastern Africa"
+        }
+    },
+    {
+        "pk": "VEN",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Venezuela",
+            "world_continent": "South America",
+            "iso_3166_1_alpha_2": "VE",
+            "world_region": "South America"
+        }
+    },
+    {
+        "pk": "JPN",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Japan",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": "JP",
+            "world_region": "Eastern Asia"
+        }
+    },
+    {
+        "pk": "DNK",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Denmark",
+            "alt_name": "Denmark (Dis)",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": "DK",
+            "world_region": "Northern Europe"
+        }
+    },
+    {
+        "pk": "ISR",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Israel",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": "IL",
+            "world_region": "Western Asia"
+        }
+    },
+    {
+        "pk": "OMN",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Oman",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": "OM",
+            "world_region": "Western Asia"
+        }
+    },
+    {
+        "pk": "TON",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Tonga",
+            "world_continent": "Oceania",
+            "iso_3166_1_alpha_2": "TO",
+            "world_region": "Polynesia"
+        }
+    },
+    {
+        "pk": "GRC",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Greece",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": "GR",
+            "world_region": "Southern Europe"
+        }
+    },
+    {
+        "pk": "PAN",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Panama",
+            "world_continent": "North America",
+            "iso_3166_1_alpha_2": "PA",
+            "world_region": "Central America"
+        }
+    },
+    {
+        "pk": "FRO",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Faeroe Islands",
+            "alt_name": "Faeroes (Fas)",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": "FO",
+            "world_region": "Northern Europe"
+        }
+    },
+    {
+        "pk": "XEC",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Alderney",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": null,
+            "world_region": "Western Europe"
+        }
+    },
+    {
+        "pk": "JER",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Channel Islands",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": null,
+            "world_region": "Western Europe"
+        }
+    },
+    {
+        "pk": "MDR",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Madeira (Portugal)",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": null,
+            "world_region": "Southern Europe"
+        }
+    },
+    {
+        "pk": "XIA",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Isle of Man",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": null,
+            "world_region": "Northern Europe"
+        }
+    },
+    {
+        "pk": "XD",
+        "model": "ships.flag",
+        "fields": {
+            "name": "United Nations Neutral Zone",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": null,
+            "world_region": "Western Asia"
+        }
+    },
+    {
+        "pk": "YUG",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Yugoslavia",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": null,
+            "world_region": "Eastern Europe"
+        }
+    },
+    {
+        "pk": "ITA",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Italy",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": "IT",
+            "world_region": "Southern Europe"
+        }
+    },
+    {
+        "pk": "PAK",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Pakistan",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": "PK",
+            "world_region": "Southern Asia"
+        }
+    },
+    {
+        "pk": "TTO",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Trinidad and Tobago",
+            "alt_name": "Trinidad & Tobago",
+            "world_continent": "North America",
+            "iso_3166_1_alpha_2": "TT",
+            "world_region": "Caribbean"
+        }
+    },
+    {
+        "pk": "DJI",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Djibouti",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "DJ",
+            "world_region": "Eastern Africa"
+        }
+    },
+    {
+        "pk": "JAM",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Jamaica",
+            "world_continent": "North America",
+            "iso_3166_1_alpha_2": "JM",
+            "world_region": "Caribbean"
+        }
+    },
+    {
+        "pk": "PNG",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Papua New Guinea",
+            "world_continent": "Oceania",
+            "iso_3166_1_alpha_2": "PG",
+            "world_region": "Melanesia"
+        }
+    },
+    {
+        "pk": "TUN",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Tunisia",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "TN",
+            "world_region": "Northern Africa"
+        }
+    },
+    {
+        "pk": "ATG",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Antigua and Barbuda",
+            "alt_name": "Antigua & Barbuda",
+            "world_continent": "North America",
+            "iso_3166_1_alpha_2": "AG",
+            "world_region": "Caribbean"
+        }
+    },
+    {
+        "pk": "ATF",
+        "model": "ships.flag",
+        "fields": {
+            "name": "French Antarctic Territory",
+            "world_continent": "Antarctic",
+            "iso_3166_1_alpha_2": "TF",
+            "world_region": "Antarctic"
+        }
+    },
+    {
+        "pk": "BRB",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Barbados",
+            "world_continent": "North America",
+            "iso_3166_1_alpha_2": "BB",
+            "world_region": "Caribbean"
+        }
+    },
+    {
+        "pk": "VCT",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Saint Vincent and Grenadines",
+            "alt_name": "St Vincent & The Grenadines",
+            "world_continent": "North America",
+            "iso_3166_1_alpha_2": "VC",
+            "world_region": "Caribbean"
+        }
+    },
+    {
+        "pk": "DMA",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Dominica",
+            "world_continent": "North America",
+            "iso_3166_1_alpha_2": "DM",
+            "world_region": "Caribbean"
+        }
+    },
+    {
+        "pk": "JOR",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Jordan",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": "JO",
+            "world_region": "Western Asia"
+        }
+    },
+    {
+        "pk": "PRY",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Paraguay",
+            "world_continent": "South America",
+            "iso_3166_1_alpha_2": "PY",
+            "world_region": "South America"
+        }
+    },
+    {
+        "pk": "TUR",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Turkey",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": "TR",
+            "world_region": "Western Asia"
+        }
+    },
+    {
+        "pk": "DOM",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Dominican Republic",
+            "world_continent": "North America",
+            "iso_3166_1_alpha_2": "DO",
+            "world_region": "Caribbean"
+        }
+    },
+    {
+        "pk": "KAZ",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Kazakhstan",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": "KZ",
+            "world_region": "Central Asia"
+        }
+    },
+    {
+        "pk": "PER",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Peru",
+            "world_continent": "South America",
+            "iso_3166_1_alpha_2": "PE",
+            "world_region": "South America"
+        }
+    },
+    {
+        "pk": "TKM",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Turkmenistan",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": "TM",
+            "world_region": "Central Asia"
+        }
+    },
+    {
+        "pk": "ZAF",
+        "model": "ships.flag",
+        "fields": {
+            "name": "South Africa",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "ZA",
+            "world_region": "Southern Africa"
+        }
+    },
+    {
+        "pk": "YEM",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Yemen",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": "YE",
+            "world_region": "Western Asia"
+        }
+    },
+    {
+        "pk": "ECU",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Ecuador",
+            "world_continent": "South America",
+            "iso_3166_1_alpha_2": "EC",
+            "world_region": "South America"
+        }
+    },
+    {
+        "pk": "KEN",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Kenya",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "KE",
+            "world_region": "Eastern Africa"
+        }
+    },
+    {
+        "pk": "PHL",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Philippines",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": "PH",
+            "world_region": "South-Eastern Asia"
+        }
+    },
+    {
+        "pk": "TUV",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Tuvalu",
+            "world_continent": "Oceania",
+            "iso_3166_1_alpha_2": "TV",
+            "world_region": "Polynesia"
+        }
+    },
+    {
+        "pk": "EGY",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Egypt",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "EG",
+            "world_region": "Northern Africa"
+        }
+    },
+    {
+        "pk": "KIR",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Kiribati",
+            "world_continent": "Oceania",
+            "iso_3166_1_alpha_2": "KI",
+            "world_region": "Micronesia"
+        }
+    },
+    {
+        "pk": "POL",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Poland",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": "PL",
+            "world_region": "Eastern Europe"
+        }
+    },
+    {
+        "pk": "UKR",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Ukraine",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": "UA",
+            "world_region": "Eastern Europe"
+        }
+    },
+    {
+        "pk": "DZA",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Algeria",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "DZ",
+            "world_region": "Northern Africa"
+        }
+    },
+    {
+        "pk": "GNQ",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Equatorial Guinea",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "GQ",
+            "world_region": "Middle Africa"
+        }
+    },
+    {
+        "pk": "KWT",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Kuwait",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": "KW",
+            "world_region": "Western Asia"
+        }
+    },
+    {
+        "pk": "PRT",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Portugal",
+            "alt_name": "Portugal (Mar)",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": "PT",
+            "world_region": "Southern Europe"
+        }
+    },
+    {
+        "pk": "GBR",
+        "model": "ships.flag",
+        "fields": {
+            "name": "United Kingdom",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": "GB",
+            "world_region": "Northern Europe"
+        }
+    },
+    {
+        "pk": "AZE",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Azerbaijan",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": "AZ",
+            "world_region": "Western Asia"
+        }
+    },
+    {
+        "pk": "ERI",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Eritrea",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "ER",
+            "world_region": "Eastern Africa"
+        }
+    },
+    {
+        "pk": "LVA",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Latvia",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": "LV",
+            "world_region": "Northern Europe"
+        }
+    },
+    {
+        "pk": "QAT",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Qatar",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": "QA",
+            "world_region": "Western Asia"
+        }
+    },
+    {
+        "pk": "BMU",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Bermuda",
+            "world_continent": "North America",
+            "iso_3166_1_alpha_2": "BM",
+            "world_region": "Northern America"
+        }
+    },
+    {
+        "pk": "BHR",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Bahrain",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": "BH",
+            "world_region": "Western Asia"
+        }
+    },
+    {
+        "pk": "EST",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Estonia",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": "EE",
+            "world_region": "Northern Europe"
+        }
+    },
+    {
+        "pk": "LBN",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Lebanon",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": "LB",
+            "world_region": "Western Asia"
+        }
+    },
+    {
+        "pk": "KOR",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Korea, Republic of",
+            "alt_name": "Korea, South",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": "KR",
+            "world_region": "Eastern Asia"
+        }
+    },
+    {
+        "pk": "CYM",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Cayman Islands",
+            "world_continent": "North America",
+            "iso_3166_1_alpha_2": "KY",
+            "world_region": "Caribbean"
+        }
+    },
+    {
+        "pk": "BGD",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Bangladesh",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": "BD",
+            "world_region": "Southern Asia"
+        }
+    },
+    {
+        "pk": "ETH",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Ethiopia",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "ET",
+            "world_region": "Eastern Africa"
+        }
+    },
+    {
+        "pk": "MDA",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Moldova",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": "MD",
+            "world_region": "Eastern Europe"
+        }
+    },
+    {
+        "pk": "FLK",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Falkland Islands",
+            "world_continent": "South America",
+            "iso_3166_1_alpha_2": "FK",
+            "world_region": "South America"
+        }
+    },
+    {
+        "pk": "BEL",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Belgium",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": "BE",
+            "world_region": "Western Europe"
+        }
+    },
+    {
+        "pk": "FJI",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Fiji",
+            "world_continent": "Oceania",
+            "iso_3166_1_alpha_2": "FJ",
+            "world_region": "Melanesia"
+        }
+    },
+    {
+        "pk": "LTU",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Lithuania",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": "LT",
+            "world_region": "Northern Europe"
+        }
+    },
+    {
+        "pk": "ROU",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Romania",
+            "alt_name": "Romania (Rifa)",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": "RO",
+            "world_region": "Eastern Europe"
+        }
+    },
+    {
+        "pk": "GIB",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Gibraltar",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": "GI",
+            "world_region": "Southern Europe"
+        }
+    },
+    {
+        "pk": "BLZ",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Belize",
+            "world_continent": "North America",
+            "iso_3166_1_alpha_2": "BZ",
+            "world_region": "Central America"
+        }
+    },
+    {
+        "pk": "FIN",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Finland",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": "FI",
+            "world_region": "Northern Europe"
+        }
+    },
+    {
+        "pk": "LUX",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Luxembourg",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": "LU",
+            "world_region": "Western Europe"
+        }
+    },
+    {
+        "pk": "RUS",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Russian Federation",
+            "alt_name": "Russia",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": "RU",
+            "world_region": "Eastern Europe"
+        }
+    },
+    {
+        "pk": "MSR",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Monserrat",
+            "world_continent": "North America",
+            "iso_3166_1_alpha_2": "MS",
+            "world_region": "Caribbean"
+        }
+    },
+    {
+        "pk": "BEN",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Benin",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "BJ",
+            "world_region": "Western Africa"
+        }
+    },
+    {
+        "pk": "FRA",
+        "model": "ships.flag",
+        "fields": {
+            "name": "France",
+            "alt_name": "France (Fis)",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": "FR",
+            "world_region": "Western Europe"
+        }
+    },
+    {
+        "pk": "MWI",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Malawi",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "MW",
+            "world_region": "Eastern Africa"
+        }
+    },
+    {
+        "pk": "SHN",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Saint Helena",
+            "alt_name": "St Helena",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "SH",
+            "world_region": "Western Africa"
+        }
+    },
+    {
+        "pk": "BOL",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Bolivia",
+            "world_continent": "South America",
+            "iso_3166_1_alpha_2": "BO",
+            "world_region": "South America"
+        }
+    },
+    {
+        "pk": "GAB",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Gabon",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "GA",
+            "world_region": "Middle Africa"
+        }
+    },
+    {
+        "pk": "MYS",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Malaysia",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": "MY",
+            "world_region": "South-Eastern Asia"
+        }
+    },
+    {
+        "pk": "LCA",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Saint Lucia",
+            "world_continent": "North America",
+            "iso_3166_1_alpha_2": "LC",
+            "world_region": "Caribbean"
+        }
+    },
+    {
+        "pk": "TCA",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Turks and Caicos Islands",
+            "alt_name": "Turks & Caicos Islands",
+            "world_continent": "North America",
+            "iso_3166_1_alpha_2": "TC",
+            "world_region": "Caribbean"
+        }
+    },
+    {
+        "pk": "BRA",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Brazil",
+            "world_continent": "South America",
+            "iso_3166_1_alpha_2": "BR",
+            "world_region": "South America"
+        }
+    },
+    {
+        "pk": "GMB",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Gambia",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "GM",
+            "world_region": "Western Africa"
+        }
+    },
+    {
+        "pk": "MDV",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Maldives",
+            "alt_name": "Maldive Islands",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": "MV",
+            "world_region": "Southern Asia"
+        }
+    },
+    {
+        "pk": "STP",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Sao Tome and Principe",
+            "alt_name": "Sao Tome & Principe",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "ST",
+            "world_region": "Middle Africa"
+        }
+    },
+    {
+        "pk": "TZA",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Tanzania",
+            "alt_name": "Tanzania (Zanzibar)",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "TZ",
+            "world_region": "Eastern Africa"
+        }
+    },
+    {
+        "pk": "GEO",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Georgia",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": "GE",
+            "world_region": "Western Asia"
+        }
+    },
+    {
+        "pk": "MLT",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Malta",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": "MT",
+            "world_region": "Southern Europe"
+        }
+    },
+    {
+        "pk": "SAU",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Saudi Arabia",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": "SA",
+            "world_region": "Western Asia"
+        }
+    },
+    {
+        "pk": "USA",
+        "model": "ships.flag",
+        "fields": {
+            "name": "United States of America",
+            "world_continent": "North America",
+            "iso_3166_1_alpha_2": "US",
+            "world_region": "Northern America"
+        }
+    },
+    {
+        "pk": "BGR",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Bulgaria",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": "BG",
+            "world_region": "Eastern Europe"
+        }
+    },
+    {
+        "pk": "DEU",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Germany",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": "DE",
+            "world_region": "Western Europe"
+        }
+    },
+    {
+        "pk": "MHL",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Marshall Islands",
+            "world_continent": "Oceania",
+            "iso_3166_1_alpha_2": "MH",
+            "world_region": "Micronesia"
+        }
+    },
+    {
+        "pk": "SEN",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Senegal",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "SN",
+            "world_region": "Western Africa"
+        }
+    },
+    {
+        "pk": "URY",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Uruguay",
+            "world_continent": "South America",
+            "iso_3166_1_alpha_2": "UY",
+            "world_region": "South America"
+        }
+    },
+    {
+        "pk": "AUS",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Australia",
+            "world_continent": "Oceania",
+            "iso_3166_1_alpha_2": "AU",
+            "world_region": "Australia and New Zealand"
+        }
+    },
+    {
+        "pk": "CMR",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Cameroon",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "CM",
+            "world_region": "Middle Africa"
+        }
+    },
+    {
+        "pk": "GHA",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Ghana",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "GH",
+            "world_region": "Western Africa"
+        }
+    },
+    {
+        "pk": "SYC",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Seychelles",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "SC",
+            "world_region": "Eastern Africa"
+        }
+    },
+    {
+        "pk": "AUT",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Austria",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": "AT",
+            "world_region": "Western Europe"
+        }
+    },
+    {
+        "pk": "CAN",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Canada",
+            "world_continent": "North America",
+            "iso_3166_1_alpha_2": "CA",
+            "world_region": "Northern America"
+        }
+    },
+    {
+        "pk": "GRD",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Grenada",
+            "world_continent": "North America",
+            "iso_3166_1_alpha_2": "GD",
+            "world_region": "Caribbean"
+        }
+    },
+    {
+        "pk": "MEX",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Mexico",
+            "world_continent": "North America",
+            "iso_3166_1_alpha_2": "MX",
+            "world_region": "Central America"
+        }
+    },
+    {
+        "pk": "SLE",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Sierra Leone",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "SL",
+            "world_region": "Western Africa"
+        }
+    },
+    {
+        "pk": "KHM",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Cambodia",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": "KH",
+            "world_region": "South-Eastern Asia"
+        }
+    },
+    {
+        "pk": "CPV",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Cape Verde",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "CV",
+            "world_region": "Western Africa"
+        }
+    },
+    {
+        "pk": "GTM",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Guatemala",
+            "world_continent": "North America",
+            "iso_3166_1_alpha_2": "GT",
+            "world_region": "Central America"
+        }
+    },
+    {
+        "pk": "MCO",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Monaco",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": "MC",
+            "world_region": "Western Europe"
+        }
+    },
+    {
+        "pk": "SVK",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Slovakia",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": "SK",
+            "world_region": "Eastern Europe"
+        }
+    },
+    {
+        "pk": "CHL",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Chile",
+            "world_continent": "South America",
+            "iso_3166_1_alpha_2": "CL",
+            "world_region": "South America"
+        }
+    },
+    {
+        "pk": "GIN",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Guinea",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "GN",
+            "world_region": "Western Africa"
+        }
+    },
+    {
+        "pk": "MNG",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Mongolia",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": "MN",
+            "world_region": "Eastern Asia"
+        }
+    },
+    {
+        "pk": "SVN",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Slovenia",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": "SI",
+            "world_region": "Southern Europe"
+        }
+    },
+    {
+        "pk": "CHN",
+        "model": "ships.flag",
+        "fields": {
+            "name": "China",
+            "alt_name": "China, People's Republic Of",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": "CN",
+            "world_region": "Eastern Asia"
+        }
+    },
+    {
+        "pk": "MAC",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Macao",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": "MO",
+            "world_region": "Eastern Asia"
+        }
+    },
+    {
+        "pk": "GUY",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Guyana",
+            "world_continent": "South America",
+            "iso_3166_1_alpha_2": "GY",
+            "world_region": "South America"
+        }
+    },
+    {
+        "pk": "MNE",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Montenegro",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": "ME",
+            "world_region": "Southern Europe"
+        }
+    },
+    {
+        "pk": "SLB",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Solomon Islands",
+            "world_continent": "Oceania",
+            "iso_3166_1_alpha_2": "SB",
+            "world_region": "Melanesia"
+        }
+    },
+    {
+        "pk": "PRK",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Korea, North",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": "KP",
+            "world_region": "Eastern Asia"
+        }
+    },
+    {
+        "pk": "HTI",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Haiti",
+            "world_continent": "North America",
+            "iso_3166_1_alpha_2": "HT",
+            "world_region": "Caribbean"
+        }
+    },
+    {
+        "pk": "MAR",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Morocco",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "MA",
+            "world_region": "Northern Africa"
+        }
+    },
+    {
+        "pk": "ESP",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Spain",
+            "alt_name": "Spain (Csr)",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": "ES",
+            "world_region": "Southern Europe"
+        }
+    },
+    {
+        "pk": "AZR",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Azores (Portugal)",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": null,
+            "world_region": "Southern Europe"
+        }
+    },
+    {
+        "pk": "XEB",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Guernsey",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": null,
+            "world_region": "Western Europe"
+        }
+    },
+    {
+        "pk": "XEA",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Jersey",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": null,
+            "world_region": "Western Europe"
+        }
+    },
+    {
+        "pk": "GZ",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Gaza Strip",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": null,
+            "world_region": "Western Asia"
+        }
+    },
+    {
+        "pk": "IO",
+        "model": "ships.flag",
+        "fields": {
+            "name": "British Indian Ocean Territory",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": null,
+            "world_region": "Eastern Africa"
+        }
+    },
+    {
+        "pk": "PT",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Disputed Territory",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": null,
+            "world_region": "Western Asia"
+        }
+    },
+    {
+        "pk": "WE",
+        "model": "ships.flag",
+        "fields": {
+            "name": "West Bank",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": null,
+            "world_region": "Western Asia"
+        }
+    },
+    {
+        "pk": "XC",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Golan Heights",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": null,
+            "world_region": "Western Asia"
+        }
+    },
+    {
+        "pk": "ZWE",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Zimbabwe",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "ZW",
+            "world_region": "Eastern Africa"
+        }
+    },
+    {
+        "pk": "ALB",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Albania",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": "AL",
+            "world_region": "Southern Europe"
+        }
+    },
+    {
+        "pk": "AGO",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Angola",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "AO",
+            "world_region": "Middle Africa"
+        }
+    },
+    {
+        "pk": "AFG",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Afghanistan",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": "AF",
+            "world_region": "Southern Asia"
+        }
+    },
+    {
+        "pk": "ABW",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Aruba",
+            "world_continent": "North America",
+            "iso_3166_1_alpha_2": "AW",
+            "world_region": "Caribbean"
+        }
+    },
+    {
+        "pk": "ANT",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Netherlands Antilles",
+            "world_continent": "North America",
+            "iso_3166_1_alpha_2": "AN",
+            "world_region": "Caribbean"
+        }
+    },
+    {
+        "pk": "AIA",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Anguilla",
+            "world_continent": "North America",
+            "iso_3166_1_alpha_2": "AI",
+            "world_region": "Caribbean"
+        }
+    },
+    {
+        "pk": "AND",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Andorra",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": "AD",
+            "world_region": "Southern Europe"
+        }
+    },
+    {
+        "pk": "ARM",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Armenia",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": "AM",
+            "world_region": "Western Asia"
+        }
+    },
+    {
+        "pk": "BLR",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Belarus",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": "BY",
+            "world_region": "Eastern Europe"
+        }
+    },
+    {
+        "pk": "BDI",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Burundi",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "BI",
+            "world_region": "Eastern Africa"
+        }
+    },
+    {
+        "pk": "BFA",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Burkina Faso",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "BF",
+            "world_region": "Western Africa"
+        }
+    },
+    {
+        "pk": "BTN",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Bhutan",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": "BT",
+            "world_region": "Southern Asia"
+        }
+    },
+    {
+        "pk": "BWA",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Botswana",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "BW",
+            "world_region": "Southern Africa"
+        }
+    },
+    {
+        "pk": "CAF",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Central African Republic",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "CF",
+            "world_region": "Middle Africa"
+        }
+    },
+    {
+        "pk": "CCK",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Cocos (Keeling) Islands",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": "CC",
+            "world_region": "Southern Asia"
+        }
+    },
+    {
+        "pk": "CXR",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Christmas Island",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": "CX",
+            "world_region": "Southern Asia"
+        }
+    },
+    {
+        "pk": "ESH",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Western Sahara",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "EH",
+            "world_region": "Northern Africa"
+        }
+    },
+    {
+        "pk": "HMD",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Heard Island and McDonald Islands",
+            "world_continent": "Oceania",
+            "iso_3166_1_alpha_2": "HM",
+            "world_region": "Australia and New Zealand"
+        }
+    },
+    {
+        "pk": "KGZ",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Kyrgyzstan",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": "KG",
+            "world_region": "Central Asia"
+        }
+    },
+    {
+        "pk": "LIE",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Liechtenstein",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": "LI",
+            "world_region": "Western Europe"
+        }
+    },
+    {
+        "pk": "LSO",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Lesotho",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "LS",
+            "world_region": "Southern Africa"
+        }
+    },
+    {
+        "pk": "MLI",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Mali",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "ML",
+            "world_region": "Western Africa"
+        }
+    },
+    {
+        "pk": "NER",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Niger",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "NE",
+            "world_region": "Western Africa"
+        }
+    },
+    {
+        "pk": "NFK",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Norfolk Island",
+            "world_continent": "Oceania",
+            "iso_3166_1_alpha_2": "NF",
+            "world_region": "Australia and New Zealand"
+        }
+    },
+    {
+        "pk": "NIU",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Niue",
+            "world_continent": "Oceania",
+            "iso_3166_1_alpha_2": "NU",
+            "world_region": "Polynesia"
+        }
+    },
+    {
+        "pk": "PCN",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Pitcairn",
+            "world_continent": "Oceania",
+            "iso_3166_1_alpha_2": "PN",
+            "world_region": "Polynesia"
+        }
+    },
+    {
+        "pk": "PSE",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Palestine",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": "PS",
+            "world_region": "Western Asia"
+        }
+    },
+    {
+        "pk": "REU",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Riunion",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "RE",
+            "world_region": "Eastern Africa"
+        }
+    },
+    {
+        "pk": "RWA",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Rwanda",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "RW",
+            "world_region": "Eastern Africa"
+        }
+    },
+    {
+        "pk": "SGS",
+        "model": "ships.flag",
+        "fields": {
+            "name": "South Georgia and South Sandwich Islands",
+            "world_continent": "South America",
+            "iso_3166_1_alpha_2": "GS",
+            "world_region": "South America"
+        }
+    },
+    {
+        "pk": "SJM",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Svalbard and Jan Mayen Islands",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": "SJ",
+            "world_region": "Northern Europe"
+        }
+    },
+    {
+        "pk": "SWZ",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Swaziland",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "SZ",
+            "world_region": "Southern Africa"
+        }
+    },
+    {
+        "pk": "TCD",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Chad",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "TD",
+            "world_region": "Middle Africa"
+        }
+    },
+    {
+        "pk": "TJK",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Tajikistan",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": "TJ",
+            "world_region": "Central Asia"
+        }
+    },
+    {
+        "pk": "TKL",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Tokelau",
+            "world_continent": "Oceania",
+            "iso_3166_1_alpha_2": "TK",
+            "world_region": "Polynesia"
+        }
+    },
+    {
+        "pk": "TWN",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Taiwan Republic Of China",
+            "alt_name": "Chinese Taipei",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": "TW",
+            "world_region": "Eastern Asia"
+        }
+    },
+    {
+        "pk": "UZB",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Uzbekistan",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": "UZ",
+            "world_region": "Central Asia"
+        }
+    },
+    {
+        "pk": "VAT",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Vatican City",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": "VA",
+            "world_region": "Southern Europe"
+        }
+    },
+    {
+        "pk": "BHS",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Bahamas",
+            "world_continent": "North America",
+            "iso_3166_1_alpha_2": "BS",
+            "world_region": "Caribbean"
+        }
+    },
+    {
+        "pk": "ARG",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Argentina",
+            "world_continent": "South America",
+            "iso_3166_1_alpha_2": "AR",
+            "world_region": "South America"
+        }
+    },
+    {
+        "pk": "ARE",
+        "model": "ships.flag",
+        "fields": {
+            "name": "United Arab Emirates",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": "AE",
+            "world_region": "Western Asia"
+        }
+    },
+    {
+        "pk": "ASM",
+        "model": "ships.flag",
+        "fields": {
+            "name": "American Samoa",
+            "world_continent": "Oceania",
+            "iso_3166_1_alpha_2": "AS",
+            "world_region": "Polynesia"
+        }
+    },
+    {
+        "pk": "COM",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Comoros",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "KM",
+            "world_region": "Eastern Africa"
+        }
+    },
+    {
+        "pk": "HND",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Honduras",
+            "world_continent": "North America",
+            "iso_3166_1_alpha_2": "HN",
+            "world_region": "Central America"
+        }
+    },
+    {
+        "pk": "MDG",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Madagascar",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "MG",
+            "world_region": "Eastern Africa"
+        }
+    },
+    {
+        "pk": "MOZ",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Mozambique",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "MZ",
+            "world_region": "Eastern Africa"
+        }
+    },
+    {
+        "pk": "LKA",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Sri Lanka",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": "LK",
+            "world_region": "Southern Asia"
+        }
+    },
+    {
+        "pk": "MMR",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Myanmar",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": "MM",
+            "world_region": "South-Eastern Asia"
+        }
+    },
+    {
+        "pk": "COG",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Congo",
+            "alt_name": "Congo (Democratic Republic)",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "CG",
+            "world_region": "Middle Africa"
+        }
+    },
+    {
+        "pk": "HUN",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Hungary",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": "HU",
+            "world_region": "Eastern Europe"
+        }
+    },
+    {
+        "pk": "SDN",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Sudan",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "SD",
+            "world_region": "Northern Africa"
+        }
+    },
+    {
+        "pk": "COK",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Cook Islands",
+            "world_continent": "Oceania",
+            "iso_3166_1_alpha_2": "CK",
+            "world_region": "Polynesia"
+        }
+    },
+    {
+        "pk": "ISL",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Iceland",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": "IS",
+            "world_region": "Northern Europe"
+        }
+    },
+    {
+        "pk": "NAM",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Namibia",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "NA",
+            "world_region": "Southern Africa"
+        }
+    },
+    {
+        "pk": "SUR",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Suriname",
+            "world_continent": "South America",
+            "iso_3166_1_alpha_2": "SR",
+            "world_region": "South America"
+        }
+    },
+    {
+        "pk": "CIV",
+        "model": "ships.flag",
+        "fields": {
+            "name": "C\u00f4te d'Ivoire",
+            "alt_name": "Cote D'ivoire",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "CI",
+            "world_region": "Western Africa"
+        }
+    },
+    {
+        "pk": "IND",
+        "model": "ships.flag",
+        "fields": {
+            "name": "India",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": "IN",
+            "world_region": "Southern Asia"
+        }
+    },
+    {
+        "pk": "NLD",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Netherlands",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": "NL",
+            "world_region": "Western Europe"
+        }
+    },
+    {
+        "pk": "SWE",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Sweden",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": "SE",
+            "world_region": "Northern Europe"
+        }
+    },
+    {
+        "pk": "HRV",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Croatia",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": "HR",
+            "world_region": "Southern Europe"
+        }
+    },
+    {
+        "pk": "IDN",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Indonesia",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": "ID",
+            "world_region": "South-Eastern Asia"
+        }
+    },
+    {
+        "pk": "NZL",
+        "model": "ships.flag",
+        "fields": {
+            "name": "New Zealand",
+            "world_continent": "Oceania",
+            "iso_3166_1_alpha_2": "NZ",
+            "world_region": "Australia and New Zealand"
+        }
+    },
+    {
+        "pk": "CHE",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Switzerland",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": "CH",
+            "world_region": "Western Europe"
+        }
+    },
+    {
+        "pk": "CUB",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Cuba",
+            "world_continent": "North America",
+            "iso_3166_1_alpha_2": "CU",
+            "world_region": "Caribbean"
+        }
+    },
+    {
+        "pk": "CUW",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Curacao",
+            "world_continent": "North America",
+            "iso_3166_1_alpha_2": "CW",
+            "world_region": "Caribbean"
+        }
+    },
+    {
+        "pk": "IRN",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Iran",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": "IR",
+            "world_region": "Southern Asia"
+        }
+    },
+    {
+        "pk": "NIC",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Nicaragua",
+            "world_continent": "North America",
+            "iso_3166_1_alpha_2": "NI",
+            "world_region": "Central America"
+        }
+    },
+    {
+        "pk": "SYR",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Syrian Arab Republic",
+            "alt_name": "Syria",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": "SY",
+            "world_region": "Western Asia"
+        }
+    },
+    {
+        "pk": "CYP",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Cyprus",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": "CY",
+            "world_region": "Western Asia"
+        }
+    },
+    {
+        "pk": "IRQ",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Iraq",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": "IQ",
+            "world_region": "Western Asia"
+        }
+    },
+    {
+        "pk": "THA",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Thailand",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": "TH",
+            "world_region": "South-Eastern Asia"
+        }
+    },
+    {
+        "pk": "CZE",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Czech Republic",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": "CZ",
+            "world_region": "Eastern Europe"
+        }
+    },
+    {
+        "pk": "IRL",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Ireland",
+            "alt_name": "Irish Republic",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": "IE",
+            "world_region": "Northern Europe"
+        }
+    },
+    {
+        "pk": "NOR",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Norway",
+            "alt_name": "Norway (Nis)",
+            "world_continent": "Europe",
+            "iso_3166_1_alpha_2": "NO",
+            "world_region": "Northern Europe"
+        }
+    },
+    {
+        "pk": "TGO",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Togo",
+            "world_continent": "Africa",
+            "iso_3166_1_alpha_2": "TG",
+            "world_region": "Western Africa"
+        }
+    },
+    {
+        "pk": "VIR",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Virgin Islands, US",
+            "world_continent": "North America",
+            "iso_3166_1_alpha_2": "VI",
+            "world_region": "Caribbean"
+        }
+    },
+    {
+        "pk": "WLF",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Wallis and Futuna",
+            "world_continent": "Oceania",
+            "iso_3166_1_alpha_2": "WF",
+            "world_region": "Polynesia"
+        }
+    },
+    {
+        "pk": "WSM",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Samoa",
+            "world_continent": "Oceania",
+            "iso_3166_1_alpha_2": "WS",
+            "world_region": "Polynesia"
+        }
+    },
+    {
+        "pk": "VGB",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Virgin Islands, British",
+            "world_continent": "North America",
+            "iso_3166_1_alpha_2": "VG",
+            "world_region": "Caribbean"
+        }
+    },
+    {
+        "pk": "VUT",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Vanuatu",
+            "world_continent": "Oceania",
+            "iso_3166_1_alpha_2": "VU",
+            "world_region": "Melanesia"
+        }
+    },
+    {
+        "pk": "VNM",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Vietnam",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": "VN",
+            "world_region": "South-Eastern Asia"
+        }
+    },
+    {
+        "pk": "SGP",
+        "model": "ships.flag",
+        "fields": {
+            "name": "Singapore",
+            "world_continent": "Asia",
+            "iso_3166_1_alpha_2": "SG",
+            "world_region": "South-Eastern Asia"
+        }
+    }
+]

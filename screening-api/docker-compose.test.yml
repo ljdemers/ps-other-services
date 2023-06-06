@@ -1,0 +1,90 @@
+version: '3.7'
+services:
+  api:
+    image: 178847878690.dkr.ecr.us-east-1.amazonaws.com/screening-api:0.15.3
+    build:
+      target: prod
+      cache_from:
+         - 178847878690.dkr.ecr.us-east-1.amazonaws.com/screening-api:testing
+         - 205287409906.dkr.ecr.us-east-1.amazonaws.com/screening-api:latest
+         - screening-api:testing
+         - screening-api:latest
+         - screening-api:latest-test
+    env_file: envs/jenkins.env
+    environment:
+      - CODEARTIFACT_AUTH_TOKEN
+      - TWINE_USERNAME
+      - TWINE_PASSWORD
+      - TWINE_REPOSITORY_URL
+    working_dir: /usr/src/app
+    volumes:
+      - ./:/usr/src/app
+      - /tmp/wheelhouse:/tmp/wheelhouse
+    depends_on:
+      - api-postgres
+      - api-redis
+  api-migrate:
+    image: 178847878690.dkr.ecr.us-east-1.amazonaws.com/screening-api:0.15.3
+    build:
+      target: prod
+    entrypoint: alembic
+    command:
+      - upgrade
+      - head
+    env_file: envs/jenkins.env
+    environment:
+      - CODEARTIFACT_AUTH_TOKEN
+      - TWINE_USERNAME
+      - TWINE_PASSWORD
+      - TWINE_REPOSITORY_URL
+    volumes:
+      - ./screening_api/confs/test.ini:/alembic.ini
+    depends_on:
+      - api-postgres
+      - api-redis
+  api-postgres:
+    image: 178847878690.dkr.ecr.us-east-1.amazonaws.com/postgres:9.6.5-alpine
+    healthcheck:
+      test: nc -zv 127.0.0.1 5432
+      interval: 15s
+    environment:
+      - POSTGRES_PASSWORD=test_screening
+      - POSTGRES_USER=test_screening
+      - POSTGRES_DB=test_screening
+  api-proxy-dep:
+    image: 178847878690.dkr.ecr.us-east-1.amazonaws.com/jwilder/dockerize:0.6.1
+    command:
+      - -wait
+      - tcp://api-postgres:5432
+      - -wait
+      - tcp://api-redis:6379
+    depends_on:
+      - api-postgres
+      - api-redis
+  api-postman:
+    image: 178847878690.dkr.ecr.us-east-1.amazonaws.com/newman_ubuntu1404:3.8.3
+    command: run collection.json --environment=environment.json --reporters cli,junit --reporter-junit-export /reports/postman-junit.xml -k
+    volumes:
+      - ./tests/postman/:/etc/newman/
+      - ./reports/:/reports/
+    depends_on:
+      - api-proxy-dep
+  api-redis:
+    image: 178847878690.dkr.ecr.us-east-1.amazonaws.com/redis:3.2.12-alpine
+    healthcheck:
+      test: nc -zv 127.0.0.1 6379
+      interval: 15s
+  rpm-builder:
+    image: 178847878690.dkr.ecr.us-east-1.amazonaws.com/rpm-builder:0.15.3
+    build:
+      context: ./
+      dockerfile: ./docker/Dockerfile.rpm-builder
+    volumes:
+      - ./screening_api:/source/usr/lib/python3.6/site-packages/screening_api
+      - ./screening_api.egg-info:/source/usr/lib/python3.6/site-packages/screening_api.egg-info
+      - ./screening_api/confs:/source/etc/polestar
+      - ./etc/supervisor/conf.d/screening_api.conf:/source/etc/supervisor/conf.d/screening_api.conf
+      - ./etc/nginx/conf.d/screening_api.conf:/source/etc/nginx/conf.d/screening_api.conf
+      - ./var/run/polestar/screening:/source/var/run/polestar/screening
+      - ./var/log/polestar/screening:/source/var/log/polestar/screening
+      - ./dist:/output

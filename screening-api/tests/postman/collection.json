@@ -1,0 +1,2749 @@
+{
+	"info": {
+		"name": "Screening API NEW copy",
+		"_postman_id": "79098e98-7054-edd9-bde9-67e1e76c92ea",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Sorting",
+			"description": "",
+			"item": [
+				{
+					"name": "Sorting By Flag ascending",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f8b0e576-e525-4b9b-b719-9156c2e0c5c4",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code name has string\", function () {",
+									"    pm.response.to.have.status(\"OK\");",
+									"});",
+									"",
+									"var count = jsonData.meta.count;",
+									"pm.test(\"Count is : \" + count, function () {",
+									"   ",
+									"});",
+									"",
+									"",
+									"if(count !== 0){",
+									"    ",
+									"    var first_flag = jsonData.data[0].ship.country_id;",
+									"    ",
+									"    ",
+									"         for(i=1;i<count;i++){",
+									"         ",
+									"         var second_flag = jsonData.data[i].ship.country_id;",
+									"         ",
+									"         if(second_flag === null){",
+									"             break;",
+									"         }else{",
+									"         var n = first_flag.localeCompare(second_flag);",
+									"         ",
+									"         pm.test(\"N is \" + n, function () {",
+									"    ",
+									"});",
+									"}",
+									"         ",
+									"         if(n == -1 || n === 0){",
+									"             ",
+									"             pm.test( i + \" \" + first_flag + \" is sorted before \" + second_flag , function () {",
+									"    ",
+									"});",
+									"",
+									"",
+									"             ",
+									"         }else if(n == 1){",
+									"    pm.test( i + \" \" + first_flag + \" is NOT sorted before \" + second_flag , function () {",
+									"    ",
+									"});",
+									"",
+									"}",
+									"         ",
+									"         first_flag = second_flag;",
+									"             ",
+									"    }",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{authorization}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{screening_endpoint}}/v1/screenings?page=1&limit={{limit}}&account_id={{account_id}}&sort=ship__country_id",
+							"host": [
+								"{{screening_endpoint}}"
+							],
+							"path": [
+								"v1",
+								"screenings"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"equals": true
+								},
+								{
+									"key": "limit",
+									"value": "{{limit}}",
+									"equals": true
+								},
+								{
+									"key": "account_id",
+									"value": "{{account_id}}",
+									"equals": true
+								},
+								{
+									"key": "sort",
+									"value": "ship__country_id",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Sorting By Flag desscending ",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "dc4d0e16-e182-44f2-a3c1-b4280abdf869",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code name has string\", function () {",
+									"    pm.response.to.have.status(\"OK\");",
+									"});",
+									"",
+									"var count = jsonData.meta.count;",
+									"pm.test(\"Count is : \" + count, function () {",
+									"   ",
+									"});",
+									"",
+									"var j = 0;",
+									"",
+									"if(count !== 0){",
+									"    ",
+									"  ",
+									"      for(j=1;j<count;j++){",
+									"          ",
+									"          var first_flag = jsonData.data[j].ship.country_id;",
+									"    ",
+									"    if(first_flag === null){",
+									"         pm.test(\"Flag unknown is seen \" + first_flag, function () {",
+									"    ",
+									"});",
+									"    }else{",
+									"          ",
+									"          pm.test(\"j is \" + j, function () {",
+									"    ",
+									"});",
+									"pm.test(\"first_flag is \" + first_flag, function () {",
+									"    ",
+									"});",
+									"          break;",
+									"    }",
+									"      }",
+									"         for(i=j+1;i<count;i++){",
+									"         ",
+									"         var second_flag = jsonData.data[i].ship.country_id;",
+									"         pm.test(\"second_flag is \" + second_flag, function () {",
+									"    ",
+									"});",
+									"       ",
+									"        var n = first_flag.localeCompare(second_flag);",
+									"         ",
+									"        pm.test(\"N is \" + n, function () {",
+									"    ",
+									"});",
+									"",
+									" if(n == 1 || n === 0){",
+									"             ",
+									"             pm.test( i + \" \" + first_flag + \" is sorted before \" + second_flag , function () {",
+									"    ",
+									"});",
+									"",
+									"",
+									"             ",
+									"         }else if(n == -1){",
+									"    pm.test( i + \" \" + first_flag + \" is NOT sorted before \" + second_flag , function () {",
+									"    ",
+									"});",
+									"",
+									"}",
+									"         ",
+									"         first_flag = second_flag;",
+									"             ",
+									"    ",
+									"}",
+									"}",
+									"",
+									"",
+									"",
+									"         "
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{authorization}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{screening_endpoint}}/v1/screenings?page=1&limit={{limit}}&account_id={{account_id}}&sort=-ship__country_id",
+							"host": [
+								"{{screening_endpoint}}"
+							],
+							"path": [
+								"v1",
+								"screenings"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"equals": true
+								},
+								{
+									"key": "limit",
+									"value": "{{limit}}",
+									"equals": true
+								},
+								{
+									"key": "account_id",
+									"value": "{{account_id}}",
+									"equals": true
+								},
+								{
+									"key": "sort",
+									"value": "-ship__country_id",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Sorting By Shipname descending ",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code name has string\", function () {",
+									"    pm.response.to.have.status(\"OK\");",
+									"});",
+									"",
+									"var count = jsonData.meta.count;",
+									"",
+									"pm.test(\"Count is \" + count, function () {",
+									"    ",
+									"});",
+									"",
+									"",
+									"if(count !== 0){",
+									"    ",
+									"    var first_ship = jsonData.data[0].ship.name;",
+									"    ",
+									"    ",
+									"         for(i=1;i<count;i++){",
+									"         ",
+									"         var second_ship = jsonData.data[i].ship.name;",
+									"         ",
+									"         var n = first_ship.localeCompare(second_ship);",
+									"         ",
+									"         pm.test(\"N is \" + n, function () {",
+									"    ",
+									"});",
+									"         ",
+									"         if(n == 1 || n === 0){",
+									"             ",
+									"             pm.test( i + \" \" + first_ship + \" is sorted before \" + second_ship , function () {",
+									"    ",
+									"});",
+									"",
+									"",
+									"             ",
+									"         }else if(n == -1){",
+									"    pm.test( i + \" \" + first_ship + \" is NOT sorted before \" + second_ship , function () {",
+									"    ",
+									"});",
+									"",
+									"}",
+									"         ",
+									"         first_ship = second_ship;",
+									"             ",
+									"    }",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{authorization}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{screening_endpoint}}/v1/screenings?page=1&limit={{limit}}&account_id={{account_id}}&sort=-ship__name",
+							"host": [
+								"{{screening_endpoint}}"
+							],
+							"path": [
+								"v1",
+								"screenings"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"equals": true
+								},
+								{
+									"key": "limit",
+									"value": "{{limit}}",
+									"equals": true
+								},
+								{
+									"key": "account_id",
+									"value": "{{account_id}}",
+									"equals": true
+								},
+								{
+									"key": "sort",
+									"value": "-ship__name",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Sorting By ShipType descending ",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code name has string\", function () {",
+									"    pm.response.to.have.status(\"OK\");",
+									"});",
+									"",
+									"var count = jsonData.meta.count;",
+									"",
+									"pm.test(\"Count is \" + count, function () {",
+									"    ",
+									"});",
+									"",
+									"",
+									"if(count !== 0){",
+									"    ",
+									"    var first_ship_type = jsonData.data[0].ship.type;",
+									"    ",
+									"    ",
+									"         for(i=1;i<count;i++){",
+									"         ",
+									"         var second_ship_type = jsonData.data[i].ship.type;",
+									"         ",
+									"         var n = first_ship_type.localeCompare(second_ship_type);",
+									"         ",
+									"         pm.test(\"N is \" + n, function () {",
+									"    ",
+									"});",
+									"         ",
+									"         if(n == 1 || n === 0){",
+									"             ",
+									"             pm.test( i + \" \" + first_ship_type + \" is sorted before \" + second_ship_type , function () {",
+									"    ",
+									"});",
+									"             ",
+									"         }else if(n === -1){",
+									"    pm.test( i + \" \" + first_ship_type + \" is NOT sorted before \" + second_ship_type , function () {",
+									"    ",
+									"});",
+									"",
+									"}",
+									"         first_ship_type = second_ship_type;",
+									"             ",
+									"    }",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{authorization}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{screening_endpoint}}/v1/screenings?page=1&limit={{limit}}&account_id={{account_id}}&sort=-ship__type",
+							"host": [
+								"{{screening_endpoint}}"
+							],
+							"path": [
+								"v1",
+								"screenings"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"equals": true
+								},
+								{
+									"key": "limit",
+									"value": "{{limit}}",
+									"equals": true
+								},
+								{
+									"key": "account_id",
+									"value": "{{account_id}}",
+									"equals": true
+								},
+								{
+									"key": "sort",
+									"value": "-ship__type",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Sorting By ShipType ascending",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code name has string\", function () {",
+									"    pm.response.to.have.status(\"OK\");",
+									"});",
+									"",
+									"var count = jsonData.meta.count;",
+									"",
+									"pm.test(\"Count is \" + count, function () {",
+									"    ",
+									"});",
+									"",
+									"",
+									"if(count !== 0){",
+									"    ",
+									"    var first_ship_type = jsonData.data[0].ship.type;",
+									"    ",
+									"    ",
+									"         for(i=1;i<count;i++){",
+									"         ",
+									"         var second_ship_type = jsonData.data[i].ship.type;",
+									"         ",
+									"         var n = first_ship_type.localeCompare(second_ship_type);",
+									"         ",
+									"         pm.test(\"N is \" + n, function () {",
+									"    ",
+									"});",
+									"         ",
+									"         if(n == -1 || n === 0){",
+									"             ",
+									"             pm.test( i + \" \" + first_ship_type + \" is sorted before \" + second_ship_type , function () {",
+									"    ",
+									"});",
+									"             ",
+									"         }else if(n === 1){",
+									"    pm.test( i + \" \" + first_ship_type + \" is NOT sorted before \" + second_ship_type , function () {",
+									"    ",
+									"});",
+									"",
+									"}",
+									"         ",
+									"         first_ship_type = second_ship_type;",
+									"             ",
+									"    }",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{authorization}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{screening_endpoint}}/v1/screenings?page=1&limit={{limit}}&account_id={{account_id}}&sort=ship__type",
+							"host": [
+								"{{screening_endpoint}}"
+							],
+							"path": [
+								"v1",
+								"screenings"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"equals": true
+								},
+								{
+									"key": "limit",
+									"value": "{{limit}}",
+									"equals": true
+								},
+								{
+									"key": "account_id",
+									"value": "{{account_id}}",
+									"equals": true
+								},
+								{
+									"key": "sort",
+									"value": "ship__type",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Sorting By IMO descending ",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code name has string\", function () {",
+									"    pm.response.to.have.status(\"OK\");",
+									"});",
+									"",
+									"var count = jsonData.meta.count;",
+									"",
+									"pm.test(\"Count is \" + count, function () {",
+									"    ",
+									"});",
+									"",
+									"",
+									"if(count !== 0){",
+									"    ",
+									"    var first_imo_num = jsonData.data[0].ship.imo_id;",
+									"    var first_imo_string = first_imo_num.toString();",
+									"    ",
+									"    ",
+									"         for(i=1;i<count;i++){",
+									"         ",
+									"         var second_imo_num = jsonData.data[i].ship.imo_id;",
+									"          var second_imo_string = second_imo_num.toString();",
+									"         ",
+									"         var n = first_imo_string.localeCompare(second_imo_string);",
+									"         ",
+									"         pm.test(\"N is \" + n, function () {",
+									"    ",
+									"});",
+									"         ",
+									"         if(n == 1 || n === 0){",
+									"             ",
+									"             pm.test( i + \" \" + first_imo_string + \" is sorted before \" + second_imo_string , function () {",
+									"    ",
+									"});",
+									"             ",
+									"         }",
+									"         ",
+									"         first_imo_string = second_imo_string;",
+									"             ",
+									"    }",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{authorization}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{screening_endpoint}}/v1/screenings?page=1&limit={{limit}}&account_id={{account_id}}&sort=-ship__imo_id",
+							"host": [
+								"{{screening_endpoint}}"
+							],
+							"path": [
+								"v1",
+								"screenings"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"equals": true
+								},
+								{
+									"key": "limit",
+									"value": "{{limit}}",
+									"equals": true
+								},
+								{
+									"key": "account_id",
+									"value": "{{account_id}}",
+									"equals": true
+								},
+								{
+									"key": "sort",
+									"value": "-ship__imo_id",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Sorting By Last Updated descending",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code name has string\", function () {",
+									"    pm.response.to.have.status(\"OK\");",
+									"});",
+									"",
+									"var count = jsonData.meta.count;",
+									"",
+									"pm.test(\"Count is \" + count, function () {",
+									"    ",
+									"});",
+									"",
+									"",
+									"if(count !== 0){",
+									"    ",
+									"    var first_updated = jsonData.data[0].updated;",
+									"    var first_updated_string = first_updated.toString();",
+									"    ",
+									"    ",
+									"         for(i=1;i<count;i++){",
+									"         ",
+									"         var second_updated_num = jsonData.data[i].updated;",
+									"          var second_updated_string = second_updated_num.toString();",
+									"         ",
+									"         var n = first_updated_string.localeCompare(second_updated_string);",
+									"         ",
+									"         pm.test(\"N is \" + n, function () {",
+									"    ",
+									"});",
+									"         ",
+									"         if(n == 1 || n === 0){",
+									"             ",
+									"             pm.test( i + \" \" + first_updated_string + \" is sorted before \" + second_updated_string , function () {",
+									"    ",
+									"});",
+									"             ",
+									"         }",
+									"         ",
+									"         first_updated_string = second_updated_string;",
+									"             ",
+									"    }",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{authorization}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{screening_endpoint}}/v1/screenings?page=1&limit={{limit}}&account_id={{account_id}}&sort=-updated",
+							"host": [
+								"{{screening_endpoint}}"
+							],
+							"path": [
+								"v1",
+								"screenings"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"equals": true
+								},
+								{
+									"key": "limit",
+									"value": "{{limit}}",
+									"equals": true
+								},
+								{
+									"key": "account_id",
+									"value": "{{account_id}}",
+									"equals": true
+								},
+								{
+									"key": "sort",
+									"value": "-updated",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Sorting By Last Updated ascending",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code name has string\", function () {",
+									"    pm.response.to.have.status(\"OK\");",
+									"});",
+									"",
+									"var count = jsonData.meta.count;",
+									"",
+									"pm.test(\"Count is \" + count, function () {",
+									"    ",
+									"});",
+									"",
+									"",
+									"if(count !== 0){",
+									"    ",
+									"    var first_updated = jsonData.data[0].updated;",
+									"    var first_updated_string = first_updated.toString();",
+									"    ",
+									"    ",
+									"         for(i=1;i<count;i++){",
+									"         ",
+									"         var second_updated_num = jsonData.data[i].updated;",
+									"          var second_updated_string = second_updated_num.toString();",
+									"         ",
+									"         var n = first_updated_string.localeCompare(second_updated_string);",
+									"         ",
+									"         pm.test(\"N is \" + n, function () {",
+									"    ",
+									"});",
+									"         ",
+									"         if(n == -1 || n === 0){",
+									"             ",
+									"             pm.test( i + \" \" + first_updated_string + \" is sorted before \" + second_updated_string , function () {",
+									"    ",
+									"});",
+									"             ",
+									"         }",
+									"         ",
+									"         first_updated_string = second_updated_string;",
+									"             ",
+									"    }",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{authorization}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{screening_endpoint}}/v1/screenings?page=1&limit={{limit}}&account_id={{account_id}}&sort=updated",
+							"host": [
+								"{{screening_endpoint}}"
+							],
+							"path": [
+								"v1",
+								"screenings"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"equals": true
+								},
+								{
+									"key": "limit",
+									"value": "{{limit}}",
+									"equals": true
+								},
+								{
+									"key": "account_id",
+									"value": "{{account_id}}",
+									"equals": true
+								},
+								{
+									"key": "sort",
+									"value": "updated",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Sorting By IMO ascending ",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code name has string\", function () {",
+									"    pm.response.to.have.status(\"OK\");",
+									"});",
+									"",
+									"var count = jsonData.meta.count;",
+									"",
+									"pm.test(\"Count is \" + count, function () {",
+									"    ",
+									"});",
+									"",
+									"",
+									"if(count !== 0){",
+									"    ",
+									"    var first_imo_num = jsonData.data[0].ship.imo_id;",
+									"    var first_imo_string = first_imo_num.toString();",
+									"    ",
+									"    ",
+									"         for(i=1;i<count;i++){",
+									"         ",
+									"         var second_imo_num = jsonData.data[i].ship.imo_id;",
+									"          var second_imo_string = second_imo_num.toString();",
+									"         ",
+									"         var n = first_imo_string.localeCompare(second_imo_string);",
+									"         ",
+									"         pm.test(\"N is \" + n, function () {",
+									"    ",
+									"});",
+									"         ",
+									"         if(n == -1 || n === 0){",
+									"             ",
+									"             pm.test( i + \" \" + first_imo_string + \" is sorted before \" + second_imo_string , function () {",
+									"    ",
+									"});",
+									"             ",
+									"         }",
+									"         ",
+									"         first_imo_string = second_imo_string;",
+									"             ",
+									"    }",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{authorization}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{screening_endpoint}}/v1/screenings?page=1&limit={{limit}}&account_id={{account_id}}&sort=ship__imo_id",
+							"host": [
+								"{{screening_endpoint}}"
+							],
+							"path": [
+								"v1",
+								"screenings"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"equals": true
+								},
+								{
+									"key": "limit",
+									"value": "{{limit}}",
+									"equals": true
+								},
+								{
+									"key": "account_id",
+									"value": "{{account_id}}",
+									"equals": true
+								},
+								{
+									"key": "sort",
+									"value": "ship__imo_id",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Sorting By Ship name ascending",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code name has string\", function () {",
+									"    pm.response.to.have.status(\"OK\");",
+									"});",
+									"",
+									"var count = jsonData.meta.count;",
+									"pm.test(\"Count is \" + count, function () {",
+									"    ",
+									"});",
+									"",
+									"",
+									"if(count !== 0){",
+									"    ",
+									"    var first_ship = jsonData.data[0].ship.name;",
+									"    ",
+									"    ",
+									"         for(i=1;i<count;i++){",
+									"         ",
+									"         var second_ship = jsonData.data[i].ship.name;",
+									"         ",
+									"         var n = first_ship.localeCompare(second_ship);",
+									"         ",
+									"                 pm.test(\"N is \" + n, function () {",
+									"    ",
+									"});",
+									"",
+									"         if(n == -1 || n === 0){",
+									"             ",
+									"             pm.test(i + \" \" + first_ship + \" is sorted before \" + second_ship, function () {",
+									"    ",
+									"});",
+									"             ",
+									"         }",
+									"         ",
+									"         first_ship = second_ship;",
+									"             ",
+									"    }",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{authorization}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{screening_endpoint}}/v1/screenings?page=1&limit={{limit}}&account_id={{account_id}}&search=&sort=ship__name",
+							"host": [
+								"{{screening_endpoint}}"
+							],
+							"path": [
+								"v1",
+								"screenings"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"equals": true
+								},
+								{
+									"key": "limit",
+									"value": "{{limit}}",
+									"equals": true
+								},
+								{
+									"key": "account_id",
+									"value": "{{account_id}}",
+									"equals": true
+								},
+								{
+									"key": "search",
+									"value": "",
+									"equals": true
+								},
+								{
+									"key": "sort",
+									"value": "ship__name",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Search",
+			"description": "",
+			"item": [
+				{
+					"name": "GET results for Search in Screening results Table IMO search",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"",
+									"",
+									"pm.environment.set(\"search_results_table_imo\", \"90\");"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code name has string\", function () {",
+									"    pm.response.to.have.status(\"OK\");",
+									"});",
+									"",
+									"var count = jsonData.meta.count;",
+									" pm.test(\"Count is  :\" + count, function () {",
+									"    ",
+									"});",
+									"",
+									"if(count !== 0){",
+									"    ",
+									"    for (i=0;i<count;i++){",
+									"        ",
+									"        if(jsonData.data[i].ship !== null){",
+									"            var first_imo_num = jsonData.data[i].ship.imo_id;",
+									"            var first_imo_string = first_imo_num.toString();",
+									"         ",
+									"            var n = first_imo_string.includes(pm.environment.get(\"search_results_table_imo\"));",
+									" ",
+									"            pm.test(\"N is :\" + n, function () {",
+									"    ",
+									"            });",
+									"",
+									"        if(n){",
+									"            pm.test(\"IMO Matches :\" + i + \" \"+ first_imo_string, function () {",
+									"    ",
+									"            });",
+									"        }else{",
+									"            ",
+									"            pm.test(\"IMO doesn't Matches :\" + i + \" \"+ first_imo_string, function () {",
+									"    ",
+									"            });",
+									"        }",
+									"            ",
+									"        }else{",
+									"    pm.test(\"Ship is null :\" + first_imo_string, function () {",
+									"    ",
+									"});",
+									"        ",
+									"}",
+									"}",
+									"}",
+									"",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "{{authorization}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{screening_endpoint}}/v1/screenings?page=1&limit={{limit}}&account_id={{account_id}}&search={{search_results_table_imo}}",
+							"host": [
+								"{{screening_endpoint}}"
+							],
+							"path": [
+								"v1",
+								"screenings"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"equals": true
+								},
+								{
+									"key": "limit",
+									"value": "{{limit}}",
+									"equals": true
+								},
+								{
+									"key": "account_id",
+									"value": "{{account_id}}",
+									"equals": true
+								},
+								{
+									"key": "search",
+									"value": "{{search_results_table_imo}}",
+									"equals": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET results for Search for Ship types",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"",
+									"",
+									"pm.environment.set(\"ship_type_search_string1\", \"B\");",
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code name has string\", function () {",
+									"    pm.response.to.have.status(\"OK\");",
+									"});",
+									"",
+									"var count = jsonData.meta.count;",
+									" pm.test(\"Count is  :\" + count, function () {",
+									"    ",
+									"});",
+									"",
+									"if(count !== 0){",
+									"    ",
+									"    for(i=0;i<count;i++){",
+									"        ",
+									"        var ship_type = jsonData.data[i];",
+									"        ",
+									"         var n = ship_type.localeCompare(pm.environment.get(\"ship_type_search_string1\"));",
+									"        ",
+									"        if(n){",
+									"         pm.test(\"Ship Type is  :\" + ship_type, function () {",
+									"    ",
+									"});",
+									"        ",
+									"    }",
+									"    }",
+									"    ",
+									"}",
+									"",
+									"",
+									"",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "{{authorization}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{screening_endpoint}}/v1/ship_types?search={{ship_type_search_string1}}",
+							"host": [
+								"{{screening_endpoint}}"
+							],
+							"path": [
+								"v1",
+								"ship_types"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "{{ship_type_search_string1}}",
+									"equals": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET results for Search for Ship types different type",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"",
+									"pm.environment.set(\"ship_type_search_string2\", \"Con\");"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code name has string\", function () {",
+									"    pm.response.to.have.status(\"OK\");",
+									"});",
+									"",
+									"var count = jsonData.meta.count;",
+									" pm.test(\"Count is  :\" + count, function () {",
+									"    ",
+									"});",
+									"",
+									"if(count !== 0){",
+									"    ",
+									"    for(i=0;i<count;i++){",
+									"        ",
+									"        var ship_type = jsonData.data[i];",
+									"        ",
+									"         var n = ship_type.localeCompare(pm.environment.get(\"ship_type_search_string2\"));",
+									"        ",
+									"        if(n){",
+									"         pm.test(\"Ship Type is  :\" + ship_type, function () {",
+									"    ",
+									"});",
+									"        ",
+									"    }",
+									"    }",
+									"    ",
+									"}",
+									"",
+									"",
+									"",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "{{authorization}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{screening_endpoint}}/v1/ship_types?search={{ship_type_search_string2}}",
+							"host": [
+								"{{screening_endpoint}}"
+							],
+							"path": [
+								"v1",
+								"ship_types"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "{{ship_type_search_string2}}",
+									"equals": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET results for Search in Screening results Table ship name",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"",
+									"",
+									"pm.environment.set(\"search_results_table_ship_name\", \"ho\");"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code name has string\", function () {",
+									"    pm.response.to.have.status(\"OK\");",
+									"});",
+									"",
+									"var count = jsonData.meta.count;",
+									" pm.test(\"Count is  :\" + count, function () {",
+									"    ",
+									"});",
+									"",
+									"if(count !== 0){",
+									"    ",
+									"    for (i=0;i<count;i++){",
+									"    var ship_name = jsonData.data[i].ship.name;",
+									"    var n = ship_name.localeCompare(pm.environment.get(\"search_results_table_ship_name\"));",
+									"    ",
+									"    if(n){",
+									"  pm.test(\"Ship_name Matches :\" + ship_name, function () {",
+									"    ",
+									"});",
+									"}",
+									"}",
+									"    ",
+									"}",
+									"   ",
+									"",
+									"",
+									"",
+									"",
+									"",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "{{authorization}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{screening_endpoint}}/v1/screenings?page=1&limit={{limit}}&account_id={{account_id}}&search={{search_results_table_ship_name}}",
+							"host": [
+								"{{screening_endpoint}}"
+							],
+							"path": [
+								"v1",
+								"screenings"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"equals": true
+								},
+								{
+									"key": "limit",
+									"value": "{{limit}}",
+									"equals": true
+								},
+								{
+									"key": "account_id",
+									"value": "{{account_id}}",
+									"equals": true
+								},
+								{
+									"key": "search",
+									"value": "{{search_results_table_ship_name}}",
+									"equals": true
+								}
+							]
+						},
+						"description": "This should return only the results which contain the matched string"
+					},
+					"response": []
+				},
+				{
+					"name": "GET : Screening Version",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Successful GET request\", function () {",
+									"    pm.response.to.have.status(503);",
+									"});",
+									"",
+									"pm.test(\"Status code name has string\", function () {",
+									"    pm.response.to.have.status(\"SERVICE UNAVAILABLE\");",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.test(\"The version is :: \" + jsonData.version, function (){",
+									"    ",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{authorization}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{screening_endpoint}}/health",
+							"host": [
+								"{{screening_endpoint}}"
+							],
+							"path": [
+								"health"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET results for Search for Ship types different type",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"",
+									"pm.environment.set(\"ship_type_search_string2\", \"Con\");"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code name has string\", function () {",
+									"    pm.response.to.have.status(\"OK\");",
+									"});",
+									"",
+									"var count = jsonData.meta.count;",
+									" pm.test(\"Count is  :\" + count, function () {",
+									"    ",
+									"});",
+									"",
+									"if(count !== 0){",
+									"    ",
+									"    for(i=0;i<count;i++){",
+									"        ",
+									"        var ship_type = jsonData.data[i];",
+									"        ",
+									"         var n = ship_type.localeCompare(pm.environment.get(\"ship_type_search_string2\"));",
+									"        ",
+									"        if(n){",
+									"         pm.test(\"Ship Type is  :\" + ship_type, function () {",
+									"    ",
+									"});",
+									"        ",
+									"    }",
+									"    }",
+									"    ",
+									"}",
+									"",
+									"",
+									"",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "{{authorization}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{screening_endpoint}}/v1/ship_types?search={{ship_type_search_string2}}",
+							"host": [
+								"{{screening_endpoint}}"
+							],
+							"path": [
+								"v1",
+								"ship_types"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "{{ship_type_search_string2}}",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Delete Operation",
+			"description": "",
+			"item": [
+				{
+					"name": "GET all the screening results",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "044bf269-04c8-4734-82e4-a168b15843ee",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code name has string\", function () {",
+									"    pm.response.to.have.status(\"OK\");",
+									"});",
+									"",
+									"var count = jsonData.meta.count;",
+									" pm.test(\"Count is  :\" + count, function () {",
+									"    ",
+									"});",
+									"",
+									"if(count !== 0){",
+									"         var screening_id = [count];",
+									"         ",
+									"    for (i=0;i<count;i++){",
+									"       ",
+									"         // var screening_id = jsonData.data[i].id;",
+									"           screening_id.push([jsonData.data[i].id.toString()]);",
+									"       ",
+									"}",
+									"",
+									"pm.test(\"Screening Id length is  :\" + screening_id.length, function () {",
+									"    ",
+									"});",
+									" pm.test(\"Count is  :\" + count, function () {",
+									"    ",
+									"});",
+									"for(j=0;j<screening_id.length;j++){",
+									"   ",
+									"",
+									"        pm.test(\"Screening Id is  :\" + screening_id[j], function () {",
+									"    ",
+									"});",
+									"",
+									"        postman.setEnvironmentVariable(\"Screening_ID\", screening_id);",
+									"    ",
+									"",
+									"}",
+									"",
+									"",
+									"",
+									"}else{",
+									"    pm.test(\"There are no screening results to be deleted\",function(){});",
+									"    postman.setEnvironmentVariable(\"Screening_ID\", 0);",
+									"}",
+									"",
+									"",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "{{authorization}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{screening_endpoint}}/v1/screenings?page=1&limit={{limit}}&account_id={{account_id}}",
+							"host": [
+								"{{screening_endpoint}}"
+							],
+							"path": [
+								"v1",
+								"screenings"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"equals": true
+								},
+								{
+									"key": "limit",
+									"value": "{{limit}}",
+									"equals": true
+								},
+								{
+									"key": "account_id",
+									"value": "{{account_id}}",
+									"equals": true
+								}
+							]
+						},
+						"description": "This should return all the results"
+					},
+					"response": []
+				},
+				{
+					"name": "GET all the screening results copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});",
+									"",
+									"pm.test(\"Status code name has string\", function () {",
+									"    pm.response.to.have.status(\"NO CONTENT\");",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "{{authorization}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{screening_endpoint}}/v1/screenings?account_id={{account_id}}&ids={{Screening_ID}}",
+							"host": [
+								"{{screening_endpoint}}"
+							],
+							"path": [
+								"v1",
+								"screenings"
+							],
+							"query": [
+								{
+									"key": "account_id",
+									"value": "{{account_id}}",
+									"equals": true
+								},
+								{
+									"key": "ids",
+									"value": "{{Screening_ID}}",
+									"equals": true
+								}
+							]
+						},
+						"description": "This should return all the results"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Filters",
+			"description": "",
+			"item": [
+				{
+					"name": "GET results for Filter by country Name",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"",
+									"",
+									"pm.environment.set(\"search_country\", \"PL\");"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code name has string\", function () {",
+									"    pm.response.to.have.status(\"OK\");",
+									"});",
+									"",
+									"var count = jsonData.meta.count;",
+									" pm.test(\"Count is  :\" + count, function () {",
+									"    ",
+									"});",
+									"",
+									"if(count !== 0){",
+									"    ",
+									"    for (i=0;i<count;i++){",
+									"    var ship_name = jsonData.data[i].ship.country_name;",
+									"    var n = ship_name.localeCompare(pm.environment.get(\"search_country\"));",
+									"    ",
+									"    if(n){",
+									"  pm.test(\"Ship_name Matches :\" + ship_name, function () {",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"The ship name is :\" + jsonData.data[i].ship.name,function () {});",
+									"}",
+									"}",
+									"    ",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "{{authorization}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{screening_endpoint}}/v1/screenings?page=1&limit={{limit}}&account_id={{account_id}}&ship__country_ids={{search_country}}",
+							"host": [
+								"{{screening_endpoint}}"
+							],
+							"path": [
+								"v1",
+								"screenings"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"equals": true
+								},
+								{
+									"key": "limit",
+									"value": "{{limit}}",
+									"equals": true
+								},
+								{
+									"key": "account_id",
+									"value": "{{account_id}}",
+									"equals": true
+								},
+								{
+									"key": "ship__country_ids",
+									"value": "{{search_country}}",
+									"equals": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET results for Filter by Ship Type ",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"",
+									"",
+									"pm.environment.set(\"search_ship_type\", \"Container Ship (Fully Cellular)\");"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code name has string\", function () {",
+									"    pm.response.to.have.status(\"OK\");",
+									"});",
+									"",
+									"var count = jsonData.meta.count;",
+									" pm.test(\"Count is  :\" + count, function () {",
+									"    ",
+									"});",
+									"",
+									"if(count !== 0){",
+									"    ",
+									"    for (i=0;i<count;i++){",
+									"    var ship_type = jsonData.data[i].ship.type;",
+									"    ",
+									"    var n = ship_type.localeCompare(pm.environment.get(\"search_ship_type\"));",
+									"",
+									"    if(n === 0){",
+									"  pm.test(\"ship_type Matches :\" + ship_type, function () {",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"The ship name is :\" + jsonData.data[i].ship.name,function () {});",
+									"} ",
+									"}",
+									"    ",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "{{authorization}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{screening_endpoint}}/v1/screenings?page=1&limit={{limit}}&account_id={{account_id}}&ship__types={{search_ship_type}}",
+							"host": [
+								"{{screening_endpoint}}"
+							],
+							"path": [
+								"v1",
+								"screenings"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"equals": true
+								},
+								{
+									"key": "limit",
+									"value": "{{limit}}",
+									"equals": true
+								},
+								{
+									"key": "account_id",
+									"value": "{{account_id}}",
+									"equals": true
+								},
+								{
+									"key": "ship__types",
+									"value": "{{search_ship_type}}",
+									"equals": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "POST : Screening By bulk upload",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.response.to.have.status(202);",
+							"});",
+							"",
+							"pm.test(\"Status code name has string\", function () {",
+							"    pm.response.to.have.status(\"ACCEPTED\");",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{authorization}}"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "data/Lots_of_IMOs.csv"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{screening_endpoint}}/v1/screenings/_bulk?account_id={{account_id}}",
+					"host": [
+						"{{screening_endpoint}}"
+					],
+					"path": [
+						"v1",
+						"screenings",
+						"_bulk"
+					],
+					"query": [
+						{
+							"key": "account_id",
+							"value": "{{account_id}}",
+							"equals": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST : Screening By bulk upload with invalid format",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"Status code name has string\", function () {",
+							"    pm.response.to.have.status(\"BAD REQUEST\");",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{authorization}}"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "data/IMO_numbers_2.xls"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{screening_endpoint}}/v1/screenings/_bulk?account_id={{account_id}}",
+					"host": [
+						"{{screening_endpoint}}"
+					],
+					"path": [
+						"v1",
+						"screenings",
+						"_bulk"
+					],
+					"query": [
+						{
+							"key": "account_id",
+							"value": "{{account_id}}",
+							"equals": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST : Screening BY Ship/IMO",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var imo_list = [9258882, 8208189, 9447263, 9330848];\r",
+							"var pick_imo = imo_list[Math.floor(Math.random() * imo_list.length)];\r",
+							"postman.setEnvironmentVariable(\"imo_number\", pick_imo);"
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code name has string\", function () {",
+							"    pm.response.to.have.status(\"ACCEPTED\");",
+							"});",
+							"",
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.response.to.have.status(202);",
+							"});",
+							"",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{authorization}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"imo_ids\": [{{imo_number}}]\n}"
+				},
+				"url": {
+					"raw": "{{screening_endpoint}}/v1/screenings/_bulk?account_id={{account_id}}",
+					"host": [
+						"{{screening_endpoint}}"
+					],
+					"path": [
+						"v1",
+						"screenings",
+						"_bulk"
+					],
+					"query": [
+						{
+							"key": "account_id",
+							"value": "{{account_id}}",
+							"equals": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST : Screening BY List of IMO's",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var imo_list_1 = [9258882, 8208189, 9447263, 9330848];\r",
+							"var pick_imo_1 = imo_list_1[Math.floor(Math.random() * imo_list_1.length)];\r",
+							"postman.setEnvironmentVariable(\"imo_number_1\", pick_imo_1);\r",
+							"\r",
+							"var imo_list_2 = [9108130, 9669330, 9197624, 9687071];\r",
+							"var pick_imo_2 = imo_list_2[Math.floor(Math.random() * imo_list_2.length)];\r",
+							"postman.setEnvironmentVariable(\"imo_number_2\", pick_imo_2);\r",
+							"\r",
+							"var imo_list_3 = [9345415, 9210218, 9698628, 8214451];\r",
+							"var pick_imo_3 = imo_list_3[Math.floor(Math.random() * imo_list_3.length)];\r",
+							"postman.setEnvironmentVariable(\"imo_number_3\", pick_imo_3);\r",
+							"\r",
+							"var imo_list_4 = [9454216, 8229561, 9669330, 8229561];\r",
+							"var pick_imo_4 = imo_list_4[Math.floor(Math.random() * imo_list_4.length)];\r",
+							"postman.setEnvironmentVariable(\"imo_number_4\", pick_imo_4);\r",
+							"\r",
+							"var imo_list_5 = [9028639, 9345415, 9210218, 9698628, 8214451, 9108130];\r",
+							"var pick_imo_5 = imo_list_5[Math.floor(Math.random() * imo_list_5.length)];\r",
+							"postman.setEnvironmentVariable(\"imo_number_5\", pick_imo_5);"
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code name has string\", function () {",
+							"    pm.response.to.have.status(\"ACCEPTED\");",
+							"});",
+							"",
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.response.to.have.status(202);",
+							"});",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{authorization}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"imo_ids\" : [{{imo_number_4}},{{imo_number_5}}]\r\n\r\n}"
+				},
+				"url": {
+					"raw": "{{screening_endpoint}}/v1/screenings/_bulk?account_id={{account_id}}",
+					"host": [
+						"{{screening_endpoint}}"
+					],
+					"path": [
+						"v1",
+						"screenings",
+						"_bulk"
+					],
+					"query": [
+						{
+							"key": "account_id",
+							"value": "{{account_id}}",
+							"equals": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST : Screening BY List of invalid  IMO's  1",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"postman.setEnvironmentVariable(\"imo_invalid_list_1\", \"352435$\");\r",
+							"\r",
+							"postman.setEnvironmentVariable(\"imo_invalid_list_2\",\"123456\");\r",
+							"\r",
+							"postman.setEnvironmentVariable(\"imo_invalid_list_3\",\"$£%^&\");\r",
+							"\r",
+							"postman.setEnvironmentVariable(\"imo_invalid_list_4\",\"abcdefgh\");"
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code name has string\", function () {",
+							"    pm.response.to.have.status(\"BAD REQUEST\");",
+							"});",
+							"",
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{authorization}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"imo_ids\": [\"{{imo_invalid_list_1}}\"]\r\n\r\n}"
+				},
+				"url": {
+					"raw": "{{screening_endpoint}}/v1/screenings/_bulk?account_id={{account_id}}",
+					"host": [
+						"{{screening_endpoint}}"
+					],
+					"path": [
+						"v1",
+						"screenings",
+						"_bulk"
+					],
+					"query": [
+						{
+							"key": "account_id",
+							"value": "{{account_id}}",
+							"equals": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST : Screening BY List of invalid  IMO's  4",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"postman.setEnvironmentVariable(\"imo_invalid_list_4\",`abcdefgh`);"
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code name has string\", function () {",
+							"    pm.response.to.have.status(\"BAD REQUEST\");",
+							"});",
+							"",
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{authorization}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"imo_ids\": [\"{{imo_invalid_list_4}}\"]\r\n\r\n}"
+				},
+				"url": {
+					"raw": "{{screening_endpoint}}/v1/screenings/_bulk?account_id={{account_id}}",
+					"host": [
+						"{{screening_endpoint}}"
+					],
+					"path": [
+						"v1",
+						"screenings",
+						"_bulk"
+					],
+					"query": [
+						{
+							"key": "account_id",
+							"value": "{{account_id}}",
+							"equals": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST : Screening BY List of invalid  IMO's  3",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"postman.setEnvironmentVariable(\"imo_invalid_list_3\",\"$£%^&\");\r",
+							"\r",
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code name has string\", function () {",
+							"    pm.response.to.have.status(\"BAD REQUEST\");",
+							"});",
+							"",
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{authorization}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"imo_ids\": [\"{{imo_invalid_list_3}}\"]\r\n\r\n}"
+				},
+				"url": {
+					"raw": "{{screening_endpoint}}/v1/screenings/_bulk?account_id={{account_id}}",
+					"host": [
+						"{{screening_endpoint}}"
+					],
+					"path": [
+						"v1",
+						"screenings",
+						"_bulk"
+					],
+					"query": [
+						{
+							"key": "account_id",
+							"value": "{{account_id}}",
+							"equals": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST : Screening BY List of invalid  IMO's 2",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"postman.setEnvironmentVariable(\"imo_invalid_list_2\",\"123456\");\r",
+							"\r",
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code name has string\", function () {",
+							"    pm.response.to.have.status(\"BAD REQUEST\");",
+							"});",
+							"",
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{authorization}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"imo_ids\": [\"{{imo_invalid_list_2}}\"]\r\n\r\n}"
+				},
+				"url": {
+					"raw": "{{screening_endpoint}}/v1/screenings/_bulk?account_id={{account_id}}",
+					"host": [
+						"{{screening_endpoint}}"
+					],
+					"path": [
+						"v1",
+						"screenings",
+						"_bulk"
+					],
+					"query": [
+						{
+							"key": "account_id",
+							"value": "{{account_id}}",
+							"equals": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET all the screening results",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Status code name has string\", function () {",
+							"    pm.response.to.have.status(\"OK\");",
+							"});",
+							"",
+							"var count = jsonData.meta.count;",
+							" pm.test(\"Count is  :\" + count, function () {",
+							"    ",
+							"});",
+							"",
+							"if(count !== 0){",
+							"    ",
+							"    for (i=0;i<count;i++){",
+							"            var screening_id = new Array(count);",
+							"         // var screening_id = jsonData.data[i].id;",
+							"           screening_id[i] = jsonData.data[i].id.toString();",
+							"           ",
+							"       ",
+							"}",
+							"",
+							"    pm.test(\"Screening_ID is :\" + screening_id[9], function () {",
+							"    ",
+							"            });",
+							"           ",
+							"",
+							"    postman.setEnvironmentVariable(\"Screening_ID\",screening_id[85]);",
+							"",
+							"}else{",
+							"    pm.test(\"There are no screening results\",function(){});",
+							"    postman.setEnvironmentVariable(\"Screening_ID\", 0);",
+							"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"disabled": true
+					},
+					{
+						"key": "Authorization",
+						"value": "{{authorization}}"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "{{screening_endpoint}}/v1/screenings?page=1&limit={{limit}}&account_id={{account_id}}",
+					"host": [
+						"{{screening_endpoint}}"
+					],
+					"path": [
+						"v1",
+						"screenings"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1",
+							"equals": true
+						},
+						{
+							"key": "limit",
+							"value": "{{limit}}",
+							"equals": true
+						},
+						{
+							"key": "account_id",
+							"value": "{{account_id}}",
+							"equals": true
+						}
+					]
+				},
+				"description": "This should return all the results"
+			},
+			"response": []
+		},
+		{
+			"name": "Screening Checks final with ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{screening_endpoint}}/v1/screenings/1031?account_id={{account_id}}",
+					"host": [
+						"{{screening_endpoint}}"
+					],
+					"path": [
+						"v1",
+						"screenings",
+						"1031"
+					],
+					"query": [
+						{
+							"key": "account_id",
+							"value": "{{account_id}}",
+							"equals": true
+						}
+					]
+				},
+				"description": null
+			},
+			"response": []
+		}
+	]
+}

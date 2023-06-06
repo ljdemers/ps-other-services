@@ -1,0 +1,42 @@
+{% extends "admin/base.html" %}
+{% load i18n static %}
+
+{% block title %}{{ title }} | {% trans 'Pole Star Ship Information Service admin' %}{% endblock %}
+
+{% block extrahead %}
+    <link href="{% static 'ico/favicon.ico' %}" rel="shortcut icon" />
+{% endblock %}
+
+{% block extrastyle %}
+    <style>
+      #header {
+        background-color: #405D7D;
+      }
+
+      #branding h1{ color: #FFFFFF; }
+      a.section:link, a.section:visited { color: #FFFFFF; }
+
+      #branding-container {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+      }
+      .branding-container-title {
+        padding-left: 40px;
+      }
+    </style>
+{% endblock %}
+
+{% block branding %}
+  <div id="branding-container">
+    <div>
+      <img src="{% static 'img/PoleStar-logo-white.svg' %}">
+    </div>
+    <div class="branding-container-title">
+      <h1 id="site-name">{% trans 'Ship Information Service' %} {{ VERSION }}</h1>
+    </div>
+  </div>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}

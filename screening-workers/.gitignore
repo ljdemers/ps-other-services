@@ -1,0 +1,53 @@
+# Test run
+.coverage
+.idea
+docs/build
+mrv/docs/build
+env/
+venv/
+log/
+local_settings.py
+/reports
+
+# Python
+.cache
+*.pyc
+nosetests.xml
+celerybeat-schedule
+.python-version
+
+# Distribution / packaging
+build/scripts-3.*
+eggs/
+.eggs/
+wheels/
+wheelhouse/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Vagrant
+Vagrantfile
+vagrant.ssh.config
+.vagrant
+.DS_Store
+data/permissions.numbers
+data_migration_files/*
+activate
+cas/staticmanifest.json
+
+# editor
+*.swp
+*.swo
+*.swn
+*.ropeproject/
+*.sublime*
+*.vscode/
+.project
+
+# database
+*.db
+.noseids
+
+# Static files
+compiled_assets/

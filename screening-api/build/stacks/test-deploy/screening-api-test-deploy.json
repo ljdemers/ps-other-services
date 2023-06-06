@@ -1,0 +1,73 @@
+{
+	"AWSTemplateFormatVersion": "2010-09-09",
+	"Description": "Deploy Screening API develop branch to TEST on merge",
+	"Resources": {
+		"CodeBuild": {
+			"Type": "AWS::CodeBuild::Project",
+			"Properties": {
+				"Name": "test-screening-api-deploy",
+				"Artifacts": {
+					"Type": "NO_ARTIFACTS"
+				},
+				"ServiceRole": {
+					"Fn::ImportValue": {
+						"Fn::Sub": "polestar-commons-CommonCodeBuildServiceRole"
+					}
+				},
+				"Environment": {
+					"Type": "LINUX_CONTAINER",
+					"ComputeType": "BUILD_GENERAL1_SMALL",
+					"Image": "aws/codebuild/standard:5.0",
+					"PrivilegedMode": true,
+					"EnvironmentVariables": [
+						{
+							"Name": "DEVOPS_BRANCH",
+							"Type": "PLAINTEXT",
+							"Value": "master"
+						},
+						{
+							"Name": "UI_VERSION",
+							"Type": "PLAINTEXT",
+							"Value": "2.38.2"
+						}
+					]
+				},
+				"Source": {
+					"BuildSpec": "build/buildspec-test-deploy.yml",
+					"Type": "GITHUB",
+					"Auth": {
+						"Resource": {
+							"Fn::ImportValue": {
+								"Fn::Sub": "polestar-commons-CodeBuildSourceCredentials"
+							}
+						},
+						"Type": "OAUTH"
+					},
+					"Location": "https://github.com/polestarglobal/screening-api.git"
+				},
+				"Triggers": {
+					"Webhook": true,
+					"FilterGroups": [
+						[
+							{
+								"Type": "EVENT",
+								"Pattern": "PUSH"
+							},
+							{
+								"Type" : "HEAD_REF",
+								"Pattern" : "^refs/heads/develop"
+							}
+						]
+					]
+				},
+				"LogsConfig": {
+					"CloudWatchLogs": {
+						"Status": "ENABLED",
+						"GroupName": "screening-api",
+						"StreamName": "test-deploy"
+					}
+				}
+			}
+		}
+	}
+}

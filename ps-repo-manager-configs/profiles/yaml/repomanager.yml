@@ -1,0 +1,3 @@
+description: Rules to format YAML files. Include if you have YAML files in your project.
+groups:
+  - add-ons

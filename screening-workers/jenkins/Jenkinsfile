@@ -1,0 +1,245 @@
+pipeline {
+    agent any
+    options {
+        timeout(time: 1, unit: 'HOURS') 
+    }
+    environment {
+        PROJECT_NAME = sh(script: "crudini --get METADATA meta name | tail -n 1", returnStdout: true).trim()
+
+        COMMIT_VERSION_BUMP = sh(script: "git log -1 --pretty=%B | grep '^Bump version' | grep -oP '\\d+.\\d+.\\d+(rc\\d+)?' | tail -n 1 || exit 0", returnStdout: true).trim()
+
+        COMPOSE_PROJECT_NAME = "${PROJECT_NAME}-${BRANCH_NAME}-${BUILD_ID}"
+        COMPOSE_ENVIRONMENT = "test"
+
+        DOCKER_REGISTRY = "205287409906.dkr.ecr.us-east-1.amazonaws.com"
+        // use one version tag to reduce ECR usage
+        // DOCKER_VERSION = "${VERSION_REVISION}"
+        DOCKER_VERSION = "latest"
+        DOCKER_IMAGE_ID = "${DOCKER_REGISTRY}/${PROJECT_NAME}:${DOCKER_VERSION}"
+
+        DEVOPS_PROJECT_NAME = "screening"
+
+        REPOSITORIES_WORKSPACE = "/opt/repositories"
+        DEVOPS_AWS_WORKSPACE = "${REPOSITORIES_WORKSPACE}/devops-aws"
+    }
+    stages {
+        stage('Source: Prepare') {
+            steps {
+                sh 'make docker-pull || true'
+            }
+        }
+        stage('Source: Build') {
+            steps {
+                sh 'echo "Project name: ${PROJECT_NAME}"'
+                sh 'echo "Commit version bump: ${COMMIT_VERSION_BUMP}"'
+                sh 'make params compose-build'
+            }
+        }
+        stage('Source: Post Actions') {
+            when {
+                expression {
+                    return env.BRANCH_NAME == 'master'
+                }
+            }
+            steps {
+                sh 'make docker-tag'
+                sh 'make docker-push'
+            }
+        }
+        stage('Test: Prepare') {
+            steps {
+                sh 'make compose-prepare'
+            }
+            post {
+                always {
+                    sh 'make compose-logs'
+                }
+            }
+        }
+        stage('Test: Run') {
+            steps {
+                parallel(
+                    python: {
+                        sh 'make compose-test-python'
+                    },
+                )
+            }
+            post {
+                always {
+                    junit 'reports/*junit.xml'
+                    // step([$class: 'CoberturaPublisher', coberturaReportFile: 'reports/coverage.xml'])
+                    sh 'make compose-clean-pytest-cache'
+                }
+                success {
+                    //script {
+                        // if we are in a PR
+                        //if (env.CHANGE_ID) {
+                        //    publishCoverageGithub(
+                        //       filepath:'reports/coverage.xml',
+                        //        coverageXmlType: 'cobertura',
+                        //        comparisonOption: [ value: 'optionFixedCoverage', fixedCoverage: '0.65' ],
+                        //        coverageRateType: 'Line'
+                        //    )
+                       // }
+                    //}
+                    sh 'make compose-clean-reports'
+                }
+                failure {
+                    sh 'make compose-clean-reports'
+                }
+            }
+        }
+        stage('Distribution: Prepare') {
+            when {
+                expression {
+                    return ( env.BRANCH_NAME == 'master' || env.BRANCH_NAME.startsWith("stable/") || env.BRANCH_NAME.startsWith("release/") ) && env.COMMIT_VERSION_BUMP
+                }
+            }
+            environment {
+                DEVOPS_AWS_REPO = "https://github.com/polestarglobal/devops-aws.git"
+                DEVOPS_AWS_REPO_CREDS_ID = "2e249059-9e76-4fdf-b3cb-1f2e74bdb29e"
+                DEVOPS_AWS_BRANCH = "PG/DEVOPS-3836/SCREENING-WORKERS/Release"
+                DEVOPS_AWS_BRANCHES = "*/${DEVOPS_AWS_BRANCH}"
+            }
+            steps {
+                dir(env.DEVOPS_AWS_WORKSPACE) {
+                    checkout([
+                        $class: 'GitSCM',
+                        branches: [[name: env.DEVOPS_AWS_BRANCHES]],
+                        doGenerateSubmoduleConfigurations: false,
+                        submoduleCfg: [],
+                        userRemoteConfigs: [[url: env.DEVOPS_AWS_REPO, credentialsId: env.DEVOPS_AWS_REPO_CREDS_ID]]
+                    ])
+                }
+            }
+        }
+        stage('Distribution: Build') {
+            when {
+                expression {
+                    return ( env.BRANCH_NAME == 'master' || env.BRANCH_NAME.startsWith("stable/") || env.BRANCH_NAME.startsWith("release/") ) && env.COMMIT_VERSION_BUMP
+                }
+            }
+            environment {
+                DEVOPS_AWS_BRANCH = "PG/DEVOPS-3836/SCREENING-WORKERS/Release"
+                DEVOPS_AWS_CONFIGDIR = "${DEVOPS_AWS_WORKSPACE}/cloudformation/Screening/${DEVOPS_PROJECT_NAME}_appspec"
+                IMAGEDIR = "${WORKSPACE}/images"
+
+                DOCKER_IMAGE_ID = "${DOCKER_REGISTRY}/${PROJECT_NAME}:${COMMIT_VERSION_BUMP}"
+            }
+            steps {
+                parallel(
+                    wheel: {
+                        sh 'make dist-build'
+                        dir('dist') {
+                            archiveArtifacts artifacts: '*.whl', fingerprint: true
+                            stash includes: '*.whl', name: 'wheel'
+                        }
+                        sh 'make dist-cleanup'
+                    },
+                    image: {
+                        sh 'mkdir -p ${IMAGEDIR}/${DEVOPS_PROJECT_NAME}/files/ ${IMAGEDIR}/scripts'
+                        sh 'echo "${COMMIT_VERSION_BUMP}" > ${IMAGEDIR}/APP-VERSION'
+                        sh 'cp ${DEVOPS_AWS_CONFIGDIR}/${DEVOPS_PROJECT_NAME}.appspec.yml ${IMAGEDIR}/appspec.yml'
+                        sh 'cp ${DEVOPS_AWS_CONFIGDIR}/scripts/*.sh ${IMAGEDIR}/scripts/'
+                        sh 'rsync -av --progress ${WORKSPACE}/ ${IMAGEDIR}/${DEVOPS_PROJECT_NAME}/ --exclude .git --exclude .gitignore --exclude images --exclude build --exclude devops-aws --exclude tests --exclude wheelhouse'
+                        sh 'echo "${DEVOPS_AWS_BRANCH}" > ${IMAGEDIR}/${DEVOPS_PROJECT_NAME}/DEVOPS_BRANCH'
+                    },
+                    docker: {
+                        sh 'make docker-tag'
+                    },
+                )
+            }
+            post {
+                failure {
+                    sh 'make clean-image'
+                }
+            }
+        }
+        stage('Distribution: Publish') {
+            environment {
+                AWS_S3_BUCKET = "polestar-images"
+                AWS_S3_PREFIX = "${DEVOPS_PROJECT_NAME}"
+                AWS_APPLICATION_NAME = "${DEVOPS_PROJECT_NAME}"
+                AWS_DEPLOYMENT_GROUP_NAME = "stage-screening-worker"
+                AWS_DEPLOYMENT_CONFIG = "CodeDeployDefault.OneAtATime"
+                AWS_REGION = "us-east-1"
+                AWS_PACKAGE_NAME = "screening-worker"
+
+                DOCKER_IMAGE_ID = "${DOCKER_REGISTRY}/${PROJECT_NAME}:${COMMIT_VERSION_BUMP}"
+            }
+            when {
+                expression {
+                    return ( env.BRANCH_NAME == 'master' || env.BRANCH_NAME.startsWith("stable/") || env.BRANCH_NAME.startsWith("release/") ) && env.COMMIT_VERSION_BUMP
+                }
+            }
+            steps {
+                parallel(
+                    wheel: {
+                        dir("dist") {
+                            unstash 'wheel'
+                        }
+                        // release to pypi.polestarglobal-test.com
+                        // sh 'twine upload -r chishop dist/*.whl'
+                        // release to pypi.polestar-testing.com
+                        sh 'make dist-upload'
+                    },
+                    image: {
+                        // zip package name hack
+                        script {
+                            currentBuild.displayName = env.AWS_PACKAGE_NAME
+                        }
+                        step([
+                            $class: 'AWSCodeDeployPublisher',
+                            s3bucket: env.AWS_S3_BUCKET,
+                            s3prefix: env.AWS_S3_PREFIX,
+                            applicationName: env.AWS_APPLICATION_NAME,
+                            deploymentGroupName: env.AWS_DEPLOYMENT_GROUP_NAME,
+                            deploymentConfig: env.AWS_DEPLOYMENT_CONFIG,
+                            deploymentGroupAppspec: false,
+                            waitForCompletion: false,
+                            region: env.AWS_REGION,
+                            includes: '**',
+                            subdirectory: 'images',
+                            packageName: env.AWS_PACKAGE_NAME,
+                            versionFileName: 'APP-VERSION'
+                        ])
+                    },
+                    docker: {
+                        sh 'make docker-push'
+                    },
+                )
+            }
+            post {
+                always {
+                    // zip package name hack (rollback)
+                    script {
+                        currentBuild.displayName = env.DISPLAY_NAME
+                    }
+                }
+                success {
+                    script {
+                        slack.notify(
+                            "Screening Workers version *${env.COMMIT_VERSION_BUMP}* was successfully deployed on <https://screening.polestar-staging.com|staging environment>",
+                            "#screening",
+                            "good"
+                        )
+                    }
+                }
+                failure {
+                    script {
+                        slack.notify(
+                            "Screening Workers version *${env.COMMIT_VERSION_BUMP}* failed to deploy on staging environment",
+                            "#screening",
+                            "danger"
+                        )
+                    }
+                }
+            }
+        }
+    }
+    post {
+        always {
+            sh 'make compose-down'
+        }
+    }
+}

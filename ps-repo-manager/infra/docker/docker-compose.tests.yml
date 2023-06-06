@@ -1,0 +1,13 @@
+version: '3.8'
+services:
+
+  repo-manager-tests:
+    build:
+      context: ../..
+      dockerfile: ./infra/docker/tests.Dockerfile
+    volumes:
+      - ../..:/opt/repo-manager
+
+networks:
+  default:
+    name: repo_manager_tests

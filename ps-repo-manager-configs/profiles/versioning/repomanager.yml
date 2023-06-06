@@ -1,0 +1,1 @@
+description: Provides a Github action that tags code with a new version. Currently JS/package.json, Java/pom.xml and Poetry Python/pyproject.toml version strings are supported as well as a Makefile based version command. Generally this profile should not be used directly, instead it is useful for other profiles.

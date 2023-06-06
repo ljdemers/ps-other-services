@@ -1,0 +1,103 @@
+name: publish java library
+on:
+  workflow_run:
+    workflows: [version]
+    types:
+      - completed
+
+# FIXME review
+permissions:
+  id-token: write # jwt token
+  actions: read # gh actions
+  contents: write # repo
+
+jobs:
+  # FIXME make reusable action (for other workflows linked to version workflow)
+  check:
+    outputs:
+      new_version: ${{ steps.check-version.outputs.new-version }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: Get tags
+        run: git fetch --prune --unshallow --tags
+      - name: Check if new version #not sure this is required for java?
+        id: check-version
+        run: |
+          if [ $(git tag --points-at HEAD | wc -l) -gt 1 ]; then
+            echo "Got more than one tag, was not expecting this, bumming out..."
+            exit 1
+          fi
+
+          # Set new version (or empty string)
+          VERSION=$(git tag --points-at HEAD)
+          echo VERSION:$VERSION
+          echo "::set-output name=new-version::${VERSION}"
+
+  publish:
+    needs: check
+    if: needs.check.outputs.new_version
+    runs-on: ubuntu-latest
+    env:
+      AWS_ACCOUNT_ID: ${{ secrets.POLESTAR_TOOLS }}
+      AWS_ACCOUNT_NAME: polestar-tools
+      AWS_DEFAULT_REGION: us-east-1
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        with:
+          lfs: true
+
+      - name: Set up java
+        uses: actions/setup-java@v3
+        with:
+          distribution: "temurin"
+          java-version: "17"
+
+      - name: Configure AWS credentials from tools account
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.POLESTAR_TOOLS }}:role/github-publish-role
+          aws-region: us-east-1
+
+      - name: Set version
+        run: |
+          VERSION=${{ needs.check.outputs.new_version }}
+          echo $VERSION
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Get CodeArtifact token
+        run: echo "CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain $AWS_ACCOUNT_NAME --domain-owner $AWS_ACCOUNT_ID --query authorizationToken --output text)" >> $GITHUB_ENV
+
+      - name: Optional makefile pre-publish hook
+        run: |
+          if grep "publish-java-library-pre-publish" Makefile; then
+            echo "Running pre-publish hook"
+            make publish-java-library-pre-publish
+          else
+            echo "No pre-publish hook detected"
+          fi
+
+      - name: Detect maven file locations
+        run: |
+          if [ -f "source/pom.xml" ]; then
+            echo "POM_PATH=source/pom.xml" >> $GITHUB_ENV
+          else
+            echo "Non-standard path used, please use source/pom.xml."
+            echo "POM_PATH=pom.xml" >> $GITHUB_ENV
+          fi
+
+          if [ -f "source/settings.xml" ]; then
+            echo "SETTINGS_PATH=source/settings.xml" >> $GITHUB_ENV
+          else
+            echo "Non-standard path used, please use source/settings.xml."
+            echo "SETTINGS_PATH=settings.xml" >> $GITHUB_ENV
+          fi
+
+      - name: Build and publish
+        run: |
+          # FIXME consider move to docker to sync with local commands - docker run -it --rm -v $(pwd):/opt/maven -w /opt/maven maven:3.8.3-openjdk-17 mvn --settings settings.xml -Drevision=0.0.1 clean package
+          export CODEARTIFACT_AUTH_TOKEN # Make available to sub processes
+          mvn --quiet -f $POM_PATH --settings $SETTINGS_PATH -Drevision=$VERSION clean package
+          mvn --quiet -f $POM_PATH --settings $SETTINGS_PATH -Drevision=$VERSION deploy

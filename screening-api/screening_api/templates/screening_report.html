@@ -1,0 +1,742 @@
+<!doctype html>
+<style>
+  @page {
+            margin: 1cm;
+            @bottom-center {
+                content: "- Page " counter(page) " -";
+                height:0.8cm;
+                font-size: 10px;
+                font-family: arial,sans-serif;
+            }
+  }
+  
+  body {
+    margin: 10px;
+    font-family: sans-serif;
+  }
+
+  /* settings */
+
+  h1 {
+    font-size: 30px;
+  }
+
+  h2 {
+    font-size: 28px;
+  }
+
+  h3 {
+    font-size: 24px;
+  }
+
+  h4 {
+    font-size: 22px;
+  }
+
+  h5 {
+    font-size: 18px;
+  }
+
+  h6 {
+    font-size: 16px;
+  }
+
+  p {
+    font-size: 16px;
+  }
+
+  .clear:before,
+  .clear:after {
+    content: "";
+    display: table;
+  }
+
+  .clear:after {
+    clear: both;
+  }
+
+  /* shared */
+
+  tr.severity-text-warning,
+  td.severity-text-warning,
+  .severity-text-warning span,
+  .year-of-build-warning {
+    color: #e7b03a;
+    font-weight: bold
+  }
+
+  tr.severity-text-critical,
+  td.severity-text-critical,
+  .severity-text-critical span,
+  .year-of-build-critical {
+    color: #b12607;
+    font-weight: bold
+  }
+
+  tr.severity-text-ok,
+  td.severity-text-ok,
+  .severity-text-ok span,
+  .year-of-build-ok  {
+    color: #6fb84e;
+    font-weight: bold
+  }
+
+  .severity-border-ok{
+    border-color: #6fb84e;
+  }
+
+  .severity-border-warning{
+    border-color: #e7b03a;
+  }
+
+  .severity-border-critical {
+    border-color: #b12607;
+  }
+
+  /* Header */
+
+  .header {
+    background: #445a71;
+    text-align: right;
+    padding: 10px;
+  }
+
+  .header img {
+    height: 35px;
+  }
+
+  /* report */
+
+  .report {
+    margin: 5px 10px;
+  }
+
+  /* Intro */
+
+  .intro {
+    border-bottom: solid 1px grey;
+    padding-bottom: 20px;
+  }
+
+  .intro img {
+    float: left;
+    height: 65px;
+  }
+
+  .intro h3 {
+    float: right;
+    line-height: 65px;
+    margin: 0;
+    font-weight: 200;
+  }
+
+  .intro h3 span {
+    font-weight: 600;
+    color: grey;
+  }
+
+  /* result */
+
+  .result {
+    margin: 10px 0;
+    padding-right: 10px;
+    padding-left: 10px;
+    border-width: 3px;
+    border-style: solid;
+  }
+
+  .result h4 {
+    float: left;
+    line-height: 50px;
+    margin: 5px 0;
+  }
+
+  .result h4 span {
+    font-weight: 100;
+  }
+
+  .result .result-severity {
+    float: right;
+    text-align: right;
+    margin: 5px 0;
+  }
+
+  .result .result-severity h3 {
+    margin: 0;
+    line-height: 30px;
+  }
+
+  .result .result-severity p {
+    margin: 0;
+    line-height: 20px;
+  }
+
+  .result .result-severity h6 {
+    margin: 0;
+    line-height: 20px;
+  }
+  /* info */
+
+  .info {
+    /* padding: 20px; */
+  }
+
+  .info-column {
+    width: 27%;
+    float: left;
+    padding: 0 1%;
+  }
+
+  .info-column p {
+    margin: 0 0 6px 0;
+  }
+
+  .info-column p span {
+    font-weight: 600;
+  }
+
+  .info-column img {
+    max-width: 100%;
+    max-height: 210px;
+  }
+
+  /* checks */
+
+  .checks {
+    padding: 0 10px;
+  }
+
+  .check {
+    margin-top: 10px;
+    border-top: dotted 1px grey;
+  }
+
+  .check .check-title {}
+
+  .check .check-title h3 {
+    display: inline-block;
+  }
+
+  .check .check-title h4 {
+    display: inline-block;
+    font-weight: 400;
+    float: right;
+  }
+
+  .check h5 {
+    margin: 10px 0;
+  }
+
+  .check-company-name {
+    margin: 5px 0;
+  }
+
+  .check-company-name span {
+    font-weight: 100;
+  }
+
+  .check table {
+    width: 100%;
+  }
+
+  .check table td {
+    padding: 3px;
+    vertical-align: top;
+    border-bottom: dashed 0.5px lightgrey;
+    line-height: 1
+  }
+
+  .table-head {
+    font-weight: 600;
+  }
+
+  @media print {
+    nav { display: none }
+
+    body {
+        margin-bottom: 10px;
+        margin-top: 10px;
+        border-bottom: 0;
+        width: 100%;
+        font-family: sans-serif;
+        font-size: 10px;
+    }
+
+  /* settings */
+
+    h1 {
+        font-size: 24px;
+    }
+
+    h2 {
+        font-size: 22px;
+    }
+
+    h3 {
+        font-size: 18px;
+    }
+
+      h4 {
+        font-size: 16px;
+      }
+
+      h5 {
+        font-size: 14px;
+      }
+
+      h6 {
+        font-size: 12px;
+      }
+
+      p {
+        font-size: 10px;
+      }
+
+  }
+
+</style>
+
+{% macro titleCase(text) -%}
+ {{ text if text=='OK' else text | title }}
+{%- endmacro %}
+
+{% macro noNull(text) -%}
+ {{ text if text else '—' }}
+{%- endmacro %}
+
+{% macro noUnknown(text) -%}
+ {{ text if text!='Unknown' else '—' }}
+{%- endmacro %}
+
+<title>{{ screening_result.ship_info.name }}</title>
+
+<div class="report-container">
+
+  <!-- START OF HEADER -->
+  <div class="header">
+    
+    <img src="{{url_for('static', filename='Pole_Star_logo_white.png')}}">
+    
+  </div>
+
+  <div class="report">
+    
+    <!-- START OF INTRO -->
+    <div class="intro clear">
+    
+      <img src="{{url_for('static', filename='AMPlogo.png')}}" />
+      <h3>Pole Star Platform -
+        <span>Screening report</span>
+      </h3>
+
+    </div>
+
+    <!-- START OF RESULT -->
+    <div class="result clear {{ screening.severity.name | border_severity }}">
+
+      <h4>{{screening_result.ship_info.name}}
+        <span>(IMO: {{screening_result.ship_info.imo}})</span>
+      </h4>
+
+      <div class="result-severity">
+
+        <h3 class="{{ screening.severity.name | title_severity }}">
+        Result: <span>{{ titleCase(screening.severity.name) }}</span>
+        </h3>
+        <h6>Ship screening: {{screening.updated.strftime('%Y-%m-%d %H:%M:%S')}} UTC</h6>
+
+      </div>
+
+    </div>
+
+    <!-- START OF INFO -->    
+    <div class="info clear">
+
+      <div class="info-column">
+        <p>
+          <span>Ship name: </span>
+          {{screening_result.ship_info.name}}
+        </p>
+
+        <p>
+          <span>IMO: </span>
+          {{screening_result.ship_info.imo}}
+        </p>
+
+        <p>
+          <span>Type:</span>
+          {{screening_result.ship_info.type}}
+        </p>
+
+        <p>
+          <span>Year of build:</span>
+          {{screening_result.ship_info.build_year}}
+          <span class="{{ 'year-of-build-critical' if screening_result.ship_info.build_age_severity.name=='CRITICAL' else
+                     'year-of-build-warning' if screening_result.ship_info.build_age_severity.name=='WARNING' else 'year-of-build-ok'}} ">({{screening_result.ship_info.build_age}} years old)</span>
+        </p>
+
+        <p>
+          <span>Flag: </span>
+          {{ noNull(screening_result.ship_info.country_name) }} ({{ noNull(screening_result.ship_info.country_id) }})
+        </p>
+
+        <p>
+          <span>Flag effective date:</span>
+          {{screening_result.ship_info.flag_effective_date}}
+        </p>
+
+
+        <p>
+          <span>MMSI:</span>
+          {{screening_result.ship_info.mmsi}}
+        </p>     
+
+        <p>
+          <span>Call sign:</span>
+          {{screening_result.ship_info.call_sign}}
+        </p>
+        
+        <!-- <img src="http://net.polestarglobal.sis-photos.s3.amazonaws.com/921227_2.jpg"> -->
+
+      </div>
+
+      <div class="info-column">
+        <p>
+          <span>Ship status:</span>
+          {{screening_result.ship_info.status}}
+        </p>
+        
+        <p>
+          <span>Port of registry:</span>
+          {{screening_result.ship_info.port_of_registry}}
+        </p>
+
+        <p>
+          <span>Deadweight:</span>
+          {{screening_result.ship_info.deadweight}} T
+        </p>
+
+        <p>
+          <span>Weight:</span>
+          {{screening_result.ship_info.weight}} GT
+        </p>
+
+        <p>
+          <span>Length:</span>
+          {{screening_result.ship_info.length}} M
+        </p>
+
+        <p>
+          <span>Breadth:</span>
+          {{screening_result.ship_info.breadth}} M
+        </p>
+
+        <p>
+          <span>Displacement:</span>
+          {{screening_result.ship_info.displacement}} T
+        </p>
+
+        <p>
+          <span>Draught:</span>
+          {{screening_result.ship_info.draught}} M
+        </p>
+
+      </div>
+
+      <div class="info-column" style="width: 39%">
+
+        <p>
+          <span>Registered owner:</span>
+          {{screening_result.ship_info.registered_owner}}
+        </p>
+
+        <p>
+          <span>Operator:</span>
+          {{screening_result.ship_info.operator}}
+        </p>
+
+        <p>
+          <span>Group beneficial owner:</span>
+          {{screening_result.ship_info.group_beneficial_owner}}
+        </p>
+
+        <p>
+          <span>Ship manager:</span>
+          {{screening_result.ship_info.ship_manager}}
+        </p>
+
+        <p>
+          <span>Technical manager:</span>
+          {{screening_result.ship_info.technical_manager}}
+        </p>
+
+        <p>
+          <span>Shipbuilder:</span>
+          {{screening_result.ship_info.shipbuilder}}
+        </p>
+
+        <p>
+          <span>Country of build:</span>
+          {{screening_result.ship_info.build_country_name}}
+        </p>
+        <p>
+          <span>Classification society:</span>
+          {{screening_result.ship_info.classification_society}}
+        </p>
+
+      </div>
+
+    </div>
+
+    <!-- START OF CHECKS -->
+    <div class="checks">
+
+      <!-- START OF SHIP MOVEMENT HISTORY CHECK -->
+      <div class="check">
+ 
+        <div class="check-title">
+          <h3>Ship movement history check</h3>
+          <h4 class="{{ screening.port_visits_severity.name|title_severity }}">
+          Result: <span>{{ titleCase(screening.port_visits_severity.name) }}</span>
+          </h4>          
+        </div>
+
+        {% if screening_result.port_visits.port_visits %}
+        <h5>Orbcomm AIS: {{screening_result.port_visits.port_visits|length}} items</h5>
+        <table>
+          <tr class="table-head">
+            <td style="width: 18%">Entered:</td>
+            <td style="width: 18%">Departed:</td>
+            <td style="width: 25%">Port:</td>
+            <td style="width: 18%">Country:</td>
+            <td>Blacklisted:</td>
+          </tr>
+          {% for item in screening_result.port_visits.port_visits %}
+                <tr class="{{ item.severity|severity }}" >
+                  <td>{{item.entered|datetime}}</td>
+                    <td>{{item.departed|datetime}}</td>
+                    <td>{{item.port_name}} ({{item.port_code}})</td>
+                  <td>{{item.port_country_name}} </td> 
+                  <td>{{item.category if item.category else ''}}</td> 
+              </tr>
+           {% endfor %}    
+        </table>
+
+        <h5>IHS movement data: {{screening_result.port_visits.ihs_movement_data|length}} items</h5>
+        <table>
+          <tr class="table-head">
+            <td style="width: 18%">Entered:</td>
+            <td style="width: 18%">Departed:</td>
+            <td style="width: 18%">Port:</td>
+            <td style="width: 12%">Country:</td>
+            <td style="width: 18%">Last port of call:</td>
+            <td style="width: 12%">Last port country:</td>
+            <td>Destination:</td>
+          </tr>
+          {% for item in screening_result.port_visits.ihs_movement_data %}
+                <tr>
+                  <td>{{item.entered|datetime}}</td>
+                    <td>{{item.departed|datetime}}</td>
+                    <td class="{{ item.port_severity|severity }}">{{item.port_name}}</td>
+                  <td class="{{ item.port_severity|severity }}">{{item.country_name}}</td>  
+                    <td class="{{ item.last_port_of_call_severity|severity }}">{{item.last_port_of_call_name}}</td>
+                  <td class="{{ item.last_port_of_call_severity|severity }}">{{item.last_port_of_call_country}}</td>  
+                  <td class="{{ item.destination_port_severity|severity }}">{{item.destination_port}}</td>	                                 
+                </tr>
+           {% endfor %}          
+        </table>
+        {% else %}
+        <p> No port visits found for this screening. </p>
+        {% endif %}
+      </div>  
+      
+      <!-- START OF COUNTRY SANCTIONS CHECK -->
+      <div class="check">
+
+        <div class="check-title">
+          <h3>Country sanctions check</h3>
+          <h4 class="{{ screening.country_sanctions_severity.name | title_severity }}">Result:
+            <span>{{ titleCase(screening.country_sanctions_severity.name) }}</span>
+          </h4>
+        </div>
+
+        <h5 class="{{ screening.ship_flag_severity.name | title_severity }}">Flag:
+          <span>{{ noNull(screening_result.ship_info.country_name)}} </span>
+        </h5>
+        <table>
+          <tr class="table-head">
+            <td>Association:</td>
+            <td>Company:</td>
+            <td>Registration Country:</td>
+            <td>Domicile Country:</td>
+            <td>Control Country:</td>
+          </tr>
+           {% for item in associations %}
+                <tr>
+                  <td>{{association_names[loop.index0]}}</td> 
+                  <td>{{ noUnknown(screening_result[item].company) }}</td>
+                    <td class="{{ screening_result[item].country_of_registration_severity|severity }}">
+                    {{ noNull(screening_result[item].country_of_registration) }}</td>
+                  <td class="{{ screening_result[item].country_of_domicile_severity|severity }}">
+                    {{ noNull(screening_result[item].country_of_domicile) }} </td>
+                  <td class="{{ screening_result[item].country_of_control_severity|severity }}">
+                    {{ noNull(screening_result[item].country_of_control) }}</td>
+              </tr>  
+           {% endfor %}               
+        </table>
+
+      </div>
+    
+      <!-- START OF PORT STATE CONTROL HISTORY CHECK -->      
+      <div class="check">
+
+        <div class="check-title">
+          <h3>Port state control history check</h3>
+          <h4 class="{{ screening.ship_inspections_severity.name | title_severity }}">
+             Result: <span>{{ titleCase(screening.ship_inspections_severity.name) }}</span>
+          </h4> 
+        </div>
+        {% if screening.ship_inspections_severity.name=="WARNING" %}
+        This check is flagged as Warning because this ship has only one detention by one of the MoUs other than Paris MoU or US Coast Guard in the last one year.
+        {% endif %}
+        {% if screening.ship_inspections_severity.name=="CRITICAL" %}
+        This check is flagged as Critical because this ship has been detained in its last inspection, or because it has at least one or more detentions by the Paris MoU or US Coast Guard in the last one year, or because it has two or more detentions by other MoUs in the last one year.
+        {% endif %}
+
+        {% if screening_result.ship_inspections.inspections %}
+        <h5>Port state control inspections: {{screening_result.ship_inspections.inspections|length}} items</h5>
+        <table>
+          <tr class="table-head">
+            <td>Authority:</td>
+            <td>Port of inspection:</td>
+            <td>Date:</td>
+            <td>Ship detained?:</td>
+            <td>No. deficiencies:</td>
+          </tr>
+        {% for item in screening_result.ship_inspections.inspections %}
+        <tr>
+            <td>{{item.authority}}</td>
+            <td>{{item.port_name}}, {{item.country_name}}</td>
+            <td style="width: 12%">{{item.inspection_date|date('-') }}</td>
+            <td class="{{item.detained_days_severity|severity }}">
+                     {{ 'Yes, ' ~ item.detained_days | int ~ ' days' if item.detained else 'No' }}</td>
+            <td class="{{item.defects_count_severity|severity }}">
+              {{item.defects_count}}</td>        
+        </tr>  
+        {% endfor %}         
+        </table>
+        {% else %}
+        <p> This ship has no past port inspection history in our database </p>
+        {% endif %}
+
+      </div>
+      
+      <!-- START OF SHIP GLOBAL SANCTIONS LIST -->
+      <div class="check">
+
+        <div class="check-title">
+          <h3>Ship global sanctions list check</h3>
+          <h4 class="{{ screening.ship_sanctions_severity.name | title_severity }}">
+          Result: <span>{{ titleCase(screening.ship_sanctions_severity.name) }}</span>
+          </h4>
+        </div>
+        
+        {% if screening_result.ship_sanction.sanctions %}
+        <div>        
+        <h5>Sanctions list: (total: {{screening_result.ship_sanction.sanctions|length}})</h5>
+        <table>
+          <tr class="table-head">
+            <td>Sanction name:</td>
+            <td>Listed since:</td>
+            <td>Listed until:</td>
+          </tr>
+          {% for item in screening_result.ship_sanction.sanctions %}
+          <tr class="{{ item.sanction_severity|severity }}">
+            <td style="width: 72%">{{item.sanction_name}}</td>
+            <td style="width: 14%">{{item.listed_since | date('-')}}</td>
+            <td style="width: 14%">{{item.listed_to | date}}</td>
+          </tr>
+          {% endfor %} 
+        </table>        
+        </div>
+        {% endif %}
+
+      </div>
+
+      <!-- START OF COMPANY GLOBAL SANCTIONS LIST CHECK -->
+      <div class="check">
+
+        <div class="check-title">
+          <h3>Company global sanctions list check</h3>
+          <h4 class="{{ screening.company_sanctions_severity.name | title_severity }}">
+          Result: <span>{{ titleCase(screening.company_sanctions_severity.name) }}</span>
+          </h4>
+        </div>
+        {% for assoc in associations %} 
+        {% if screening_result[assoc+'_company'].sanctions %}
+        <div>
+        <h5>{{association_names[loop.index0]}} company sanctions</h5>    
+        <h6 class="check-company-name">Company name:
+          <span>{{screening_result[assoc+'_company'].company_name}}
+          (total: {{screening_result[assoc+'_company'].sanctions|length}} sanctions)
+          </span>
+        </h6>
+        <table>
+          <tr class="table-head">
+            <td style="width: 72%">Sanction name:</td>
+            <td style="width: 14%">Listed since:</td>
+            <td style="width: 14%">Listed until:</td>
+          </tr>
+          {% for item in screening_result[assoc+'_company'].sanctions %}
+          <tr class="{{ item.sanction_severity|severity }}">
+            <td>{{item.sanction_name}}</td>
+            <td>{{item.listed_since | date('-')}}</td>
+            <td>{{item.listed_to | date}}</td>
+          </tr>
+          {% endfor %} 
+        </table>            
+        </div>
+        {% endif %} 
+        {% endfor %}
+
+       {% if screening_result.ship_company_associates.associates %}
+       <div>
+       <h5>Relatives / Close associates sanctions (total: {{screening_result.ship_company_associates.associates|length}})</h5>
+       {% for assoc in screening_result.ship_company_associates.associates %}
+        <table>
+          <tr class="table-head" >
+            <td style="width: 72%">Name:</td>
+            <td style="width: 14%">Type:</td>
+            <td style="width: 14%">Relationship:</td>
+          </tr>
+          <tr>
+          <td>{{assoc.dst_name}}</td>
+          <td>{{assoc.dst_type}}</td>
+          <td>{{assoc.relationship}}</td>
+          </tr>
+          <tr class="table-head">
+            <td>Sanction name: (total: {{assoc.sanctions|length}})</td>
+            <td>Listed since:</td>
+            <td>Listed until:</td>
+          </tr>
+          {% for item in assoc.sanctions %}
+          <tr>
+          <tr class="{{ item.sanction_severity|severity }}">
+            <td style="width: 72%">{{item.sanction_name}}</td>
+            <td style="width: 14%">{{item.listed_since | date('-')}}</td>
+            <td style="width: 14%">{{item.listed_to | date}}</td>
+          </tr>
+         {% endfor %}    
+        </table> 
+        {% endfor %}
+        </div>        
+        {% endif %}
+        
+      </div>
+      
+
+    </div>
+
+  </div>
+
+</div>

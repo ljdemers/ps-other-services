@@ -1,0 +1,13 @@
+FROM ruby:alpine3.6
+
+RUN apk --update upgrade && \
+    apk add --no-cache ruby-dev make gcc build-base rpm && \
+    rm -rf /var/cache/apk/*
+
+RUN gem install fpm
+
+VOLUME ["/source", "/output"]
+
+WORKDIR /source
+
+ENTRYPOINT ["fpm", "-s", "dir", "-p", "/output", "-t", "rpm", "-C", "/source", "-a", "all"]

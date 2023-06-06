@@ -1,0 +1,7 @@
+include dependency_links.txt
+include requirements.txt
+include requirements_dev.txt
+include screening_api/alembic/*
+include screening_api/alembic/versions/*.py
+include screening_api/confs/*.ini
+include screening_api/spec/*.json

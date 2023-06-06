@@ -1,0 +1,7 @@
+description: For Java projects that want to publish to the PS maven library repo. It includes pipelines that will handle all publishing actions when the version string in pom.xml is updated in the main/master branch.
+depends_on:
+  - java
+  - versioning
+groups:
+  - high-level-profiles
+  - add-ons

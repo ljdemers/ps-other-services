@@ -1,0 +1,32 @@
+{{- if .Values.ingress.enabled -}}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "screening-api.fullname" . }}
+  namespace: {{ template "screening-api.namespace" . }}
+  labels:
+    app: {{ template "screening-api.name" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+  annotations:
+  {{- range $key, $value := .Values.ingress.annotations }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
+spec:
+  rules:
+    {{- if .Values.ingress.hostName }}
+    - host: {{ .Values.ingress.hostName }}
+      http:
+    {{- else }}
+    - http:
+    {{- end }}
+        paths:
+          - backend:
+              serviceName: {{ template "screening-api.fullname" . }}
+              servicePort: 80
+  {{- if .Values.ingress.tls }}
+  tls:
+{{ toYaml .Values.ingress.tls | indent 4 }}
+  {{- end -}}
+{{- end }}

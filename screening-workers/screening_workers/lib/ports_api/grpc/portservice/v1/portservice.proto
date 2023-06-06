@@ -1,0 +1,77 @@
+syntax = "proto3";
+
+package grpc_portservice_v1;
+
+message Empty {}
+
+//
+// The position represents a message received by a remote transceiver.
+// Fundamentally it places the transceiver at a point in time and space
+// with a time, latitude, longitude tuple, although additional information
+// almost alwasys accompanies the basic data.
+//
+// Note that a few diagnostic position types do not actually carry position
+// data.
+//
+message Position {
+    // The PositionType of the position identifies what additional attributes
+    // the report may have.
+    string type_code = 1;
+
+    // Timestamp = Timestamp GNSS - the Global Navigation Satellite System
+    // time that the
+    // postion report was generated on the transceiver.  This time is always
+    // authoritative when available.
+    int32 timestamp = 2;
+
+    // The source indicates which PositionSource the position originated from.
+    string source = 3;
+
+    // Latitude and Longitude are the location of the transceiver identified
+    // by the GNSS device
+    float latitude = 4;
+    float longitude = 5;
+
+    // Speed Over Ground reported - the reported speed is calculated by the
+    // transceiver by the delta between subsequent positions.
+    float sog_reported = 6;
+
+    // Course Over Ground reported - the reported course is calculated by the
+    // transceiver by the delta between subsequent positions.
+    float cog_reported = 7;
+}
+
+message Port {
+    string code = 1;
+    string name = 2;
+    string country_code = 3;
+    // Latitude and Longitude are the location of the port
+    float latitude = 4;
+    float longitude = 5;
+
+    string iso_country = 6;
+    string port_source = 7;
+
+    string ihs_port_id = 8;
+    string world_port_number = 9;
+    string country_name = 10;
+}
+
+message PortHistory {
+    Port port = 1;
+    int32 timestamp_enter = 2;
+    int32 timestamp_exit = 3;
+}
+
+message Data {
+    string field = 1;
+    string value= 2;
+}
+
+// The port service definition.
+service FindPort {
+  rpc FindNearestPort (Position) returns (Port) {}
+  rpc GetPort (Data) returns (Port) {}
+  rpc FindClosestPorts (stream Position) returns (stream Port) {}
+  rpc GetPortHistory (stream Position) returns (stream PortHistory) {}
+}

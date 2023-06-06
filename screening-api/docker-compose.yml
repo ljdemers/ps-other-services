@@ -1,0 +1,17 @@
+version: '3.7'
+services:
+  api:
+    build:
+      context: ./
+      dockerfile: ./docker/Dockerfile
+    healthcheck:
+      test: curl -f http://localhost/healthz
+      interval: 15s
+  api-migrate:
+    build:
+      context: ./
+      dockerfile: ./docker/Dockerfile
+    entrypoint: alembic
+    command:
+      - upgrade
+      - head

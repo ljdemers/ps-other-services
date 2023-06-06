@@ -1,0 +1,134 @@
+{
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string"
+        },
+        "imo": {
+            "type": "string"
+        },
+        "type": {
+            "type": "string"
+        },
+        "build_year": {
+            "type": "number"
+        },
+        "build_age": {
+            "type": "number"
+        },
+        "build_age_severity": {
+            "$ref": "openapi.json#/components/schemas/Severity"
+        },
+        "country_name": {
+            "type": [
+                "string",
+                "null"
+            ]
+        },
+        "country_id": {
+            "type": [
+                "string",
+                "null"
+            ]
+        },
+        "flag_effective_date": {
+            "type": [
+                "string",
+                "null"
+            ]
+        },
+        "mmsi": {
+            "type": [
+                "string",
+                "null"
+            ]
+        },
+        "call_sign": {
+            "type": [
+                "string",
+                "null"
+            ]
+        },
+        "status": {
+            "type": [
+                "string",
+                "null"
+            ]
+        },
+        "port_of_registry": {
+            "type": [
+                "string",
+                "null"
+            ]
+        },
+        "deadweight": {
+            "type": "number"
+        },
+        "weight": {
+            "type": [
+                "number",
+                "null"
+            ]
+        },
+        "length": {
+            "type": "number"
+        },
+        "breadth": {
+            "type": "number"
+        },
+        "displacement": {
+            "type": "number"
+        },
+        "draught": {
+            "type": "number"
+        },
+        "registered_owner": {
+            "type": [
+                "string",
+                "null"
+            ]
+        },
+        "operator": {
+            "type": [
+                "string",
+                "null"
+            ]
+        },
+        "group_beneficial_owner": {
+            "type": [
+                "string",
+                "null"
+            ]
+        },
+        "ship_manager": {
+            "type": [
+                "string",
+                "null"
+            ]
+        },
+        "technical_manager": {
+            "type": [
+                "string",
+                "null"
+            ]
+        },
+        "shipbuilder": {
+            "type": [
+                "string",
+                "null"
+            ]
+        },
+        "build_country_name": {
+            "type": [
+                "string",
+                "null"
+            ]
+        },
+        "classification_society": {
+            "type": [
+                "string",
+                "null"
+            ]
+        }
+    }
+}

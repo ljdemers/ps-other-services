@@ -1,0 +1,115 @@
+image:
+  # registry: docker.io DISABLED
+  repository: 178847878690.dkr.ecr.us-east-1.amazonaws.com/screening-workers
+  tag: 0.21.19
+  ## Specify a imagePullPolicy
+  ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
+  ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
+  ##
+  pullPolicy: IfNotPresent
+  ## Optionally specify an array of imagePullSecrets.
+  ## Secrets must be manually created in the namespace.
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+  ##
+  # pullSecrets:
+  #   - myRegistrKeySecretName
+
+service:
+  ## Kubernetes service type
+  type: LoadBalancer
+
+  ## Specify the nodePort value for the LoadBalancer and NodePort service types.
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport
+  ##
+  # nodePort:
+
+## Create an Ingress for the Web UI
+ingress:
+  enabled: false
+  annotations: {}
+  labels: {}
+  hosts: []
+  tls: []
+
+externalDatabase:
+  backend: postgresql+psycopg2
+
+postgresql:
+  enabled: true
+  postgresDatabase: screening
+  postgresUser: screening
+  postgresPassword: screening
+
+externalBroker:
+  backend: memory
+  username: 
+  password: 
+  host: 
+  port: 6379
+  name: 0
+
+rabbitmq:
+  enabled: false
+
+redis:
+  enabled: true
+  usePassword: false
+  cluster:
+    enabled: false
+  master:
+    persistence:
+      enabled: false
+
+externalRedis:
+  host: 
+  name: 0
+
+ais:
+  baseUrl: https://commaisservice.polestar-staging.com
+  username:
+  password:
+
+celery:
+  configModule: screening_workers.celeryconfig
+
+compliance:
+  baseUrl: http://compliance2.polestar-testing.local/api/v2/
+  username: screening
+  apiKey:
+
+ports:
+  baseUrl: ports.polestar-testing.com:50051
+
+sis:
+  baseUrl: https://sis.polestar-testing.com/api/v1/
+  username:
+  apiKey:
+
+workers:
+  replicaCount: 1
+  iniFile: /usr/local/lib/python3.6/site-packages/screening_workers/confs/testenv.ini
+  jwtSecret: not very secret key
+  logLevel: DEBUG
+  defaultAISReportingMinutes: 60
+  defaultShipMovementDays: 365
+  screeningsBulkScreenTime: 0 1 * * *
+  voyageStoppedSpeed: 99
+
+metrics:
+  enabled: false
+  statsd:
+    host: statsd.polestar-testing.local
+
+flower:
+  enabled: true
+  replicaCount: 1
+  name: flower
+
+  service:
+    ## Kubernetes service type
+    type: LoadBalancer
+
+    ## Specify the nodePort value for the LoadBalancer and NodePort service types.
+    ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport
+    ##
+    # nodePort:

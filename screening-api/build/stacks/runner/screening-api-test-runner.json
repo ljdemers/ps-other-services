@@ -1,0 +1,64 @@
+{
+	"AWSTemplateFormatVersion": "2010-09-09",
+	"Description": "Test runners for Screening API",
+	"Resources": {
+		"CodeBuild": {
+			"Type": "AWS::CodeBuild::Project",
+			"Properties": {
+				"Name": "screening-api-test-runner",
+				"Artifacts": {
+					"Type": "NO_ARTIFACTS"
+				},
+				"ServiceRole": {
+					"Fn::ImportValue": {
+						"Fn::Sub": "polestar-commons-CommonCodeBuildServiceRole"
+					}
+				},
+				"Environment": {
+					"Type": "LINUX_CONTAINER",
+					"ComputeType": "BUILD_GENERAL1_SMALL",
+					"Image": "aws/codebuild/standard:5.0",
+					"PrivilegedMode": true,
+					"EnvironmentVariables": [
+						{
+							"Name": "COMPOSE_ENV",
+							"Type": "PLAINTEXT",
+							"Value": "test"
+						}
+					]
+				},
+				"Source": {
+					"BuildSpec": "build/buildspec-test-runner.yml",
+					"Type": "GITHUB",
+					"Auth": {
+						"Resource": {
+							"Fn::ImportValue": {
+								"Fn::Sub": "polestar-commons-CodeBuildSourceCredentials"
+							}
+						},
+						"Type": "OAUTH"
+					},
+					"Location": "https://github.com/polestarglobal/screening-api.git"
+				},
+				"Triggers": {
+					"Webhook": true,
+					"FilterGroups": [
+						[
+							{
+								"Type": "EVENT",
+								"Pattern": "PULL_REQUEST_CREATED, PULL_REQUEST_UPDATED, PULL_REQUEST_REOPENED"
+							}
+						]
+					]
+				},
+				"LogsConfig": {
+					"CloudWatchLogs": {
+						"Status": "ENABLED",
+						"GroupName": "screening-api",
+						"StreamName": "test-runner"
+					}
+				}
+			}
+		}
+	}
+}

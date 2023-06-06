@@ -1,0 +1,2326 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Screening API",
+        "description": "Manage screenings",
+        "contact": {
+            "name": "Pole Star",
+            "url": "http://polestarglobal.com",
+            "email": "support@polestarglobal.com"
+        },
+        "version": "0.0.1-RC3"
+    },
+    "servers": [
+        {
+            "url": "http://localhost{port}/{version}",
+            "description": "Development server",
+            "variables": {
+                "version": {
+                    "enum": ["v1"],
+                    "default": "v1"
+                },
+                "port": {
+                    "enum": ["", ":80", ":5000", ":8000"],
+                    "default": ":5000"
+                }
+            }
+        },
+        {
+            "url": "http://api{port}/{version}",
+            "description": "Development server (docker)",
+            "variables": {
+                "version": {
+                    "enum": ["v1"],
+                    "default": "v1"
+                },
+                "port": {
+                    "enum": ["", ":80", ":5000", ":8000"],
+                    "default": ""
+                }
+            }
+        },
+        {
+            "url": "{scheme}://screening.polestar-testing.com/{version}",
+            "description": "Testing server",
+            "variables": {
+                "scheme": {
+                    "enum": ["http", "https"],
+                    "default": "http"
+                },
+                "version": {
+                    "enum": ["v1"],
+                    "default": "v1"
+                }
+            }
+        },
+        {
+            "url": "{scheme}://screening.polestar-staging.com/{version}",
+            "description": "Staging server",
+            "variables": {
+                "scheme": {
+                    "enum": ["http", "https"],
+                    "default": "http"
+                },
+                "version": {
+                    "enum": ["v1"],
+                    "default": "v1"
+                }
+            }
+        },
+        {
+            "url": "{scheme}://screening.polestarglobal.com/{version}",
+            "description": "Production server",
+            "variables": {
+                "scheme": {
+                    "enum": ["http", "https"],
+                    "default": "http"
+                },
+                "version": {
+                    "enum": ["v1"],
+                    "default": "v1"
+                }
+            }
+        },
+        {
+            "url": "{scheme}://screening.polestar-production.com/{version}",
+            "description": "Alternative production server",
+            "variables": {
+                "scheme": {
+                    "enum": ["http", "https"],
+                    "default": "http"
+                },
+                "version": {
+                    "enum": ["v1"],
+                    "default": "v1"
+                }
+            }
+        }
+    ],
+    "security": [],
+    "paths": {
+        "/countries": {
+            "get": {
+                "description": "Get all countries",
+                "parameters":[
+                    {
+                        "$ref": "#/components/parameters/SearchQueryParam"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/CountriesResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "default": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/screenings": {
+            "get": {
+                "description": "Get all screenings",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/IdsQueryParam"
+                    },
+                    {
+                        "$ref": "#/components/parameters/SeveritiesQueryParam"
+                    },
+                    {
+                        "$ref": "#/components/parameters/CompanySanctionsSeveritiesQueryParam"
+                    },
+                    {
+                        "$ref": "#/components/parameters/ShipSanctionsSeveritiesQueryParam"
+                    },
+                    {
+                        "$ref": "#/components/parameters/CountrySanctionsSeveritiesQueryParam"
+                    },
+                    {
+                        "$ref": "#/components/parameters/ShipInspectionsSeveritiesQueryParam"
+                    },
+                    {
+                        "$ref": "#/components/parameters/ShipMovementsSeveritiesQueryParam"
+                    },
+                    {
+                        "$ref": "#/components/parameters/SeverityChangeQueryParam"
+                    },
+                    {
+                        "$ref": "#/components/parameters/ShipTypesQueryParam"
+                    },
+                    {
+                        "$ref": "#/components/parameters/ShipCountryIdsQueryParam"
+                    },
+                    {
+                        "$ref": "#/components/parameters/SearchQueryParam"
+                    },
+                    {
+                        "$ref": "#/components/parameters/SortQueryParam"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PageQueryParam"
+                    },
+                    {
+                        "$ref": "#/components/parameters/LimitQueryParam"
+                    },
+                    {
+                        "$ref": "#/components/parameters/FormatQueryParam"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/ScreeningsResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "default": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            },
+            "delete": {
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/IdsQueryParam"
+                    },
+                    {
+                        "$ref": "#/components/parameters/SeveritiesQueryParam"
+                    },
+                    {
+                        "$ref": "#/components/parameters/SeverityChangeQueryParam"
+                    },
+                    {
+                        "$ref": "#/components/parameters/ShipTypesQueryParam"
+                    },
+                    {
+                        "$ref": "#/components/parameters/ShipCountryIdsQueryParam"
+                    },
+                    {
+                        "$ref": "#/components/parameters/SearchQueryParam"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "$ref": "#/components/responses/DeletedResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "default": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/screenings/screen": {
+            "post": {
+                "description": "Screen screenings",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/IdsQueryParam"
+                    },
+                    {
+                        "$ref": "#/components/parameters/SeveritiesQueryParam"
+                    },
+                    {
+                        "$ref": "#/components/parameters/SeverityChangeQueryParam"
+                    },
+                    {
+                        "$ref": "#/components/parameters/ShipTypesQueryParam"
+                    },
+                    {
+                        "$ref": "#/components/parameters/ShipCountryIdsQueryParam"
+                    },
+                    {
+                        "$ref": "#/components/parameters/SearchQueryParam"
+                    }
+                ],
+                "responses": {
+                    "202": {
+                        "description": "Screen screenings accepted"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "default": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/screenings/{screening_id}": {
+            "get": {
+                "description": "Get screening details",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/ScreeningIdPathParam"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/ScreeningResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "default": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/screenings/{screening_id}/history": {
+            "get": {
+                "description": "Get all screenings",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/ScreeningIdPathParam"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PageQueryParam"
+                    },
+                    {
+                        "$ref": "#/components/parameters/LimitQueryParam"
+                    },
+                    {
+                        "$ref": "#/components/parameters/OffsetQueryParam"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/ScreeningsHistoryResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "default": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/screenings/{screening_id}/reports/ship_info": {
+            "get": {
+                "description": "Get screening ship info check report",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/ScreeningIdPathParam"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/ScreeningShipInfoReportResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "default": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/screenings/{screening_id}/reports/ship_inspections": {
+            "get": {
+                "description": "Get screening ship inspections check report",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/ScreeningIdPathParam"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/ScreeningShipInspectionsReportResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "default": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/screenings/{screening_id}/reports/ship_sanctions": {
+            "get": {
+                "description": "Get screening ship sanctions check report",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/ScreeningIdPathParam"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/ScreeningShipSanctionsReportResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "default": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/screenings/{screening_id}/reports/country_sanctions": {
+            "get": {
+                "description": "Get screening country sanctions check report",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/ScreeningIdPathParam"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/ScreeningCountrySanctionsReportResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "default": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/screenings/{screening_id}/reports/ship_movements": {
+            "get": {
+                "description": "Get screening ship movements check report",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/ScreeningIdPathParam"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/ScreeningShipMovementsReportResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "default": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/screenings/{screening_id}/reports/company_sanctions": {
+            "get": {
+                "description": "Get screening company sanctions check report",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/ScreeningIdPathParam"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/ScreeningCompanySanctionsReportResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "default": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/screenings/{screening_id}/report": {
+            "get": {
+                "description": "Get screening PDF report",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/ScreeningIdPathParam"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/PdfResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "default": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/screenings/{screening_id}/history/{history_id}/report": {
+            "get": {
+                "description": "Get screening history PDF report",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/ScreeningIdPathParam"
+                    },
+                    {
+                        "$ref": "#/components/parameters/ScreeningHistoryIdPathParam"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/PdfResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "default": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/screenings/_bulk/{bulk_screening_id}": {
+            "delete": {
+                "description": "Delete bulk screening",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/BulkScreeningIdPathParam"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "$ref": "#/components/responses/DeletedResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "default": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/screenings/_bulk": {
+            "get": {
+                "description": "Get result of latest bulk add to screening",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/StatusesQueryParam"
+                    },
+                    {
+                        "$ref": "#/components/parameters/ResultsQueryParam"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/BulkScreeningsResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "default": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            },
+            "post": {
+                "description": "Bulk add new ships to screening",
+                "requestBody": {
+                    "$ref": "#/components/requestBodies/BulkScreeningRequestBody"
+                },
+                "responses": {
+                    "202": {
+                        "description": "Bulk screening accepted"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "415": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "default": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            },
+            "delete": {
+                "responses": {
+                    "204": {
+                        "$ref": "#/components/responses/DeletedResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "default": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        },
+        "/ship_types": {
+            "get": {
+                "description": "Get all ship types",
+                "parameters":[
+                    {
+                        "$ref": "#/components/parameters/SearchQueryParam"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/ShipTypesResponse"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    },
+                    "default": {
+                        "$ref": "#/components/responses/ErrorResponse"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Id": {
+                "type": "integer",
+                "format": "int64"
+            },
+            "Ids": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/Id"
+                }
+            },
+            "BaseModel": {
+                "type": "object",
+                "properties": {
+                    "created": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
+            },
+            "CountriesResponseData": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Country"
+                        }
+                    }
+                }
+            },
+            "CountriesResponse": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/CountriesResponseData"
+                    },
+                    {
+                        "$ref": "#/components/schemas/ResponsePagination"
+                    }
+                ]
+            },
+            "BulkScreenings": {
+                "type": "object",
+                "required": [
+                    "imo_ids"
+                ],
+                "properties": {
+                    "imo_ids": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ImoId"
+                        }
+                    }
+                }
+            },
+            "ShipTypesResponseData": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ShipType"
+                        }
+                    }
+                }
+            },
+            "ShipTypesResponse": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ShipTypesResponseData"
+                    },
+                    {
+                        "$ref": "#/components/schemas/ResponsePagination"
+                    }
+                ]
+            },
+            "Page": {
+                "type": "integer",
+                "default": 1
+            },
+            "Limit": {
+                "type": "integer",
+                "default": 10
+            },
+            "Offset": {
+                "type": "integer",
+                "default": 0
+            },
+            "Format": {
+                "type": "string",
+                "enum": [
+                    "json",
+                    "csv"
+                ],
+                "default": "json"
+            },
+            "BaseBulkScreeningModel": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "$ref": "#/components/schemas/BulkScreeningId"
+                    },
+                    "imo_id": {
+                        "type": "string"
+                    },
+                    "account_id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "status": {
+                        "$ref": "#/components/schemas/BulkScreeningStatus"
+                    },
+                    "result": {
+                        "$ref": "#/components/schemas/BulkScreeningResult"
+                    }
+                }
+            },
+            "BulkScreeningModel": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/BaseModel"
+                    },
+                    {
+                        "$ref": "#/components/schemas/BaseBulkScreeningModel"
+                    }
+                ]
+            },
+            "BulkScreeningsResponseData": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/BulkScreeningModel"
+                        }
+                    }
+                }
+            },
+            "BulkScreeningsResponse": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/BulkScreeningsResponseData"
+                    },
+                    {
+                        "$ref": "#/components/schemas/ResponsePagination"
+                    }
+                ]
+            },
+            "BulkScreeningId": {
+                "type": "integer",
+                "format": "int64",
+                "example": 9582506
+            },
+            "ScreeningId": {
+                "type": "integer",
+                "format": "int64",
+                "example": 9582506
+            },
+            "ScreeningHistoryId": {
+                "type": "integer",
+                "format": "int64",
+                "example": 9582506
+            },
+            "Screenings": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/Screening"
+                }
+            },
+            "ScreeningsHistory": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/ScreeningHistory"
+                }
+            },
+            "ScreeningShipInfoReport": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "imo": {
+                        "type": "string"
+                    },
+                    "type": {
+                        "type": "string"
+                    },
+                    "build_year": {
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 2007
+                    },
+                    "build_age": {
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 11
+                    },
+                    "build_age_severity": {
+                        "$ref": "#/components/schemas/Severity"
+                    },
+                    "country_name": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "country_id": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "flag_effective_date": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "mmsi": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "call_sign": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "status": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "port_of_registry": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "deadweight": {
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 317355
+                    },
+                    "weight": {
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 163650
+                    },
+                    "length": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "breadth": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "displacement": {
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 362598
+                    },
+                    "draught": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "registered_owner": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "operator": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "group_beneficial_owner": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "ship_manager": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "technical_manager": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "shipbuilder": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "build_country_name": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "classification_society": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                }
+            },
+            "ScreeningShipInspectionsReport": {
+                "type": "object",
+                "properties": {
+                    "inspections": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": [
+                                "inspection_date", "authority", "detained_days",
+                                "defects_count", "port_name", "country_name",
+                                "detained_days_severity", "defects_count_severity"
+                            ],
+                            "properties": {
+                                "inspection_date": {
+                                    "type": "string",
+                                    "format": "date"
+                                },
+                                "authority": {
+                                    "type": "string"
+                                },
+                                "detained": {
+                                    "type": "boolean"
+                                },
+                                "detained_days": {
+                                    "type": "number"
+                                },
+                                "detained_days_severity": {
+                                    "$ref": "#/components/schemas/Severity"
+                                },
+                                "defects_count": {
+                                    "type": "integer"
+                                },
+                                "defects_count_severity": {
+                                    "$ref": "#/components/schemas/Severity"
+                                },
+                                "port_name": {
+                                    "type": "string",
+                                    "nullable": true
+                                },
+                                "country_name": {
+                                    "type": "string",
+                                    "nullable": true
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "ScreeningShipSanctionsReport": {
+                "type": "object",
+                "properties": {
+                    "sanctions": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": [
+                                "sanction_name", "listed_since", "listed_to",
+                                "sanction_severity"
+                            ],
+                            "properties": {
+                                "sanction_name": {
+                                    "type": "string"
+                                },
+                                "listed_since": {
+                                    "type": "string",
+                                    "format": "date-time",
+                                    "nullable": true
+                                },
+                                "listed_to": {
+                                    "type": "string",
+                                    "format": "date-time",
+                                    "nullable": true
+                                },
+                                "sanction_severity": {
+                                    "$ref": "#/components/schemas/Severity"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "ScreeningShipFlagReport": {
+                "type": "object",
+                "properties": {
+                    "country": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "severity": {
+                        "$ref": "#/components/schemas/Severity"
+                    }
+                }
+            },
+            "ScreeningShipAssociatedCountryReport": {
+                "type": "object",
+                "properties": {
+                    "company": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "country_of_domicile": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "country_of_domicile_severity": {
+                        "$ref": "#/components/schemas/Severity"
+                    },
+                    "country_of_control": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "country_of_control_severity": {
+                        "$ref": "#/components/schemas/Severity"
+                    },
+                    "country_of_registration": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "country_of_registration_severity": {
+                        "$ref": "#/components/schemas/Severity"
+                    }
+                }
+            },
+            "ScreeningCountrySanctionsReport": {
+                "type": "object",
+                "properties": {
+                    "ship_flag": {
+                        "$ref": "#/components/schemas/ScreeningShipFlagReport"
+                    },
+                    "ship_registered_owner": {
+                        "$ref": "#/components/schemas/ScreeningShipAssociatedCountryReport"
+                    },
+                    "ship_operator": {
+                        "$ref": "#/components/schemas/ScreeningShipAssociatedCountryReport"
+                    },
+                    "ship_beneficial_owner": {
+                        "$ref": "#/components/schemas/ScreeningShipAssociatedCountryReport"
+                    },
+                    "ship_manager": {
+                        "$ref": "#/components/schemas/ScreeningShipAssociatedCountryReport"
+                    },
+                    "ship_technical_manager": {
+                        "$ref": "#/components/schemas/ScreeningShipAssociatedCountryReport"
+                    }
+                }
+            },
+            "CompanySanctionReport": {
+                "type": "object",
+                "required": [
+                    "sanction_name", "listed_since", "listed_to",
+                    "sanction_severity"
+                ],
+                "properties": {
+                    "sanction_name": {
+                        "type": "string"
+                    },
+                    "listed_since": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "listed_to": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "sanction_severity": {
+                        "$ref": "#/components/schemas/Severity"
+                    }
+                }
+            },
+            "CompanySanctionsReport": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/CompanySanctionReport"
+                }
+            },
+            "ScreeningShipAssociatedCompanyReport": {
+                "type": "object",
+                "properties": {
+                    "company_name": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "sanctions": {
+                        "$ref": "#/components/schemas/CompanySanctionsReport"
+                    }
+                }
+            },
+            "ScreeningShipCompanyAssociateReport": {
+                "type": "object",
+                "properties": {
+                    "company_name": {
+                        "type": "string"
+                    },
+                    "relationship": {
+                        "type": "string"
+                    },
+                    "dst_type": {
+                        "type": "string"
+                    },
+                    "dst_name": {
+                        "type": "string"
+                    },
+                    "sanctions": {
+                        "$ref": "#/components/schemas/CompanySanctionsReport"
+                    }
+                }
+            },
+            "ScreeningShipCompanyAssociatesReport": {
+                "type": "object",
+                "properties": {
+                    "associates": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ScreeningShipCompanyAssociateReport"
+                        }
+                    }
+                }
+            },
+            "ScreeningCompanySanctionsReport": {
+                "type": "object",
+                "required": [
+                    "ship_registered_owner_company", "ship_operator_company",
+                    "ship_beneficial_owner_company", "ship_manager_company",
+                    "ship_technical_manager_company", "ship_company_associates"
+                ],
+                "properties": {
+                    "ship_registered_owner_company": {
+                        "$ref": "#/components/schemas/ScreeningShipAssociatedCompanyReport"
+                    },
+                    "ship_operator_company": {
+                        "$ref": "#/components/schemas/ScreeningShipAssociatedCompanyReport"
+                    },
+                    "ship_beneficial_owner_company": {
+                        "$ref": "#/components/schemas/ScreeningShipAssociatedCompanyReport"
+                    },
+                    "ship_manager_company": {
+                        "$ref": "#/components/schemas/ScreeningShipAssociatedCompanyReport"
+                    },
+                    "ship_technical_manager_company": {
+                        "$ref": "#/components/schemas/ScreeningShipAssociatedCompanyReport"
+                    },
+                    "ship_company_associates": {
+                        "$ref": "#/components/schemas/ScreeningShipCompanyAssociatesReport"
+                    }
+                }
+            },
+            "ScreeningShipMovementsReport": {
+                "type": "object",
+                "properties": {
+                    "port_visits": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": [
+                                "departed", "entered", "port_name",
+                                "port_latitude", "port_code",
+                                "port_country_name", "port_longitude",
+                                "category", "severity"
+                            ],
+                            "properties": {
+                                "entered": {
+                                    "type": "string",
+                                    "format": "date-time",
+                                    "nullable": true
+                                },
+                                "departed": {
+                                    "type": "string",
+                                    "format": "date-time",
+                                    "nullable": true
+                                },
+                                "port_name": {
+                                    "type": "string",
+                                    "nullable": true
+                                },
+                                "port_code": {
+                                    "type": "string",
+                                    "nullable": true
+                                },
+                                "port_country_name": {
+                                    "type": "string",
+                                    "nullable": true
+                                },
+                                "port_latitude": {
+                                    "type": "string",
+                                    "nullable": true
+                                },
+                                "port_longitude": {
+                                    "type": "string",
+                                    "nullable": true
+                                },
+                                "category": {
+                                    "type": "string",
+                                    "nullable": true
+                                },
+                                "severity": {
+                                    "$ref": "#/components/schemas/Severity"
+                                }
+                            }
+                        }
+                    },
+                    "ihs_movement_data": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": [
+                                "departed", "destination_port_severity", "last_port_of_call_country_code",
+                                "destination_port", "last_port_of_call_country",
+                                "last_port_of_call_severity", "last_port_of_call_name",
+                                "port_severity", "country_name", "port_name", "entered"
+                            ],
+                            "properties": {
+                                "entered": {
+                                    "type": "string",
+                                    "format": "date-time",
+                                    "nullable": true
+                                },
+                                "departed": {
+                                    "type": "string",
+                                    "format": "date-time",
+                                    "nullable": true
+                                },
+                                "port_name": {
+                                    "type": "string",
+                                    "nullable": true
+                                },
+                                "country_name": {
+                                    "type": "string",
+                                    "nullable": true
+                                },
+                                "port_severity": {
+                                    "$ref": "#/components/schemas/Severity"
+                                },
+                                "last_port_of_call_country": {
+                                    "type": "string",
+                                    "nullable": true
+                                },
+                                "last_port_of_call_country_code": {
+                                    "type": "string",
+                                    "nullable": true
+                                },
+                                "last_port_of_call_name": {
+                                    "type": "string",
+                                    "nullable": true
+                                },
+                                "last_port_of_call_severity": {
+                                    "$ref": "#/components/schemas/Severity"
+                                },
+                                "destination_port": {
+                                    "type": "string",
+                                    "nullable": true
+                                },
+                                "destination_port_severity": {
+                                    "$ref": "#/components/schemas/Severity"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "ScreeningsResponseData": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/Screenings"
+                    }
+                }
+            },
+            "ScreeningSeverityModel": {
+                "type": "object",
+                "properties": {
+                    "severity": {
+                        "$ref": "#/components/schemas/Severity"
+                    },
+                    "company_sanctions_severity": {
+                        "$ref": "#/components/schemas/Severity"
+                    },
+                    "ship_sanctions_severity": {
+                        "$ref": "#/components/schemas/Severity"
+                    },
+                    "country_sanctions_severity": {
+                        "$ref": "#/components/schemas/Severity"
+                    },
+                    "ship_inspections_severity": {
+                        "$ref": "#/components/schemas/Severity"
+                    },
+                    "ship_movements_severity": {
+                        "$ref": "#/components/schemas/Severity"
+                    }
+                }
+            },
+            "ScreeningStatusModel": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "$ref": "#/components/schemas/Status"
+                    },
+                    "company_sanctions_status": {
+                        "$ref": "#/components/schemas/Status"
+                    },
+                    "ship_sanctions_status": {
+                        "$ref": "#/components/schemas/Status"
+                    },
+                    "country_sanctions_status": {
+                        "$ref": "#/components/schemas/Status"
+                    },
+                    "ship_inspections_status": {
+                        "$ref": "#/components/schemas/Status"
+                    },
+                    "ship_movements_status": {
+                        "$ref": "#/components/schemas/Status"
+                    }
+                }
+            },
+            "ScreeningDetailsModel": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/BaseModel"
+                    },
+                    {
+                        "$ref": "#/components/schemas/ScreeningSeverityModel"
+                    },
+                    {
+                        "$ref": "#/components/schemas/ScreeningStatusModel"
+                    }
+                ],
+                "properties": {
+                    "id": {
+                        "$ref": "#/components/schemas/Id"
+                    }
+                }
+            },
+            "ScreeningResponseData": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/ScreeningDetailsModel"
+                    }
+                }
+            },
+            "ScreeningsHistoryResponseData": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/ScreeningsHistory"
+                    }
+                }
+            },
+            "ScreeningHistoryResponseData": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/ScreeningHistory"
+                    }
+                }
+            },
+            "ScreeningShipInfoReportData": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/ScreeningShipInfoReport"
+                    }
+                }
+            },
+            "ScreeningShipInspectionsReportData": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/ScreeningShipInspectionsReport"
+                    }
+                }
+            },
+            "ScreeningShipSanctionsReportData": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/ScreeningShipSanctionsReport"
+                    }
+                }
+            },
+            "ScreeningCountrySanctionsReportData": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/ScreeningCountrySanctionsReport"
+                    }
+                }
+            },
+            "ScreeningShipMovementsReportData": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/ScreeningShipMovementsReport"
+                    }
+                }
+            },
+            "ScreeningCompanySanctionsReportData": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/ScreeningCompanySanctionsReport"
+                    }
+                }
+            },
+            "ScreeningsResponse": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ScreeningsResponseData"
+                    },
+                    {
+                        "$ref": "#/components/schemas/ResponsePagination"
+                    }
+                ]
+            },
+            "ScreeningResponse": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ScreeningResponseData"
+                    }
+                ]
+            },
+            "ScreeningsHistoryResponse": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ScreeningsHistoryResponseData"
+                    },
+                    {
+                        "$ref": "#/components/schemas/ResponsePagination"
+                    }
+                ]
+            },
+            "ScreeningHistoryResponse": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ScreeningHistoryResponseData"
+                    }
+                ]
+            },
+            "ScreeningShipInfoReportResponse": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ScreeningShipInfoReportData"
+                    }
+                ]
+            },
+            "ScreeningShipInspectionsReportResponse": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ScreeningShipInspectionsReportData"
+                    }
+                ]
+            },
+            "ScreeningShipSanctionsReportResponse": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ScreeningShipSanctionsReportData"
+                    }
+                ]
+            },
+            "ScreeningCountrySanctionsReportResponse": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ScreeningCountrySanctionsReportData"
+                    }
+                ]
+            },
+            "ScreeningShipMovementsReportResponse": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ScreeningShipMovementsReportData"
+                    }
+                ]
+            },
+            "ScreeningCompanySanctionsReportResponse": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ScreeningCompanySanctionsReportData"
+                    }
+                ]
+            },
+            "ScreeningModel": {
+                "type": "object",
+                "required": [
+                    "id", "account_id"
+                ],
+                "properties": {
+                    "id": {
+                        "$ref": "#/components/schemas/ScreeningId"
+                    },
+                    "account_id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "ship_id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "ship": {
+                        "$ref": "#/components/schemas/Ship"
+                    },
+                    "status": {
+                        "$ref": "#/components/schemas/Status"
+                    },
+                    "severity": {
+                        "$ref": "#/components/schemas/Severity"
+                    },
+                    "severity_change": {
+                        "$ref": "#/components/schemas/SeverityChange"
+                    },
+                    "previous_severity": {
+                        "$ref": "#/components/schemas/PreviousSeverity"
+                    },
+                    "previous_severity_date": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "screens": {
+                        "$ref": "#/components/schemas/Screens"
+                    }
+                }
+            },
+            "ScreeningHistoryModel": {
+                "type": "object",
+                "required": [
+                    "id", "screening_id"
+                ],
+                "properties": {
+                    "id": {
+                        "$ref": "#/components/schemas/Id"
+                    },
+                    "screening_id": {
+                        "$ref": "#/components/schemas/ScreeningId"
+                    },
+                    "severity": {
+                        "$ref": "#/components/schemas/Severity"
+                    },
+                    "severity_date": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "company_sanctions_severity": {
+                        "$ref": "#/components/schemas/Severity"
+                    },
+                    "ship_sanctions_severity": {
+                        "$ref": "#/components/schemas/Severity"
+                    },
+                    "country_sanctions_severity": {
+                        "$ref": "#/components/schemas/Severity"
+                    },
+                    "ship_inspections_severity": {
+                        "$ref": "#/components/schemas/Severity"
+                    },
+                    "ship_movements_severity": {
+                        "$ref": "#/components/schemas/Severity"
+                    }
+                }
+            },
+            "Screening": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/BaseModel"
+                    },
+                    {
+                        "$ref": "#/components/schemas/ScreeningModel"
+                    }
+                ]
+            },
+            "ScreeningHistory": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/BaseModel"
+                    },
+                    {
+                        "$ref": "#/components/schemas/ScreeningHistoryModel"
+                    }
+                ]
+            },
+            "Screens": {
+                "type": "object",
+                "properties": {
+                    "company_sanctions": {
+                        "$ref": "#/components/schemas/CompanySanctions"
+                    },
+                    "country_sanctions": {
+                        "$ref": "#/components/schemas/CountrySanctions"
+                    },
+                    "ship_inspections": {
+                        "$ref": "#/components/schemas/ShipInspections"
+                    },
+                    "ship_sanctions": {
+                        "$ref": "#/components/schemas/ShipSanctions"
+                    },
+                    "ship_movement_history": {
+                        "$ref": "#/components/schemas/ShipMovementHistory"
+                    }
+                }
+            },
+            "Screen": {
+                "type": "object",
+                "properties": {
+                    "severity": {
+                        "$ref": "#/components/schemas/Severity"
+                    }
+                }
+            },
+            "CompanySanctions": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Screen"
+                    }
+                ]
+            },
+            "CountrySanctions": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Screen"
+                    }
+                ]
+            },
+            "ShipInspections": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Screen"
+                    }
+                ]
+            },
+            "ShipSanctions": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Screen"
+                    }
+                ]
+            },
+            "ShipMovementHistory": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Screen"
+                    }
+                ],
+                "properties": {
+                    "port_visits": {
+                        "$ref": "#/components/schemas/PortVisits"
+                    },
+                    "zone_visits": {
+                        "$ref": "#/components/schemas/ZoneVisits"
+                    }
+                }
+            },
+            "PortVisits": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/PortVisit"
+                }
+            },
+            "ZoneVisits": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/ZoneVisit"
+                }
+            },
+            "PortVisit": {
+                "type": "object"
+            },
+            "ZoneVisit": {
+                "type": "object"
+            },
+            "ImoId": {
+                "type": "integer",
+                "format": "int64",
+                "example": 9582506
+            },
+            "BulkScreeningResult": {
+                "type": "boolean",
+                "nullable": true
+            },
+            "BulkScreeningResults": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/BulkScreeningResult"
+                }
+            },
+            "BulkScreeningStatus": {
+                "type": "string",
+                "enum": [
+                    "SCHEDULED",
+                    "PENDING",
+                    "DONE"
+                ]
+            },
+            "BulkScreeningStatuses": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/BulkScreeningStatus"
+                }
+            },
+            "Status": {
+                "type": "string",
+                "enum": [
+                    "CREATED",
+                    "SCHEDULED",
+                    "PENDING",
+                    "DONE"
+                ]
+            },
+            "Severity": {
+                "type": "string",
+                "enum": [
+                    "UNKNOWN",
+                    "OK",
+                    "WARNING",
+                    "CRITICAL"
+                ]
+            },
+            "PreviousSeverity": {
+                "type": "string",
+                "enum": [
+                    "UNKNOWN",
+                    "OK",
+                    "WARNING",
+                    "CRITICAL",
+                    null
+                ],
+                "nullable": true
+            },
+            "Severities": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/Severity"
+                }
+            },
+            "SeverityChange": {
+                "type": "string",
+                "enum": [
+                    "DECREASED",
+                    "INCREASED",
+                    "NOCHANGE"
+                ]
+            },
+            "Ship": {
+                "type": "object",
+                "required": [
+                    "imo_id"
+                ],
+                "properties": {
+                    "imo_id": {
+                        "$ref": "#/components/schemas/ImoId"
+                    },
+                    "name": {
+                        "$ref": "#/components/schemas/ShipName"
+                    },
+                    "type": {
+                        "$ref": "#/components/schemas/ShipType"
+                    },
+                    "country_id": {
+                        "$ref": "#/components/schemas/CountryId"
+                    },
+                    "country_name": {
+                        "$ref": "#/components/schemas/CountryName"
+                    }
+                }
+            },
+            "ShipName": {
+                "type": "string",
+                "example": "Karpaty"
+            },
+            "ShipType": {
+                "type": "string"
+            },
+            "ShipTypes": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/ShipType"
+                }
+            },
+            "Country": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 2,
+                "uniqueItems": true,
+                "items": {
+                    "type": "string",
+                    "nullable": true
+                },
+                "example": ["PL", "Poland"]
+            },
+            "CountryId": {
+                "type": "string",
+                "minLength": 2,
+                "maxLength": 2,
+                "nullable": true,
+                "example": "PL"
+            },
+            "CountryIds": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/CountryId"
+                }
+            },
+            "CountryName": {
+                "type": "string",
+                "nullable": true,
+                "example": "Poland"
+            },
+            "Error": {
+                "type": "object",
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "class": {
+                        "type": "string"
+                    }
+                }
+            },
+            "ErrorResponseData": {
+                "type": "object",
+                "required": [
+                    "errors"
+                ],
+                "properties": {
+                    "errors": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Error"
+                        }
+                    }
+                }
+            },
+            "ErrorResponse": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ErrorResponseData"
+                    }
+                ]
+            },
+            "ResponsePagination": {
+                "type": "object",
+                "required": [
+                    "meta", "links"
+                ],
+                "properties": {
+                    "meta": {
+                        "type": "object",
+                        "properties": {
+                            "count": {
+                                "type": "integer",
+                                "format": "int64"
+                            }
+                        }
+                    },
+                    "links": {
+                        "type": "object",
+                        "properties": {
+                            "first": {
+                                "type": "string"
+                            },
+                            "prev": {
+                                "type": "string"
+                            },
+                            "next": {
+                                "type": "string"
+                            },
+                            "last": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "parameters": {
+            "BulkScreeningIdPathParam": {
+                "name": "bulk_screening_id",
+                "in": "path",
+                "description": "Bulk screening ID",
+                "schema": {
+                    "$ref": "#/components/schemas/BulkScreeningId"
+                }
+            },
+            "ScreeningIdPathParam": {
+                "name": "screening_id",
+                "in": "path",
+                "description": "Screening ID",
+                "schema": {
+                    "$ref": "#/components/schemas/ScreeningId"
+                }
+            },
+            "ScreeningHistoryIdPathParam": {
+                "name": "history_id",
+                "in": "path",
+                "description": "Screening History ID",
+                "schema": {
+                    "$ref": "#/components/schemas/ScreeningHistoryId"
+                }
+            },
+            "IdsQueryParam": {
+                "name": "ids",
+                "in": "query",
+                "description": "IDs",
+                "schema": {
+                    "$ref": "#/components/schemas/Ids"
+                },
+                "explode": false
+            },
+            "ShipTypesQueryParam": {
+                "name": "ship__types",
+                "in": "query",
+                "description": "ship types",
+                "schema": {
+                    "$ref": "#/components/schemas/ShipTypes"
+                },
+                "explode": false
+            },
+            "ShipCountryIdsQueryParam": {
+                "name": "ship__country_ids",
+                "in": "query",
+                "description": "ship country IDs",
+                "schema": {
+                    "$ref": "#/components/schemas/CountryIds"
+                },
+                "explode": false
+            },
+            "StatusesQueryParam": {
+                "name": "statuses",
+                "in": "query",
+                "description": "bulk screening statuses",
+                "schema": {
+                    "$ref": "#/components/schemas/BulkScreeningStatuses"
+                },
+                "explode": false
+            },
+            "ResultsQueryParam": {
+                "name": "results",
+                "in": "query",
+                "description": "bulk screening results",
+                "schema": {
+                    "$ref": "#/components/schemas/BulkScreeningResults"
+                },
+                "explode": false
+            },
+            "SeveritiesQueryParam": {
+                "name": "severities",
+                "in": "query",
+                "description": "screening severities",
+                "schema": {
+                    "$ref": "#/components/schemas/Severities"
+                },
+                "explode": false
+            },
+            "CompanySanctionsSeveritiesQueryParam": {
+                "name": "company_sanctions_severities",
+                "in": "query",
+                "description": "screening company sanctions severities",
+                "schema": {
+                    "$ref": "#/components/schemas/Severities"
+                },
+                "explode": false
+            },
+            "ShipSanctionsSeveritiesQueryParam": {
+                "name": "ship_sanctions_severities",
+                "in": "query",
+                "description": "screening ship sanctions severities",
+                "schema": {
+                    "$ref": "#/components/schemas/Severities"
+                },
+                "explode": false
+            },
+            "CountrySanctionsSeveritiesQueryParam": {
+                "name": "country_sanctions_severities",
+                "in": "query",
+                "description": "screening country sanctions severities",
+                "schema": {
+                    "$ref": "#/components/schemas/Severities"
+                },
+                "explode": false
+            },
+            "ShipInspectionsSeveritiesQueryParam": {
+                "name": "ship_inspections_severities",
+                "in": "query",
+                "description": "screening ship inspections severities",
+                "schema": {
+                    "$ref": "#/components/schemas/Severities"
+                },
+                "explode": false
+            },
+            "ShipMovementsSeveritiesQueryParam": {
+                "name": "ship_movements_severities",
+                "in": "query",
+                "description": "screening ship movements severities",
+                "schema": {
+                    "$ref": "#/components/schemas/Severities"
+                },
+                "explode": false
+            },
+            "SeverityChangeQueryParam": {
+                "name": "severity_change",
+                "in": "query",
+                "description": "screening severity change",
+                "schema": {
+                    "$ref": "#/components/schemas/SeverityChange"
+                },
+                "allowEmptyValue": true
+            },
+            "SearchQueryParam": {
+                "name": "search",
+                "in": "query",
+                "description": "search phrase",
+                "schema": {
+                    "type": "string",
+                    "default": ""
+                },
+                "allowEmptyValue": true
+            },
+            "SortQueryParam": {
+                "name": "sort",
+                "in": "query",
+                "description": "sort by field",
+                "schema": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "id",
+                            "-id",
+                            "updated",
+                            "-updated",
+                            "severity",
+                            "-severity",
+                            "severity_change",
+                            "-severity_change",
+                            "ship__country_id",
+                            "-ship__country_id",
+                            "ship__name",
+                            "-ship__name",
+                            "ship__imo_id",
+                            "-ship__imo_id",
+                            "ship__type",
+                            "-ship__type",
+                            "status",
+                            "-status"
+                        ]
+                    },
+                    "default": [
+                        "-updated"
+                    ]
+                },
+                "explode": false
+            },
+            "PageQueryParam": {
+                "name": "page",
+                "in": "query",
+                "description": "results page",
+                "schema": {
+                    "$ref": "#/components/schemas/Page"
+                }
+            },
+            "LimitQueryParam": {
+                "name": "limit",
+                "in": "query",
+                "description": "results per page",
+                "schema": {
+                    "$ref": "#/components/schemas/Limit"
+                }
+            },
+            "OffsetQueryParam": {
+                "name": "offset",
+                "in": "query",
+                "description": "results offset",
+                "schema": {
+                    "$ref": "#/components/schemas/Offset"
+                }
+            },
+            "FormatQueryParam": {
+                "name": "format",
+                "in": "query",
+                "description": "results format",
+                "schema": {
+                    "$ref": "#/components/schemas/Format"
+                }
+            }
+        },
+        "requestBodies": {
+            "BulkScreeningRequestBody": {
+                "description": "Bulk screening request body",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/BulkScreenings"
+                        }
+                    },
+                    "text/csv": {
+                        "schema": {
+                            "type": "string",
+                            "format": "binary"
+                        }
+                    },
+                    "application/vnd.ms-excel": {
+                        "schema": {
+                            "type": "string",
+                            "format": "binary"
+                        }
+                    },
+                    "multipart/form-data": {
+                        "schema": {
+                            "type": "string",
+                            "format": "binary"
+                        }
+                    }
+                }
+            }
+        },
+        "examples": {
+            "ScreeningsCSVExample": {
+                "summary": "Screenings CSV example",
+                "value": "id,imo_id,country_id,ship_type"
+            }
+        },
+        "responses": {
+            "DeletedResponse": {
+                "description": "The resource was deleted successfully"
+            },
+            "CountriesResponse": {
+                "description": "Returns list of countries",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/CountriesResponse"
+                        }
+                    }
+                }
+            },
+            "ScreeningsResponse": {
+                "description": "Returns all screenings",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/ScreeningsResponse"
+                        }
+                    },
+                    "text/csv": {
+                        "schema": {
+                            "type": "string",
+                            "format": "binary"
+                        },
+                        "examples": {
+                            "simpleExample": {
+                                "$ref": "#/components/examples/ScreeningsCSVExample"
+                            }
+                        }
+                    }
+                }
+            },
+            "ScreeningResponse": {
+                "description": "Returns screening details",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/ScreeningResponse"
+                        }
+                    }
+                }
+            },
+            "ScreeningsHistoryResponse": {
+                "description": "Returns screenings history",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/ScreeningsHistoryResponse"
+                        }
+                    }
+                }
+            },
+            "ScreeningHistoryResponse": {
+                "description": "Returns screening history",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/ScreeningHistoryResponse"
+                        }
+                    }
+                }
+            },
+            "ScreeningShipInfoReportResponse": {
+                "description": "Returns screening ship info report",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/ScreeningShipInfoReportResponse"
+                        }
+                    }
+                }
+            },
+            "ScreeningShipInspectionsReportResponse": {
+                "description": "Returns screening ship inspections report",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/ScreeningShipInspectionsReportResponse"
+                        }
+                    }
+                }
+            },
+            "ScreeningShipSanctionsReportResponse": {
+                "description": "Returns screening ship sanctions report",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/ScreeningShipSanctionsReportResponse"
+                        }
+                    }
+                }
+            },
+            "ScreeningCountrySanctionsReportResponse": {
+                "description": "Returns screening country sanctions report",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/ScreeningCountrySanctionsReportResponse"
+                        }
+                    }
+                }
+            },
+            "ScreeningShipMovementsReportResponse": {
+                "description": "Returns screening ship movements report",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/ScreeningShipMovementsReportResponse"
+                        }
+                    }
+                }
+            },
+            "ScreeningCompanySanctionsReportResponse": {
+                "description": "Returns screening company Sanctions report",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/ScreeningCompanySanctionsReportResponse"
+                        }
+                    }
+                }
+            },
+            "BulkScreeningsResponse": {
+                "description": "Returns list of ships added to screening",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/BulkScreeningsResponse"
+                        }
+                    }
+                }
+            },
+            "ShipTypesResponse": {
+                "description": "Returns list of ship types",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/ShipTypesResponse"
+                        }
+                    }
+                }
+            },
+            "ErrorResponse": {
+                "description": "Error response",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "PdfResponse": {
+                "description": "Returns a PDF file object",
+                "content": {
+                    "application/pdf": {
+                        "schema": {
+                            "type": "string",
+                            "format": "binary"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

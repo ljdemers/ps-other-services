@@ -1,0 +1,110 @@
+{
+	"AWSTemplateFormatVersion": "2010-09-09",
+	"Description": "Deploy SMH API develop branch to TEST on merge",
+	"Resources": {
+		"CodeBuild": {
+			"Type": "AWS::CodeBuild::Project",
+			"Properties": {
+				"Name": "test-smh-api-deploy",
+				"Artifacts": {
+					"Type": "NO_ARTIFACTS"
+				},
+				"ServiceRole": {
+					"Fn::ImportValue": {
+						"Fn::Sub": "polestar-commons-CommonCodeBuildServiceRole"
+					}
+				},
+				"Environment": {
+					"Type": "LINUX_CONTAINER",
+					"ComputeType": "BUILD_GENERAL1_SMALL",
+					"Image": "aws/codebuild/standard:4.0",
+					"PrivilegedMode": true,
+					"EnvironmentVariables": [
+						{
+							"Name": "DEVOPS_BRANCH",
+							"Type": "PLAINTEXT",
+							"Value": "master"
+						}
+					]
+				},
+				"Source": {
+					"BuildSpec": "build/buildspec-test-deploy.yml",
+					"Type": "GITHUB",
+					"Auth": {
+						"Resource": {
+							"Fn::ImportValue": {
+								"Fn::Sub": "polestar-commons-CodeBuildSourceCredentials"
+							}
+						},
+						"Type": "OAUTH"
+					},
+					"Location": "https://github.com/polestarglobal/smh-api.git"
+				},
+				"Triggers": {
+					"Webhook": true,
+					"FilterGroups": [
+						[
+							{
+								"Type": "EVENT",
+								"Pattern": "PUSH"
+							},
+							{
+								"Type" : "HEAD_REF",
+								"Pattern" : "^refs/heads/develop"
+							}
+						]
+					]
+				},
+				"LogsConfig": {
+					"CloudWatchLogs": {
+						"Status": "ENABLED",
+						"GroupName": "smh-api",
+						"StreamName": "test-deploy"
+					}
+				}
+			}
+		},
+        "Slack": {
+            "Type" : "AWS::Chatbot::SlackChannelConfiguration",
+            "Properties" : {
+                "ConfigurationName" : "slack-smh",
+                "IamRoleArn" : {
+                    "Fn::ImportValue": {
+                        "Fn::Sub": "polestar-commons-CommonCodeBuildServiceRole"
+                    }
+                },
+                "LoggingLevel" : "INFO",
+                "SlackChannelId" : "GUKM90TLZ",
+                "SlackWorkspaceId" : "T0JQRDW9H"
+            }
+        },
+        "Notification": {
+            "Type": "AWS::CodeStarNotifications::NotificationRule",
+            "Properties": {
+                "DetailType": "FULL",
+                "EventTypeIds": [
+                    "codebuild-project-build-state-failed",
+                    "codebuild-project-build-state-succeeded",
+                    "codebuild-project-build-state-in-progress",
+                    "codebuild-project-build-state-stopped"
+                ],
+                "Name": "test-smh-api-deploy-notifications",
+                "Resource": {
+                    "Fn::GetAtt": [
+                        "CodeBuild",
+                        "Arn"
+                    ]
+                },
+                "Status": "ENABLED",
+                "Targets": [
+                    {
+                        "TargetType": "AWSChatbotSlack",
+                        "TargetAddress": {
+                            "Fn::GetAtt": ["Slack", "Arn"]
+                        }
+                    }
+                ]
+            }
+        }
+	}
+}

@@ -1,0 +1,66 @@
+name: packer publish
+on:
+  workflow_run:
+    workflows: [version]
+    types:
+      - completed
+
+permissions:
+  id-token: write # jwt token
+  actions: read # gh actions
+  contents: read # repo
+
+jobs:
+  check:
+    outputs:
+      new_version: ${{ steps.check-version.outputs.new-version }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: Get tags
+        run: git fetch --prune --unshallow --tags
+      - name: Check if new version
+        id: check-version
+        run: |
+          if [ $(git tag --points-at HEAD | wc -l) -gt 1 ]; then
+            echo "Got more than one tag, was not expecting this, bumming out..."
+            exit 1
+          fi
+
+          # Set new version (or empty string)
+          VERSION=$(git tag --points-at HEAD)
+          echo VERSION:$VERSION
+          echo "::set-output name=new-version::${VERSION}"
+
+  packer:
+    needs: check
+    if: needs.check.outputs.new_version
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        with:
+          lfs: true
+      - name: Configure AWS Credentials from test account
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::178847878690:role/github-packer-publish-role
+          role-session-name: GithubPackerBuilder
+          aws-region: us-east-1
+      - name: Setup `packer`
+        uses: hashicorp/setup-packer@main
+        id: setup
+        with:
+          version: "1.8.3"
+      - name: Run `packer init`
+        id: init
+        run: "packer init ./infra/packer/packer.pkr.hcl"
+        env:
+          PACKER_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Run `packer validate`
+        id: validate
+        run: "packer validate ./infra/packer/packer.pkr.hcl"
+      - name: Run `packer build`
+        id: build
+        run: "packer build ./infra/packer/packer.pkr.hcl"

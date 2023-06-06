@@ -1,0 +1,303 @@
+#
+# The SMH service API
+#
+openapi: 3.0.0
+info:
+  title: SMH API
+  description: SMH service API calls
+  contact:
+    email: farrukh.shahzad@polestarglobal.com
+  license:
+    name: Proprietary License
+    url: https://www.polestarglobal.com/
+  version: 1.0.0
+servers:
+- url: /api/v1/
+paths:
+  /servicestatus:
+    get:
+      summary: Service health check
+      operationId: health
+      responses:
+        "200":
+          description: Health check info
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: OK
+        "400":
+          description: bad input parameter
+  /shipmovementhistory/{imo_number}:
+    get:
+      summary: Perfrom SMH
+      description: |
+        By passing in the appropriate options, you can request for the SMH results
+      operationId: smh
+      parameters:
+      - name: imo_number
+        in: path
+        description: Ship's IMO number (7 digit)
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: "1234567"
+      - name: end_date
+        in: query
+        description: Either number of days from now or date to start the screening
+          from
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+          format: int or yyyy-mm-dd
+      - name: ais_rate
+        in: query
+        description: AIS data rate in minutes used for SMH
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          default: 3600
+      - name: ihs_join
+        in: query
+        description: Flag to whether join IHS movement data with AIS positions
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          default: 1
+      - name: use_cache
+        in: query
+        description: Flag to whether to use cached results
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          default: 1
+      - name: remove_outliers
+        in: query
+        description: Flag to whether remove outliers from AIS positions
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          default: 1
+      - name: speed_filter
+        in: query
+        description: Ignore positions with speed > speed_filter
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          default: 99
+      - name: response_type
+        in: query
+        description: Flag to return specific data plus  metadata
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          default: 1
+      responses:
+        "200":
+          description: Ruturns port visits and metadata after SMH is performed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SMHResult'
+        "400":
+          description: bad input parameter
+components:
+  schemas:
+    Port:
+      required:
+      - port_code
+      - port_country
+      - port_name
+      type: object
+      properties:
+        port_code:
+          type: string
+          example: USLAX
+        port_name:
+          type: string
+          example: Los Angeles
+        port_country:
+          type: string
+          example: United States of America
+        port_latitude:
+          type: number
+          example: 35.6789
+        port_longitude:
+          type: number
+          example: -75.6789
+    Position:
+      required:
+      - timestamp
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: yyyy-mm-ddThh:mm:ssZ or yyyy-mm-ddThh:mm:ss
+          example: 2019-07-17T15:45:19Z
+        speed:
+          type: number
+          example: 10.2
+        heading:
+          type: number
+          example: 275
+        latitude:
+          type: number
+          example: 35.688
+        longitude:
+          type: number
+          example: -75.6666
+        status:
+          type: string
+          example: Moored
+    ihs_movement_data:
+      required:
+      - timestamp
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: yyyy-mm-ddThh:mm:ss
+          example: 2019-07-17T15:45:19
+        sail_date_full:
+          type: string
+          format: yyyy-mm-ddThh:mm:ss
+          example: 2019-07-18T15:55:29
+        port_name:
+          type: string
+          description: usually empty for Anchorages or transits
+          example: Dumai Pelintung Port
+        country_name:
+          type: string
+          example: Indonesia
+        ihs_port_id:
+          type: string
+          example: "27822"
+        latitude:
+          type: number
+          description: usually empty for Anchorages or transits
+          example: 35.688
+        longitude:
+          type: number
+          description: usually empty for Anchorages or transits
+          example: -75.6666
+        last_port_of_call_name:
+          type: string
+          example: Gresik
+        last_port_of_call_country:
+          type: string
+          example: Indonesia
+        last_port_of_call_country_code:
+          type: string
+          example: RI
+        destination_port:
+          type: string
+          description: usually empty for Anchorages or transits
+          example: Dumai
+        movement_type:
+          type: string
+          description: Anchorage or transit name or Empty
+      description: IHS movement data as returned by SIS for the IMO. There are more
+        fields but not used for SMH
+    PortVisit:
+      required:
+      - departed
+      - entered
+      - port
+      - type
+      type: object
+      properties:
+        entered:
+          type: string
+          format: yyyy-mm-ddThh:mm:ssZ or yyyy-mm-ddThh:mm:ss
+          example: 2019-07-18T15:45:19Z
+        departed:
+          type: string
+          format: yyyy-mm-ddThh:mm:ssZ or yyyy-mm-ddThh:mm:ss or Null
+          example: 2019-07-20T05:45:19Z
+        latitude:
+          type: number
+          example: 35.688
+        longitude:
+          type: number
+          example: -75.6666
+        port:
+          $ref: '#/components/schemas/Port'
+        sail_full_date:
+          type: string
+          format: yyyy-mm-ddThh:mm:ssZ or yyyy-mm-ddThh:mm:ss or Null
+          example: 2019-07-20T05:45:19
+        speed:
+          type: number
+          example: 2.75
+        type:
+          type: string
+          example: IHS
+    SMHResult:
+      required:
+      - metadata
+      - visits
+      type: object
+      properties:
+        visits:
+          type: array
+          items:
+            $ref: '#/components/schemas/PortVisit'
+        metadata:
+          $ref: '#/components/schemas/SMHResult_metadata'
+        positions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Position'
+        ihs_movement_data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ihs_movement_data'
+    SMHResult_metadata:
+      type: object
+      properties:
+        ais_days:
+          type: integer
+          example: 60
+        ais_rate:
+          type: integer
+          example: 3600
+        ihs_join:
+          type: integer
+          example: 1
+        remove_outliers:
+          type: integer
+          example: 1
+        speed_filter:
+          type: integer
+          example: 99
+        use_cache:
+          type: integer
+          example: 1
+        last_smh_id:
+          type: integer
+          example: 1509
+        elapsed_seconds:
+          type: number
+          description: total elapsed time (sec) in SMH computation
+          example: 10.4
+        error:
+          type: string
+          description: Null or false means no error
+      description: metadata like configuration etc.

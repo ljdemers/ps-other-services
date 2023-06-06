@@ -1,0 +1,37 @@
+name: packer-pre-check
+on:
+  pull_request:
+    paths:
+      - "infra/packer/packer.pkr.hcl"
+    branches:
+      - "**"
+
+permissions:
+  id-token: write # jwt token
+  actions: read # gh actions
+  contents: read # repo
+
+jobs:
+  packer:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        with:
+          lfs: true
+      - name: Setup `packer`
+        uses: hashicorp/setup-packer@main
+        id: setup
+        with:
+          version: "1.8.3"
+      - name: Run `packer init`
+        id: init
+        run: "packer init ./infra/packer/packer.pkr.hcl"
+        env:
+          PACKER_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Run `packer validate`
+        id: validate
+        run: "packer validate ./infra/packer/packer.pkr.hcl"
+      - name: Run `packer fmt`
+        id: fmt
+        run: "packer fmt -check ./infra/packer/packer.pkr.hcl"

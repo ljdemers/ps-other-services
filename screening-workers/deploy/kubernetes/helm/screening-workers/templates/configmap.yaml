@@ -1,0 +1,84 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "screening-workers.fullname" . }}
+  labels:
+    app: {{ template "screening-workers.name" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+data:
+  INI_FILE: {{ .Values.workers.iniFile }}
+  JWT_SECRET: {{ .Values.workers.jwtSecret }}
+  LOG_LEVEL: {{ .Values.workers.logLevel }}
+  DEFAULT_AIS_REPORTING_MINUTES: {{ .Values.workers.defaultAISReportingMinutes | quote }}
+  DEFAULT_SHIP_MOVEMENT_DAYS: {{ .Values.workers.defaultShipMovementDays | quote }}
+  SCREENINGS_BULK_SCREEN_TIME: {{ .Values.workers.screeningsBulkScreenTime | quote }}
+  VOYAGE_STOPPED_SPEED: {{ .Values.workers.voyageStoppedSpeed | quote }}
+  # AIS
+  AIS_BASE_URL: {{ .Values.ais.baseUrl | quote }}
+  AIS_USERNAME: {{ .Values.ais.username | quote }}
+  AIS_PASSWORD: {{ .Values.ais.password | quote }}
+  # Celery
+  CELERY_CONFIG_MODULE: {{ .Values.celery.configModule | quote }}
+  WORKER_HIJACK_ROOT_LOGGER: ""
+  # Compliance
+  COMPLIANCE_BASE_URL: {{ .Values.compliance.baseUrl | quote }}
+  COMPLIANCE_USERNAME: {{ .Values.compliance.username | quote }}
+  COMPLIANCE_API_KEY: {{ .Values.compliance.apiKey | quote }}
+  # Ports
+  PORTSERVICE_BASE_URL: {{ .Values.ports.baseUrl | quote }}
+  # SIS
+  SIS_BASE_URL: {{ .Values.sis.baseUrl | quote }}
+  SIS_USERNAME: {{ .Values.sis.username | quote }}
+  SIS_API_KEY: {{ .Values.sis.apiKey | quote }}
+  # Metrics
+  {{- if .Values.metrics.enabled }}
+  METRICS_ENABLE: "true"
+  STATSD_HOST: {{ .Values.metrics.statsd.host | quote }}
+  {{- else }}
+  METRICS_ENABLE: "false"
+  STATSD_HOST: ""
+  {{- end }}
+  {{- if .Values.redis.enabled }}
+  # Redis for Locker, Redbeat & Results
+  LOCKERHOST: "{{ template "screening-workers.fullname" . }}-redis-master"
+  REDBEATHOST: "{{ template "screening-workers.fullname" . }}-redis-master"
+  RESULTHOST: "{{ template "screening-workers.fullname" . }}-redis-master"
+  {{- else }}
+  # External Redis for Locker, Redbeat & Results
+  LOCKERHOST: {{ .Values.externalRedis.host | quote }}
+  REDBEATHOST: {{ .Values.externalRedis.host | quote }}
+  RESULTHOST: {{ .Values.externalRedis.host | quote }}
+  {{- end }}
+  {{- if .Values.postgresql.enabled }}
+  # PostgreSQL Database
+  DBBACKEND: "postgresql+psycopg2"
+  DBHOST: "{{ template "screening-workers.fullname" . }}-postgresql"
+  DBUSER: {{ .Values.postgresql.postgresUser | quote }}
+  DBPASSWORD: {{ .Values.postgresql.postgresPassword | quote }}
+  DBNAME: {{ .Values.postgresql.postgresDatabase  | quote }}
+  {{- else }}
+  # External Database
+  DBBACKEND: {{ .Values.externalDatabase.backend | quote }}
+  DBHOST: {{ .Values.externalDatabase.host | quote }}
+  DBUSER: {{ .Values.externalDatabase.username | quote }}
+  DBPASSWORD: {{ .Values.externalDatabase.password | quote }}
+  DBNAME: {{ .Values.externalDatabase.name  | quote }}
+  {{- end }}
+  {{- if .Values.rabbitmq.enabled }}
+  # RabbitMQ Broker
+  BROKERBACKEND: "amqp"
+  BROKERHOST: ""
+  BROKERUSER: ""
+  BROKERPASSWORD: ""
+  BROKERNAME: ""
+  {{- else }}
+  # External Broker
+  BROKERBACKEND: {{ .Values.externalBroker.backend | quote }}
+  BROKERHOST: {{ .Values.externalBroker.host | quote }}
+  BROKERPORT: {{ .Values.externalBroker.port | quote }}
+  BROKERUSER: {{ .Values.externalBroker.username | quote }}
+  BROKERPASSWORD: {{ .Values.externalBroker.password | quote }}
+  BROKERNAME: {{ .Values.externalBroker.name  | quote }}
+  {{- end }}

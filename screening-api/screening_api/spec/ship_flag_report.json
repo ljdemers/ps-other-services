@@ -1,0 +1,14 @@
+{
+    "type": "object",
+    "properties": {
+        "country": {
+            "type": [
+                "string",
+                "null"
+            ]
+        },
+        "severity": {
+            "$ref": "openapi.json#/components/schemas/Severity"
+        }
+    }
+}

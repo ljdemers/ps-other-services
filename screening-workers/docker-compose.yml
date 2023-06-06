@@ -1,0 +1,14 @@
+version: '3.7'
+services:
+  consumers:
+    build:
+      context: ./
+      dockerfile: ./docker/Dockerfile
+    healthcheck:
+      test: celery inspect ping -A screening_workers
+  producer:
+    build:
+      context: ./
+      dockerfile: ./docker/Dockerfile
+    healthcheck:
+      test: celery inspect ping -A screening_workers

@@ -1,0 +1,32 @@
+version: '2.1'
+
+services:
+  sis-api-postgres:
+    environment:
+      - POSTGRES_PASSWORD=sis
+      - POSTGRES_USER=sis
+      - POSTGRES_DB=sis
+
+  sis-api:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.dev
+    command: python manage.py runserver 0.0.0.0:8000
+    environment:
+      - DJANGO_ENVIRONMENT=jenkins
+      - DJANGO_SETTINGS_MODULE=sis_api.settings.jenkins
+      - HOSTUSER=$UID
+      - HOSTGROUP=$GROUP
+    volumes:
+      - ./:/usr/src/app
+
+  proxy-dep:
+    image: 178847878690.dkr.ecr.us-east-1.amazonaws.com/busybox:1.32
+    depends_on:
+      sis-api:
+        condition: service_healthy
+
+  api-dep:
+    image: 178847878690.dkr.ecr.us-east-1.amazonaws.com/busybox:1.32
+    depends_on:
+      - proxy-dep

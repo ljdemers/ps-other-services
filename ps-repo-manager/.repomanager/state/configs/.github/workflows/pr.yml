@@ -1,0 +1,36 @@
+name: pr tests
+on:
+  pull_request:
+    branches:
+      - "**"
+
+# FIXME review
+permissions:
+  id-token: write # jwt token
+  actions: read # gh actions
+  contents: read # repo
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        with:
+          lfs: true
+      - name: Set up python
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.8"
+      # FIXME might need to split this into specialized python pr test run
+      - name: install poetry
+        run: pip install poetry
+        shell: bash
+
+      - name: Configure AWS credentials from tools account
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.POLESTAR_TOOLS }}:role/github-pr-role
+          aws-region: us-east-1
+      - name: Run
+        run: make pr-tests

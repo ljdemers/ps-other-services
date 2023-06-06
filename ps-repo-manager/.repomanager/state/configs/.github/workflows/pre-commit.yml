@@ -1,0 +1,28 @@
+name: pre-commit
+
+on:
+  pull_request:
+    branches:
+      - "**"
+
+jobs:
+  pre-commit-on-pull-request:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          lfs: true
+          fetch-depth: 0
+      - uses: actions/setup-python@v3
+        with:
+          python-version: "3.6.15"
+
+      - name: Install pre-commit
+        run: pip install pre-commit
+        shell: bash
+
+      - name: Pre-commit
+        run: |
+          export SKIP=detect-aws-credentials # requires access to users aws creds file to be useful
+          pre-commit run --color=always --from-ref ${{ github.event.pull_request.base.sha }} --to-ref ${{ github.event.pull_request.head.sha }}
+        shell: bash

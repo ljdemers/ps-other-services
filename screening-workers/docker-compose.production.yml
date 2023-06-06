@@ -1,0 +1,56 @@
+version: '2.3'
+services:
+  consumers:
+    image: 178847878690.dkr.ecr.us-east-1.amazonaws.com/screening-workers:0.21.19
+    build:
+      context: ./
+      dockerfile: ./docker/Dockerfile.prod
+      args:
+        VERSION: ${VERSION:-latest}
+    environment:
+      - CODEARTIFACT_AUTH_TOKEN
+      - TWINE_USERNAME
+      - TWINE_PASSWORD
+      - TWINE_REPOSITORY_URL
+      - PIP_FIND_LINKS=/tmp/wheelhouse
+      - PIP_WHEEL_DIR=/tmp/wheelhouse
+      - CELERY_CONFIG_MODULE=screening_workers.celeryconfig
+      - INI_FILE=screening_workers/confs/docker.ini
+      - FQDN=consumers
+      - DBHOST=api-postgres
+      - DBHOSTNAME=api-postgres
+      - DBNAME=screening
+      - DBUSER=screening
+      - DBPASSWORD=screening
+      - BROKERBACKEND=amqp
+      - BROKERHOST=rabbitmq
+      - BROKERNAME=rmq
+      - BROKERUSER=rmquser
+      - BROKERPASSWORD=rmqpass
+      - BROKERPORT=5672
+      - LOCKERHOST=redis
+      - RESULTHOST=redis
+      - REDISDNS=redis
+      - AWSACCOUNTID=178847878690
+      - AWSREGION=us-east-1
+      - ENVIRONMENT=docker
+      - REDBEATHOST=redis
+      - SERVICE=screening-consumers
+      - TASK_SOFT_TIME_LIMIT=60
+      - WORKER_HIJACK_ROOT_LOGGER=
+      - WORKER_CONCURRENCY=1
+      - WORKER_POOL=celery.concurrency.solo:TaskPool
+      - SIS_BASE_URL=https://sis.polestarglobal.net/api/v1/
+      - SIS_USERNAME=purpletrac
+      - SIS_API_KEY=a0394f02efbf2a037275691f30d02482323aab58
+      - COMPLIANCE_BASE_URL=https://compliance.polestarglobal.net/api/v1/
+      - COMPLIANCE_USERNAME=purpletrac
+      - COMPLIANCE_API_KEY=2a2127ae5717a1ef9ecb22e2c8ee0833f4bec07a
+      - AIS_BASE_URL=https://commaisservice.polestarglobal-test.com
+      - AIS_USERNAME=admin
+      - AIS_PASSWORD=secret
+      - PORTSERVICE_BASE_URL=ports.polestar-testing.com:50051
+      - DEFAULT_SHIP_MOVEMENT_DAYS=365
+      - DEFAULT_AIS_REPORTING_MINUTES=10
+      - START_AIS_LAST_MIDNIGHT=1
+      - VOYAGE_STOPPED_SPEED=99

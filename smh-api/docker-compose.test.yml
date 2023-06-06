@@ -1,0 +1,24 @@
+version: '3.7'
+
+services:
+  smh-api:
+    depends_on:
+      - db
+
+  smh-dep:
+    image: 178847878690.dkr.ecr.us-east-1.amazonaws.com/busybox:1.32
+    command:
+      - -wait
+      - http://smh-api:8080/api/v1/system/status
+    depends_on:
+      - smh-api
+
+  db:
+    image: 178847878690.dkr.ecr.us-east-1.amazonaws.com/postgres:11.5-alpine
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=smh
+    healthcheck:
+      test: psql -U postgres -h 127.0.0.1 -b -c "\conninfo" -d smh
+      interval: 15s

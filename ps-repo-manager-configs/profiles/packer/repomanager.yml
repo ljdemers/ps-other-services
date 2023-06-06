@@ -1,0 +1,5 @@
+description: Provides a packer action to build and publish AWS AWM's for EC2 based workloads.
+depends_on:
+  - versioning
+groups:
+  - add-ons

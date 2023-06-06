@@ -1,0 +1,32 @@
+version: '3.7'
+
+services:
+  smh-api:
+    environment:
+      - DEBUG=True
+      - AIS_REST_BASE_URL=http://commaisservice.polestarglobal-test.com/api/v2
+      - AIS_USERNAME=admin
+      - AIS_PASSWORD=secret
+      - API_PASSWORD=super-fast
+      - LOG_LEVEL=INFO
+      - PYTHONPATH=/opt/smh
+      - SIS_BASE_URL=https://sis.polestar-testing.com/api/v1
+      - SIS_USERNAME=purpletrac
+      - SIS_API_KEY=b85d85a9523e7caf3ecec776b003f3c91e84aa94
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
+    dns:
+      - 172.16.21.3
+      - 172.16.21.2
+
+  db:
+    image: 178847878690.dkr.ecr.us-east-1.amazonaws.com/postgres:11.5-alpine
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=smh
+    healthcheck:
+      test: psql -U postgres -h 127.0.0.1 -b -c "\conninfo" -d smh
+      interval: 15s

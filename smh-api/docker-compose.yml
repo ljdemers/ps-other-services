@@ -1,0 +1,16 @@
+version: '3.7'
+
+services:
+  smh-api:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+    working_dir: /opt/smh/smh_service
+    command: uwsgi --http :8080 --wsgi-file smh_api.py --callable app --processes 4 --threads 2 --http-timeout 180
+    volumes:
+      - ./:/opt/smh/
+    healthcheck:
+      test: nc -z localhost:8080
+      interval: 30s
+      timeout: 30s
+      retries: 15

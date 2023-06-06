@@ -1,0 +1,139 @@
+pipeline {
+    agent any
+    options {
+        timeout(time: 1, unit: 'HOURS')
+    }
+    environment {
+        PROJECT_NAME = sh(script: "crudini --get METADATA meta name | tail -n 1", returnStdout: true).trim()
+
+        UID = sh(script: "id -u", returnStdout: true).trim()
+        GROUP = sh(script: "id -g", returnStdout: true).trim()
+
+        VERSION = sh(script: "crudini --get METADATA meta version | tail -n 1", returnStdout: true).trim()
+        REVISION = sh(script: "git log -n 1 --pretty=format:'%h'", returnStdout: true).trim()
+        VERSION_REVISION = "${VERSION}-r${REVISION}"
+        VERSION_REVISION_LONG = "${VERSION} (revision: ${REVISION})"
+
+        COMPOSE_PROJECT_NAME = "${PROJECT_NAME}-${REVISION}"
+
+        DEVOPS_PROJECT_NAME = "sis"
+    }
+    stages {
+        stage('Source: Build') {
+            environment {
+                COMPOSE_ENV = "test"
+            }
+            steps {
+                sh 'echo "Project name: ${PROJECT_NAME}"'
+                sh 'echo "Version: ${VERSION_REVISION_LONG}"'
+                sh 'make params compose-build'
+            }
+        }
+        stage('Test: Prepare') {
+            environment {
+                COMPOSE_ENV = "test"
+            }
+            steps {
+                sh 'make compose-prepare'
+            }
+            post {
+                always {
+                    sh 'make compose-logs'
+                }
+            }
+        }
+        stage('Test: Run') {
+            environment {
+                COMPOSE_ENV = "test"
+            }
+            steps {
+                sh 'make compose-test-python-reports'
+                sh 'make compose-test-python'
+            }
+            post {
+                always{
+                    junit 'reports/*junit.xml'
+                    recordIssues(
+                        tool: pep8(pattern: 'reports/pep8.report'),
+                        unstableTotalAll: 260,
+                        failedTotalAll: 265
+                    )
+                    recordIssues(
+                        tool: pyLint(pattern: 'reports/pylint.report'),
+                        unstableTotalAll: 120,
+                        failedTotalAll: 125
+                    )
+                }
+            }
+        }
+        stage('Distribution: Build') {
+            environment {
+                PROJECT_NAME = "sis"
+                DEVOPS_AWS_WORKSPACE = "devops-aws"
+                DEVOPS_BRANCH = "TD/DEVOPS-3833/SIS-non-prod-sftp-update"
+                DEVOPS_BRANCHES = "*/${DEVOPS_BRANCH}"
+                CONFIGDIR = "${DEVOPS_AWS_WORKSPACE}/cloudformation/SIS/appspec"
+                APPDIR = "${WORKSPACE}"
+                IMAGEDIR = "${WORKSPACE}/images"
+            }
+            steps {
+                sh 'echo "Devops AWS workspace: ${DEVOPS_AWS_WORKSPACE}"'
+                sh 'echo "Application workspace: ${WORKSPACE}"'
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: env.DEVOPS_BRANCHES]],
+                    doGenerateSubmoduleConfigurations: false,
+                    extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'devops-aws']],
+                    submoduleCfg: [],
+                    userRemoteConfigs: [[url: 'https://github.com/polestarglobal/devops-aws.git']]
+                ])
+                sh 'mkdir -p ${IMAGEDIR}/${PROJECT_NAME}/files/ ${IMAGEDIR}/scripts'
+                sh 'echo ${VERSION_REVISION} > ${IMAGEDIR}/APP-VERSION'
+                sh 'cp ${CONFIGDIR}/${PROJECT_NAME}.appspec.yml ${IMAGEDIR}/appspec.yml'
+                sh 'cp ${CONFIGDIR}/scripts/*.sh ${IMAGEDIR}/scripts/'
+                sh 'rsync -av --progress ${APPDIR}/ ${IMAGEDIR}/${PROJECT_NAME}/ --exclude .git --exclude .gitignore --exclude /images --exclude /build --exclude /devops-aws --exclude tests --exclude docs --exclude /venv --exclude /reports'
+            }
+            post {
+                always {
+                    sh 'docker-compose -f docker-compose.yml -f docker-compose.test.yml exec -T sis-api bin/restore_permissions.sh'
+                }
+            }
+        }
+        stage('Distribution: Publish') {
+            steps {
+                // zip package name hack
+                script {
+                    currentBuild.displayName = "sis"
+                }
+                step([
+                    $class: 'AWSCodeDeployPublisher',
+                    s3bucket: 'polestar-images',
+                    s3prefix: 'sis',
+                    applicationName: 'sis',
+                    deploymentGroupName: 'test-sis',
+                    deploymentConfig: 'CodeDeployDefault.OneAtATime',
+                    deploymentGroupAppspec: false,
+                    waitForCompletion: false,
+                    region: 'us-east-1',
+                    includes: '**',
+                    subdirectory: 'images',
+                    packageName: 'sis',
+                    versionFileName: 'APP-VERSION'
+                ])
+                // zip package name hack (rollback)
+                script {
+                    currentBuild.displayName = env.DISPLAY_NAME
+                }
+            }
+        }
+    }
+    post {
+        success {
+            sh 'docker-compose -f docker-compose.yml -f docker-compose.test.yml exec -T sis-api bin/restore_permissions.sh'
+            sh 'docker-compose -f docker-compose.yml -f docker-compose.test.yml down -v --rmi local --remove-orphans'
+        }
+        failure {
+            sh 'docker-compose -f docker-compose.yml -f docker-compose.test.yml down -v --rmi local --remove-orphans'
+        }
+    }
+}

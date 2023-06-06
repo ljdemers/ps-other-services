@@ -1,0 +1,55 @@
+{{- if .Capabilities.APIVersions.Has "apps/v1" }}
+apiVersion: apps/v1
+{{- else }}
+apiVersion: apps/v1beta1
+{{- end }}
+kind: Deployment
+metadata:
+  name: {{ template "screening-api.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    app: {{ template "screening-api.name" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.api.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "screening-api.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "screening-api.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        envFrom:
+        - configMapRef:
+            name: {{ template "screening-api.fullname" . }}
+        env:
+        {{- if .Values.postgresql.enabled }}
+        - name: DBPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-postgresql
+              key: postgres-password
+        {{- end }}
+        ports:
+        - name: http
+          containerPort: 80
+          hostPort: 80
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: http
+          initialDelaySeconds: 15
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: http
+          initialDelaySeconds: 5

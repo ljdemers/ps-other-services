@@ -1,0 +1,26 @@
+{{- if .Values.flower.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "screening-workers.flower.fullname" . }}
+  namespace: {{ template "screening-workers.namespace" . }}
+  labels:
+    app: {{ template "screening-workers.name" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+    component: {{ .Values.flower.name | quote }}
+spec:
+  type: {{ .Values.flower.service.type }}
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+{{- if .Values.service.nodePort }}
+      nodePort: {{ .Values.service.nodePort }}
+{{- end }}
+  selector:
+    app: {{ template "screening-workers.name" . }}
+    release: {{ .Release.Name }}
+    component: {{ .Values.flower.name | quote }}
+{{- end }}

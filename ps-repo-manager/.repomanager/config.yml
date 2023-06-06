@@ -1,0 +1,17 @@
+version: 1
+profiles:
+  - python-library-poetry
+  - docker
+owners:
+  - edward.kirk
+connected_users:
+  - evans.mungai
+tests:
+  pr:
+    - make docker-tests-fast
+template_values:
+  pyproject.yml:
+    tool.isort:
+      src_paths: .
+    tool.coverage.report:
+      fail_under: 95

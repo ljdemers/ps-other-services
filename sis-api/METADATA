@@ -1,0 +1,5 @@
+[meta]
+version = 2.9.1
+long_name = Ship Information Service API Service
+description = Ship Information Service RESTful API for internal use
+name = sis

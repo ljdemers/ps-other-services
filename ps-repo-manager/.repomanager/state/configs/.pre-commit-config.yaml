@@ -1,0 +1,88 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.1.0
+    hooks:
+      - id: check-added-large-files
+        args:
+          - --maxkb
+          - '2048'
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-executables-have-shebangs
+      - id: check-json
+      - id: check-merge-conflict
+      - id: check-symlinks
+      - id: check-toml
+      - id: check-xml
+      - id: check-yaml
+        args:
+          - --allow-multiple-documents
+          - --unsafe
+      - id: detect-aws-credentials
+      - id: detect-private-key
+      - id: mixed-line-ending
+      - id: pretty-format-json
+        args:
+          - --autofix
+          - --no-sort-keys
+      - id: no-commit-to-branch
+        args:
+          - --branch
+          - develop
+          - --branch
+          - master
+          - --branch
+          - main
+          - --pattern
+          - release/*
+  - repo: https://github.com/zricethezav/gitleaks
+    rev: v8.14.1
+    hooks:
+      - id: gitleaks-docker
+        name: Gitleaks
+        exclude: .secrets.baseline
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.2.0
+    hooks:
+      - id: detect-secrets
+        args:
+          - --baseline
+          - .secrets.baseline
+        exclude: (package.lock.json|.*tests.*|.*test_.*|.*alembic.*)
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v3.1.0
+    hooks:
+      - id: check-ast
+      - id: check-builtin-literals
+      - id: check-byte-order-marker
+      - id: check-docstring-first
+      - id: debug-statements
+  - repo: https://github.com/timothycrosley/isort
+    rev: 5.10.1
+    hooks:
+      - id: isort
+        language_version: '3.6'
+  - repo: https://github.com/psf/black
+    rev: 22.8.0
+    hooks:
+      - id: black
+        name: Black (Python)
+  - repo: https://github.com/asottile/blacken-docs
+    rev: v1.12.0
+    hooks:
+      - id: blacken-docs
+        name: Blacken Docs
+        additional_dependencies:
+          - black==21.12b0
+  - repo: https://github.com/pycqa/flake8
+    rev: 4.0.1
+    hooks:
+      - id: flake8
+        additional_dependencies:
+          - flake8-bugbear
+          - flake8-bandit
+  - repo: https://github.com/hadolint/hadolint
+    rev: v2.10.0
+    hooks:
+      - id: hadolint-docker
+exclude: dummy

@@ -1,0 +1,15 @@
+apiVersion: v1
+name: screening-workers
+home: https://github.com/polestarglobal/screening-workers
+version: 0.0.1
+appVersion: 0.21.19
+description: A Helm chart for screening-workers
+keywords:
+  - screening
+  - screening-workers
+sources:
+- https://github.com/polestarglobal/screening-workers
+maintainers:
+- name: artur.maciag
+  email: artur.maciag@polestarglobal.com
+icon: https://wiki.jenkins-ci.org/download/attachments/2916393/logo.png

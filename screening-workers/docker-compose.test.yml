@@ -1,0 +1,100 @@
+version: '3.7'
+services:
+  consumers:
+    image: 178847878690.dkr.ecr.us-east-1.amazonaws.com/screening-workers:0.21.19
+    build:
+      target: prod
+      cache_from:
+        - 178847878690.dkr.ecr.us-east-1.amazonaws.com/screening-workers:testing
+        - 205287409906.dkr.ecr.us-east-1.amazonaws.com/screening-workers:latest
+        - screening-workers:testing
+        - screening-workers:latest
+        - screening-workers:latest-test
+    environment:
+      - CODEARTIFACT_AUTH_TOKEN
+      - TWINE_USERNAME
+      - TWINE_PASSWORD
+      - TWINE_REPOSITORY_URL
+      - FQDN=consumers
+      - SERVICE=screening-consumers
+    env_file: envs/jenkins.env
+    healthcheck:
+      retries: 10
+    working_dir: /usr/src/app
+    volumes:
+      - ./:/usr/src/app
+      - /tmp/wheelhouse:/tmp/wheelhouse
+    depends_on:
+      - workers-postgres
+      - rabbitmq
+      - redis
+      - statsd
+  producer:
+    image: 178847878690.dkr.ecr.us-east-1.amazonaws.com/screening-workers:0.21.19
+    build:
+      target: prod
+      cache_from:
+        - 178847878690.dkr.ecr.us-east-1.amazonaws.com/screening-workers:testing
+        - 205287409906.dkr.ecr.us-east-1.amazonaws.com/screening-workers:latest
+        - screening-workers:testing
+        - screening-workers:latest
+        - screening-workers:latest-test
+    command: beat -A screening_workers --pidfile /var/run/polestar/screening/beat.pid -S redbeat.RedBeatScheduler -l debug
+    environment:
+      - CODEARTIFACT_AUTH_TOKEN
+      - TWINE_USERNAME
+      - TWINE_PASSWORD
+      - TWINE_REPOSITORY_URL
+      - FQDN=producer
+      - SERVICE=screening-producer
+    env_file: envs/jenkins.env
+    healthcheck:
+      retries: 10
+    working_dir: /usr/src/app
+    volumes:
+      - ./:/usr/src/app
+      - /tmp/wheelhouse:/tmp/wheelhouse
+    depends_on:
+      - workers-postgres
+      - rabbitmq
+      - redis
+      - statsd
+  workers:
+    image: 178847878690.dkr.ecr.us-east-1.amazonaws.com/jwilder/dockerize:0.6.1
+    command:
+      - -wait
+      - tcp://workers-postgres:5432
+      - -wait
+      - tcp://rabbitmq:5672
+      - -wait
+      - tcp://redis:6379
+      - -timeout
+      - 60s
+    depends_on:
+      - workers-postgres
+      - rabbitmq
+      - redis
+      - statsd
+  workers-postgres:
+    image: 178847878690.dkr.ecr.us-east-1.amazonaws.com/postgres:9.6.5-alpine
+    environment:
+      - POSTGRES_PASSWORD=test_screening
+      - POSTGRES_USER=test_screening
+      - POSTGRES_DB=test_screening
+    healthcheck:
+      test: nc -zv 127.0.0.1 5432
+      interval: 15s
+  rabbitmq:
+    image: 178847878690.dkr.ecr.us-east-1.amazonaws.com/rabbitmq:3.7-management-alpine
+    environment:
+      - RABBITMQ_ERLANG_COOKIE=cookie
+      - RABBITMQ_DEFAULT_USER=rmquser
+      - RABBITMQ_DEFAULT_PASS=rmqpass
+      - RABBITMQ_DEFAULT_VHOST=rmq
+  redis:
+    image: 178847878690.dkr.ecr.us-east-1.amazonaws.com/redis:4.0.2-alpine
+    healthcheck:
+      test: nc -zv 127.0.0.1 6379
+      interval: 15s
+  statsd:
+    image: 178847878690.dkr.ecr.us-east-1.amazonaws.com/graphiteapp/graphite-statsd:1.1.7-8

@@ -1,0 +1,72 @@
+version: '3.7'
+services:
+  consumers:
+    image: 178847878690.dkr.ecr.us-east-1.amazonaws.com/screening-workers:0.21.19
+    build:
+      target: dev
+      cache_from:
+        -  screening-workers:latest
+    environment:
+      - CODEARTIFACT_AUTH_TOKEN
+      - TWINE_USERNAME
+      - TWINE_PASSWORD
+      - TWINE_REPOSITORY_URL
+      - FQDN=consumers
+      - SERVICE=screening-consumers
+    env_file: envs/dev.env
+    ports:
+      - 5555:5555
+      - 5679:5679
+      - 6899:6899
+    volumes:
+      - ./:/usr/src/app
+      - ./wheelhouse:/tmp/wheelhouse
+    depends_on:
+      - rabbitmq
+      - redis
+      - statsd
+  producer:
+    image: 178847878690.dkr.ecr.us-east-1.amazonaws.com/screening-workers:0.21.19
+    build:
+      target: dev
+      cache_from:
+        -  screening-workers:latest
+    command: celery beat -A screening_workers --pidfile /var/run/polestar/screening/beat.pid -S redbeat.RedBeatScheduler -l debug
+    environment:
+      - CODEARTIFACT_AUTH_TOKEN
+      - TWINE_USERNAME
+      - TWINE_PASSWORD
+      - TWINE_REPOSITORY_URL
+      - FQDN=producer
+      - SERVICE=screening-producer
+    env_file: envs/dev.env
+    volumes:
+      - ./:/usr/src/app
+      - ./wheelhouse:/tmp/wheelhouse
+    depends_on:
+      - rabbitmq
+      - redis
+      - statsd
+  rabbitmq:
+    image: 178847878690.dkr.ecr.us-east-1.amazonaws.com/rabbitmq:3.7-management-alpine
+    environment:
+      - RABBITMQ_ERLANG_COOKIE=cookie
+      - RABBITMQ_DEFAULT_USER=rmquser
+      - RABBITMQ_DEFAULT_PASS=rmqpass
+      - RABBITMQ_DEFAULT_VHOST=rmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+  redis:
+    image: 178847878690.dkr.ecr.us-east-1.amazonaws.com/redis:4.0.2-alpine
+    healthcheck:
+      test: nc -zv 127.0.0.1 6379
+      interval: 15s
+    ports:
+      - 6379:6379
+  statsd:
+    image: 178847878690.dkr.ecr.us-east-1.amazonaws.com/graphiteapp/graphite-statsd:1.1.7-8
+    ports:
+      - 8125:8125
+      - 8126:8126
+      - 8888:8080

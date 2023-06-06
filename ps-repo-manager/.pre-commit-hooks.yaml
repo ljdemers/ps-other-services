@@ -1,0 +1,6 @@
+- id: repo-manager
+  name: Check current repo config.
+  entry: PYTHONPATH=. poetry run bin/repo-manager _pre-commit-check
+  pass_filenames: false
+  language: system
+  verbose: true

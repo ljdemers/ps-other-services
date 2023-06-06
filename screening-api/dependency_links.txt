@@ -1,0 +1,2 @@
+# retry forever on connection error
+git+https://github.com/p1c2u/redis-py.git#egg=redis

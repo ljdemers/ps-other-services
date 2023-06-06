@@ -1,0 +1,40 @@
+FROM 178847878690.dkr.ecr.us-east-1.amazonaws.com/alpine:3.6
+
+ENV NGINX_VERSION=1.12.1-r0
+ENV PYTHON_VERSION=2.7.13-r1
+ENV PYTHON3_VERSION=3.6.1-r3
+ENV SUPERVISOR_VERSION=3.3.3
+
+RUN apk --update upgrade && \
+    apk add --no-cache git openssh && \
+    apk add --no-cache openssl nginx=${NGINX_VERSION} && \
+    apk add --no-cache postgresql-dev gcc musl-dev && \
+    apk add --no-cache python=${PYTHON_VERSION} py-pip && \
+    apk add --no-cache python3=${PYTHON3_VERSION} && \
+    apk add --no-cache python3-dev=${PYTHON3_VERSION} && \
+    rm -rf /var/cache/apk/* && \
+    chown -R nginx:www-data /var/lib/nginx && \
+    python3 -m ensurepip && \
+    rm -r /usr/lib/python*/ensurepip && \
+    pip3 install --upgrade pip setuptools && \
+    pip install --no-cache-dir supervisor==${SUPERVISOR_VERSION}
+
+RUN addgroup -S devops \
+    && adduser -S -D -h /opt1/screening -G devops devops
+
+RUN mkdir -p /var/log/nginx && chown nginx:nginx /var/log/nginx
+RUN mkdir -p /var/log/gunicorn && chown devops:devops /var/log/gunicorn
+RUN mkdir -p /var/log/polestar/screening && chown devops:devops -R /var/log/polestar
+RUN mkdir -p /var/run/polestar/screening && chown devops:devops -R /var/run/polestar/screening
+RUN mkdir -p /var/run/nginx && chown nginx:nginx /var/run/nginx
+RUN mkdir -p /opt1/screening
+
+COPY . /opt1/screening
+
+WORKDIR /opt1/screening
+
+RUN pip3 install -r /opt1/screening/dependency_links.txt
+RUN pip3 install /opt1/screening
+
+ENTRYPOINT ["supervisord"]
+CMD ["--nodaemon", "--configuration", "/etc/supervisor/supervisord.conf"]

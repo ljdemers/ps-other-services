@@ -1,0 +1,15 @@
+apiVersion: v1
+name: screening-api
+home: https://github.com/polestarglobal/screening-api
+version: 0.0.1
+appVersion: 0.15.3
+description: A Helm chart for screening-api
+keywords:
+  - screening
+  - screening-api
+sources:
+- https://github.com/polestarglobal/screening-api
+maintainers:
+- name: artur.maciag
+  email: artur.maciag@polestarglobal.com
+icon: https://wiki.jenkins-ci.org/download/attachments/2916393/logo.png

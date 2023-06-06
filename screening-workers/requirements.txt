@@ -1,0 +1,17 @@
+screening-api==0.15.3
+celery[redis]==4.2.1
+flower==0.9.7
+requests==2.25.1
+sqlalchemy==1.2.7
+python-dateutil==2.8.1
+booby==0.7.0
+blinker==1.4
+redlock==1.2.0
+# beaker
+grpcio==1.26.0
+protobuf==3.9.0
+structlog==20.1.0
+recordclass==0.5
+celery-redbeat==0.11.1
+redis==2.10.6
+statsd-tags==3.2.1.post1

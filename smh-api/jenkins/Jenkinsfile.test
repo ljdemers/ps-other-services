@@ -1,0 +1,121 @@
+pipeline {
+    agent any
+    options {
+        timeout(time: 1, unit: 'HOURS')
+    }
+    environment {
+        PROJECT_NAME = sh(script: "crudini --get METADATA meta name | tail -n 1", returnStdout: true).trim()
+        VERSION = sh(script: "crudini --get METADATA meta version | tail -n 1", returnStdout: true).trim()
+        REVISION = sh(script: "git log -n 1 --pretty=format:'%h'", returnStdout: true).trim()
+        VERSION_REVISION = "${VERSION}-r${REVISION}"
+        VERSION_REVISION_LONG = "${VERSION} (revision: ${REVISION})"
+        DEVOPS_PROJECT_NAME = "smh"
+        REPOSITORIES_WORKSPACE = "/opt/repositories"
+        DEVOPS_AWS_WORKSPACE = "${REPOSITORIES_WORKSPACE}/devops-aws"
+    }
+    stages {
+        stage('Distribution: Prepare') {
+            environment {
+                DEVOPS_AWS_REPO = "https://github.com/polestarglobal/devops-aws.git"
+                DEVOPS_AWS_REPO_CREDS_ID = "2e249059-9e76-4fdf-b3cb-1f2e74bdb29e"
+                DEVOPS_AWS_BRANCHES = "*/${DEVOPS_AWS_BRANCH}"
+            }
+            steps {
+                dir(env.DEVOPS_AWS_WORKSPACE) {
+                    checkout([
+                        $class: 'GitSCM',
+                        branches: [[name: env.DEVOPS_AWS_BRANCHES]],
+                        doGenerateSubmoduleConfigurations: false,
+                        submoduleCfg: [],
+                        userRemoteConfigs: [[url: env.DEVOPS_AWS_REPO, credentialsId: env.DEVOPS_AWS_REPO_CREDS_ID]]
+                    ])
+                }
+            }
+        }
+        stage('Distribution: Build') {
+            environment {
+                DEVOPS_AWS_CONFIGDIR = "${DEVOPS_AWS_WORKSPACE}/cloudformation/SMH/appspec"
+                IMAGEDIR = "${WORKSPACE}/images"
+            }
+            steps {
+                parallel(
+                    image: {
+                        sh 'mkdir -p ${IMAGEDIR}/${DEVOPS_PROJECT_NAME}/files/ ${IMAGEDIR}/scripts'
+                        sh 'echo "${COMMIT_VERSION_BUMP}" > ${IMAGEDIR}/APP-VERSION'
+                        sh 'cp ${DEVOPS_AWS_CONFIGDIR}/smh.appspec.yml ${IMAGEDIR}/appspec.yml'
+                        sh 'cp ${DEVOPS_AWS_CONFIGDIR}/scripts/*.sh ${IMAGEDIR}/scripts/'
+                        sh 'rsync -av --progress ${WORKSPACE}/ ${IMAGEDIR}/${DEVOPS_PROJECT_NAME}/ --exclude .git --exclude .gitignore --exclude images --exclude build --exclude devops-aws --exclude tests'
+                        sh 'echo "${DEVOPS_AWS_BRANCH}" > ${IMAGEDIR}/${DEVOPS_PROJECT_NAME}/DEVOPS_BRANCH'
+                    }
+                )
+            }
+        }
+        stage('Distribution: Publish') {
+            environment {
+                AWS_S3_BUCKET = "polestar-images"
+                AWS_S3_PREFIX = "${DEVOPS_PROJECT_NAME}"
+                AWS_APPLICATION_NAME = "${DEVOPS_PROJECT_NAME}"
+                AWS_DEPLOYMENT_GROUP_NAME = "test-smh"
+                AWS_DEPLOYMENT_CONFIG = "CodeDeployDefault.OneAtATime"
+                AWS_REGION = "us-east-1"
+                AWS_PACKAGE_NAME = "${PROJECT_NAME}"
+            }
+            steps {
+                parallel(
+                    image: {
+                        // zip package name hack
+                        script {
+                            currentBuild.displayName = env.AWS_PACKAGE_NAME
+                        }
+                        step([
+                            $class: 'AWSCodeDeployPublisher',
+                            s3bucket: env.AWS_S3_BUCKET,
+                            s3prefix: env.AWS_S3_PREFIX,
+                            applicationName: env.AWS_APPLICATION_NAME,
+                            deploymentGroupName: env.AWS_DEPLOYMENT_GROUP_NAME,
+                            deploymentConfig: env.AWS_DEPLOYMENT_CONFIG,
+                            deploymentGroupAppspec: false,
+                            waitForCompletion: false,
+                            region: env.AWS_REGION,
+                            includes: '**',
+                            subdirectory: 'images',
+                            versionFileName: 'APP-VERSION'
+                        ])
+                    },
+                )
+            }
+            post {
+                always {
+                    // zip package name hack (rollback)
+                    script {
+                        currentBuild.displayName = env.DISPLAY_NAME
+                    }
+                }
+            }
+        }
+    }
+    post {
+        success {
+            wrap([$class: 'BuildUser']) {
+                script {
+                    slack.notify(
+                        "SMH API from branch *${env.BRANCH_NAME}* was successfully deployed on <https://smh.polestar-testing.com|testing environment> by ${BUILD_USER_ID}",
+                        "smh",
+                        "good"
+                    )
+                }
+            }
+        }
+        failure {
+            wrap([$class: 'BuildUser']) {
+                script {
+                    slack.notify(
+                        "SMH API from branch *${env.BRANCH_NAME}* failed to deploy on testing environment by ${BUILD_USER_ID}",
+                        "smh",
+                        "danger"
+                    )
+                }
+            }
+        }
+    }
+}

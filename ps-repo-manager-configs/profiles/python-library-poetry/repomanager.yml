@@ -1,0 +1,7 @@
+description: Choose this profile if you'd like to publish a Poetry managed Python library to the PS library repo/index. It includes pipelines that will handle all publishing actions when the pyproject.toml version string is updated in the main/master branch.
+depends_on:
+  - python
+  - versioning
+groups:
+  - high-level-profiles
+  - add-ons

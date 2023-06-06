@@ -1,0 +1,99 @@
+{
+    "type": "object",
+    "properties": {
+        "port_visits": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "entered", "departed", "port_name", "port_code",
+                    "port_country_name", "port_latitude", "port_longitude",
+                    "severity", "category"
+                ],
+                "properties": {
+                    "entered": {
+                        "type": ["string", "null"],
+                        "format": "date"
+                    },
+                    "departed": {
+                        "type": ["string", "null"],
+                        "format": "date"
+                    },
+                    "port_name": {
+                        "type": ["string", "null"]
+                    },
+                    "port_code": {
+                        "type": ["string", "null"]
+                    },
+                    "port_country_name": {
+                        "type": ["string", "null"]
+                    },
+                    "port_latitude": {
+                        "type": ["number", "null"],
+                        "format": "double"
+                    },
+                    "port_longitude": {
+                        "type": ["number", "null"],
+                        "format": "double"
+                    },
+                    "severity": {
+                        "$ref": "openapi.json#/components/schemas/Severity"
+                    },
+                    "category": {
+                        "type": ["string", "null"]
+                    }
+                }
+            }
+        },
+        "ihs_movement_data": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "entered", "departed", "port_name", "country_name",
+                    "last_port_of_call_name", "last_port_of_call_country_code",
+                    "last_port_of_call_country", "destination_port",
+                    "port_severity", "last_port_of_call_severity",
+                    "destination_port_severity"
+                ],
+                "properties": {
+                    "entered": {
+                        "type": ["string", "null"],
+                        "format": "date"
+                    },
+                    "departed": {
+                        "type": ["string", "null"],
+                        "format": "date"
+                    },
+                    "port_name": {
+                        "type": ["string", "null"]
+                    },
+                    "country_name": {
+                        "type": ["string", "null"]
+                    },
+                    "last_port_of_call_name": {
+                        "type": ["string", "null"]
+                    },
+                    "last_port_of_call_country_code": {
+                        "type": ["string", "null"]
+                    },
+                    "last_port_of_call_country": {
+                        "type": ["string", "null"]
+                    },
+                    "destination_port": {
+                        "type": ["string", "null"]
+                    },
+                    "port_severity": {
+                        "$ref": "openapi.json#/components/schemas/Severity"
+                    },
+                    "last_port_of_call_severity": {
+                        "$ref": "openapi.json#/components/schemas/Severity"
+                    },
+                    "destination_port_severity": {
+                        "$ref": "openapi.json#/components/schemas/Severity"
+                    }
+                }
+            }
+        }
+    }
+}

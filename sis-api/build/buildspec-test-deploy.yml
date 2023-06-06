@@ -1,0 +1,19 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - echo CODEBUILD_SRC_DIR - $CODEBUILD_SRC_DIR
+      - echo CODEBUILD_BUILD_IMAGE - $CODEBUILD_BUILD_IMAGE
+      - echo CODEBUILD_SOURCE_VERSION - $CODEBUILD_SOURCE_VERSION
+      - echo CODEBUILD_WEBHOOK_ACTOR_ACCOUNT_ID - $CODEBUILD_WEBHOOK_ACTOR_ACCOUNT_ID
+      - echo CODEBUILD_WEBHOOK_BASE_REF - $CODEBUILD_WEBHOOK_BASE_REF
+      - echo CODEBUILD_WEBHOOK_EVENT - $CODEBUILD_WEBHOOK_EVENT
+      - echo CODEBUILD_WEBHOOK_TRIGGER - $CODEBUILD_WEBHOOK_TRIGGER
+  pre_build:
+    commands:
+      - export COMMIT_VERSION_BUMP=$(echo $CODEBUILD_WEBHOOK_TRIGGER | grep -o "[0-9\.]*")
+      - echo COMMIT_VERSION_BUMP - $COMMIT_VERSION_BUMP
+  build:
+      commands:
+        - bin/deploy_to_test.sh

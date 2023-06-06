@@ -1,0 +1,38 @@
+version: '2.1'
+
+services:
+  sis-api-postgres:
+    environment:
+      - POSTGRES_PASSWORD=sis
+      - POSTGRES_USER=sis
+      - POSTGRES_DB=sis
+    ports:
+      - 5432:5432
+    volumes:
+      - "postgres:/var/lib/postgresql/data"
+
+  sis-api:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.dev
+    command: python manage.py runserver 0.0.0.0:8000
+    environment:
+      - DJANGO_ENVIRONMENT=docker
+      - DJANGO_SETTINGS_MODULE=sis_api.settings.docker
+    ports:
+      - 8100:8000
+    volumes:
+      - ./:/usr/src/app
+      - ./data:/usr/src/app/data
+      - ihs-data:/opt/data
+
+networks:
+  default:
+    external:
+      name: purpletrac_default
+
+volumes:
+  postgres:
+    driver: local
+  ihs-data:
+    driver: local

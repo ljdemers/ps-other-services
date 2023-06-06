@@ -1,0 +1,36 @@
+name: NPM publish dry run
+on: pull_request
+
+# FIXME review
+permissions:
+  id-token: write # jwt token
+  actions: read # gh actions
+  contents: read # repo
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        with:
+          lfs: true
+
+      - uses: actions/setup-node@v3
+
+      - name: Configure AWS credentials from tools account
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.POLESTAR_TOOLS }}:role/github-publish-role
+          aws-region: us-east-1
+
+      - name: npm login
+        run: |
+          aws codeartifact login --tool npm --repository ps-npm --domain polestar-tools --domain-owner 324252367609 --region us-east-1 --namespace=@polestarglobal --region us-east-1
+          aws codeartifact login --tool npm --repository ps-npm --domain polestar-tools --domain-owner 324252367609 --region us-east-1 --namespace=@polestar --region us-east-1
+
+      - name: install dependencies
+        run: npm install
+
+      - name: Dummy publish
+        run: npm publish --dry-run

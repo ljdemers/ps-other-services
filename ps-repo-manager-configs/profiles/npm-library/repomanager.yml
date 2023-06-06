@@ -1,0 +1,7 @@
+description: Choose this profile if you'd like to publish an npm js/ts library to the PS library repo/index. It includes pipelines that will handle all publishing actions when the package.json version string is updated in the main/master branch.
+depends_on:
+  - typescript
+  - versioning
+groups:
+  - high-level-profiles
+  - add-ons

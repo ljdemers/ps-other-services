@@ -1,0 +1,131 @@
+pipeline {
+    agent any
+    options {
+        timeout(time: 1, unit: 'HOURS')
+    }
+    environment {
+        COMPOSE_PROJECT_NAME = "${env.BRANCH_NAME}.${env.BUILD_ID}"
+        CONTAINER_PREFIX = "${COMPOSE_PROJECT_NAME.replace('-', '').replace('.', '').toLowerCase()}"
+        COMMIT_VERSION_BUMP = sh(script: "git log -1 --pretty=%B | grep '^Bump version' | grep -oP '\\d+.\\d+.\\d+(rc\\d+)?\$' || exit 0", returnStdout: true)
+        UID = sh(script: "id -u", returnStdout: true).trim()
+        GROUP = sh(script: "id -g", returnStdout: true).trim()
+    }
+    stages {
+        stage('prepare') {
+            steps {
+                sh 'echo "Compose project name: ${COMPOSE_PROJECT_NAME}"'
+                sh 'echo "Container prefix: ${CONTAINER_PREFIX}"'
+                sh 'echo "Commit version bump: ${COMMIT_VERSION_BUMP}"'
+                sh 'docker-compose -f docker-compose.yml -f docker-compose.test.yml build sis-api'
+                sh 'docker-compose -f docker-compose.yml -f docker-compose.test.yml run --rm api-dep uname -a'
+            }
+            post {
+                always {
+                    sh 'docker-compose -f docker-compose.yml -f docker-compose.test.yml logs --tail=20 sis-api'
+                }
+            }
+        }
+        stage('test') {
+            steps {
+                sh 'docker-compose -f docker-compose.yml -f docker-compose.test.yml exec -T sis-api mkdir -p reports'
+                sh 'docker-compose -f docker-compose.yml -f docker-compose.test.yml exec -T sis-api chmod 777 reports'
+                sh 'docker-compose -f docker-compose.yml -f docker-compose.test.yml exec -T sis-api python manage.py jenkins --project-apps-tests --enable-coverage --verbosity 2 --noinput'
+            }
+            post {
+                always{
+                    junit 'reports/*junit.xml'
+                    recordIssues(
+                        tool: pep8(pattern: 'reports/pep8.report'),
+                        unstableTotalAll: 260,
+                        failedTotalAll: 265
+                    )
+                    recordIssues(
+                        tool: pyLint(pattern: 'reports/pylint.report'),
+                        unstableTotalAll: 120,
+                        failedTotalAll: 125
+                    )
+                }
+            }
+        }
+        stage('build') {
+            when {
+                expression {
+                    return ( env.BRANCH_NAME == 'master' || env.BRANCH_NAME.startsWith("stable/") ) && env.COMMIT_VERSION_BUMP
+                }
+            }
+            environment {
+                PROJECT_NAME = "sis"
+                DEVOPS_AWS_WORKSPACE = "devops-aws"
+                DEVOPS_BRANCH = "master"
+                DEVOPS_BRANCHES = "*/${DEVOPS_BRANCH}"
+                CONFIGDIR = "${DEVOPS_AWS_WORKSPACE}/cloudformation/SIS/appspec"
+                APPDIR = "${WORKSPACE}"
+                IMAGEDIR = "${WORKSPACE}/images"
+                APP_VERSION = "${COMMIT_VERSION_BUMP}"
+            }
+            steps {
+                sh 'echo "Devops AWS workspace: ${DEVOPS_AWS_WORKSPACE}"'
+                sh 'echo "Application workspace: ${WORKSPACE}"'
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: env.DEVOPS_BRANCHES]],
+                    doGenerateSubmoduleConfigurations: false,
+                    extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'devops-aws']],
+                    submoduleCfg: [],
+                    userRemoteConfigs: [[url: 'https://github.com/polestarglobal/devops-aws.git']]
+                ])
+                sh 'mkdir -p ${IMAGEDIR}/${PROJECT_NAME}/files/ ${IMAGEDIR}/scripts'
+                sh 'echo ${APP_VERSION} > ${IMAGEDIR}/APP-VERSION'
+                sh 'cp ${CONFIGDIR}/${PROJECT_NAME}.appspec.yml ${IMAGEDIR}/appspec.yml'
+                sh 'cp ${CONFIGDIR}/scripts/*.sh ${IMAGEDIR}/scripts/'
+                sh 'rsync -av --progress ${APPDIR}/ ${IMAGEDIR}/${PROJECT_NAME}/ --exclude .git --exclude .gitignore --exclude /images --exclude /build --exclude /devops-aws --exclude tests --exclude docs --exclude /venv --exclude /reports'
+            }
+            post {
+                always {
+                    sh 'docker-compose -f docker-compose.yml -f docker-compose.test.yml exec -T sis-api bin/restore_permissions.sh'
+                }
+            }
+        }
+        stage('release') {
+            when {
+                expression {
+                    return ( env.BRANCH_NAME == 'master' || env.BRANCH_NAME.startsWith("stable/") ) && env.COMMIT_VERSION_BUMP
+                }
+            }
+            steps {
+                // zip package name hack
+                script {
+                    currentBuild.displayName = "sis"
+                }
+                step([
+                    $class: 'AWSCodeDeployPublisher',
+                    s3bucket: 'polestar-images',
+                    s3prefix: 'sis',
+                    applicationName: 'sis',
+                    deploymentGroupName: 'test-sis',
+                    deploymentConfig: 'CodeDeployDefault.OneAtATime',
+                    deploymentGroupAppspec: false,
+                    waitForCompletion: false,
+                    region: 'us-east-1',
+                    includes: '**',
+                    subdirectory: 'images',
+                    packageName: 'sis',
+                    versionFileName: 'APP-VERSION'
+                ])
+                // zip package name hack (rollback)
+                script {
+                    currentBuild.displayName = env.DISPLAY_NAME
+                }
+            }
+        }
+    }
+    post {
+        success {
+            sh 'docker-compose -f docker-compose.yml -f docker-compose.test.yml exec -T sis-api bin/restore_permissions.sh'
+            sh 'docker-compose -f docker-compose.yml -f docker-compose.test.yml down -v --rmi local --remove-orphans'
+        }
+        failure {
+            sh 'docker-compose -f docker-compose.yml -f docker-compose.test.yml down -v --rmi local --remove-orphans'
+        }
+    }
+}

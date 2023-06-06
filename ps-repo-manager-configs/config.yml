@@ -1,0 +1,11 @@
+groups:
+  - name: high-level-profiles
+    title: High Level Profiles
+    description: These high level profiles meet most users' needs, targeting typical use cases
+
+  - name: add-ons
+    title: Add Ons
+    description: Profiles linked to technologies and conventions that may suit projects
+
+  - name: default
+    title: Assorted Profiles

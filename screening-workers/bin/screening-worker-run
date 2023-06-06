@@ -1,0 +1,30 @@
+#!/usr/bin/env python
+
+from argparse import ArgumentParser
+import configparser
+import os
+import sys
+
+from screening_worker import application_factory
+
+
+# Parse args
+name = os.path.basename(sys.argv[0])
+
+parser = ArgumentParser(name)
+parser.add_argument('--config')
+arguments = parser.parse_args()
+
+
+# Read config
+config = configparser.ConfigParser()
+config.read_file(open(arguments.config))
+
+
+# Inject config and go.
+try:
+    screening_worker = application_factory(config)
+except Exception as e:
+    exit(e)
+
+screening_worker.run()

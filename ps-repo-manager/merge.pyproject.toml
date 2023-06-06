@@ -1,0 +1,44 @@
+[tool.poetry]
+name = "ps-repo-manager"
+packages = [
+    { include = "repomanager" }
+    ]
+version = "0.8.2"
+description = "Tools for managing Polestar Repos."
+authors = ["edkirk30 <edward.kirk@polestarglobal.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.6"
+typer = "^0.7.0"
+cerberus = "^1.3.4"
+pyyaml = ">=3.1"
+gitpython = "^3.1.18"
+semver = "^2.13.0"
+toml = "^0.10.2"
+path = "^16.2.0"
+textual = {version = "<0.11.0", python = ">=3.7"} # FIXME when poetry bug fixed set to 0.5
+importlib-metadata = [
+    {version = "4.13.0", python = ">=3.7"}, # FIXME remove when 3.6 removed - fixes res issues
+    {version = "4.8.3", python = "<3.7"}, # FIXME remove when 3.6 removed - fixes res issues
+]
+click = [
+    {version = "8.1.3", python = ">=3.7"},
+    {version = "8.0.4", python = "<3.7"},
+]
+
+
+[tool.poetry.scripts]
+repo-manager = "repomanager.cli:app"
+ps-repo-manager = "repomanager.cli:app"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
+
+[tool.poetry.dev-dependencies]
+repomanager = "__repo-manager__None"
+ps-repo-manager = "__repo-manager__None"
+pytest = "^7.0.1"
+nox = "^2022.1.7"
+textual = {version = "*", python = ">=3.7", extras = ["dev"]} # FIXME when poetry bug fixed set to 0.5
+pexpect = "^4.8.0"

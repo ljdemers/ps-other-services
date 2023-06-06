@@ -1,0 +1,114 @@
+name: docker_images
+on:
+  workflow_run:
+    workflows: [version]
+    types:
+      - completed
+
+permissions:
+  id-token: write # jwt token
+  actions: read # gh actions
+  contents: read # repo
+
+jobs:
+  # FIXME make reusable action (for other workflows linked to version workflow)
+  check:
+    outputs:
+      new_version: ${{ steps.check-version.outputs.new-version }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: Get tags
+        run: git fetch --prune --unshallow --tags
+      - name: Check if new version
+        id: check-version
+        run: |
+          if [ $(git tag --points-at HEAD | wc -l) -gt 1 ]; then
+            echo "Got more than one tag, was not expecting this, bumming out..."
+            exit 1
+          fi
+
+          # Set new version (or empty string)
+          VERSION=$(git tag --points-at HEAD)
+          echo VERSION:$VERSION
+          echo "::set-output name=new-version::${VERSION}"
+
+  # FIXME move core build and publish functionality, excluding image lookup and make a re-usable workflow for repos that don't use docker/ layout.
+  docker:
+    needs: check
+    if: needs.check.outputs.new_version
+    runs-on: ubuntu-latest
+    env:
+      AWS_ACCOUNT_ID: ${{ secrets.POLESTAR_TOOLS }}
+      ECR_REPO: ${{ secrets.POLESTAR_TOOLS_ECR_REPO }}
+      AWS_ACCOUNT_NAME: polestar-tools
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        with:
+          lfs: true
+
+      - name: Configure AWS credentials from tools account
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.POLESTAR_TOOLS }}:role/github-publish-role
+          aws-region: us-east-1
+
+      - name: No unnamed dockerfile
+        run: |
+          if [ -f docker/Dockerfile ]; then
+            echo "Every Dockerfile needs a prefix, e.g. api.Dockerfile, worker.Dockerfile, web.Dockerfile, etc."
+            exit 1
+          fi
+
+      - name: Get service name
+        run: |
+          # SERVICE_NAME == repo name
+          SERVICE_NAME=$(basename `pwd`)
+          echo $SERVICE_NAME
+          echo "SERVICE_NAME=${SERVICE_NAME}" >> $GITHUB_ENV
+
+      - name: Login ECR
+        run: aws ecr get-login-password | docker login --username AWS --password-stdin $ECR_REPO
+
+      - name: Get CodeArtifact token
+        run: echo "CODEARTIFACT_TOKEN=$(aws codeartifact get-authorization-token --domain $AWS_ACCOUNT_NAME --domain-owner $AWS_ACCOUNT_ID --query authorizationToken --output text)" >> $GITHUB_ENV
+
+      - name: Optional publish-docker-pre-build makefile command
+        run: |
+          if make --dry-run publish-docker-pre-build &> /dev/null; then
+            echo "Running publish-docker-pre-build command"
+            make publish-docker-pre-build
+          else
+            echo "No publish-docker-pre-build command detected"
+          fi
+
+      - name: Build docker files
+        run: |
+          VERSION=${{ needs.check.outputs.new_version }}
+
+          echo $VERSION
+          echo $SERVICE_NAME
+
+          ls infra/docker/*Dockerfile
+          for dockerfile_path in infra/docker/*Dockerfile; do
+            filename=`basename $dockerfile_path`
+            container_name=$(echo "$filename" | cut -f 1 -d '.')
+
+            # Exclude test and dev names
+            if [[ "$container_name" =~ ^(test|tests|dev)$ ]]; then
+              echo not building $container_name
+              continue
+            fi
+
+            echo Building $container_name
+            tag=$ECR_REPO/${SERVICE_NAME}-${container_name}:${VERSION}
+            echo tag $tag
+
+            docker build --build-arg CODEARTIFACT_TOKEN=${CODEARTIFACT_TOKEN} -t $tag . -f $dockerfile_path
+
+            echo pushing $container_name
+            docker push $tag
+
+          done

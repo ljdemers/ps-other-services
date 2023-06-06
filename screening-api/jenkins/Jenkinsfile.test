@@ -1,0 +1,209 @@
+pipeline {
+    agent any
+    options {
+        timeout(time: 1, unit: 'HOURS') 
+    }
+    environment {
+        PROJECT_NAME = sh(script: "crudini --get METADATA meta name | tail -n 1", returnStdout: true).trim()
+
+        VERSION = sh(script: "crudini --get METADATA meta version | tail -n 1", returnStdout: true).trim()
+        REVISION = sh(script: "git log -n 1 --pretty=format:'%h'", returnStdout: true).trim()
+        VERSION_REVISION = "${VERSION}-r${REVISION}"
+        VERSION_REVISION_LONG = "${VERSION} (revision: ${REVISION})"
+
+        COMPOSE_PROJECT_NAME = "${PROJECT_NAME}-${REVISION}"
+        COMPOSE_ENVIRONMENT = "test"
+
+        DOCKER_REGISTRY = "178847878690.dkr.ecr.us-east-1.amazonaws.com"
+        // use one version tag to reduce ECR usage
+        // DOCKER_VERSION = "${VERSION_REVISION}"
+        DOCKER_VERSION = "testing"
+        DOCKER_IMAGE_ID = "${DOCKER_REGISTRY}/${PROJECT_NAME}:${DOCKER_VERSION}"
+
+        DEVOPS_PROJECT_NAME = "screening"
+
+        REPOSITORIES_WORKSPACE = "/opt/repositories"
+        DEVOPS_AWS_WORKSPACE = "${REPOSITORIES_WORKSPACE}/devops-aws"
+        DEVOPS_AWS_PROJECTDIR = "${DEVOPS_AWS_WORKSPACE}/helm/screening-api"
+    }
+    stages {
+        stage('Source: Prepare') {
+            steps {
+                sh 'make docker-pull || true'
+            }
+        }
+        stage('Source: Build') {
+            steps {
+                sh 'echo "Project name: ${PROJECT_NAME}"'
+                sh 'echo "Version: ${VERSION_REVISION_LONG}"'
+                sh 'make params compose-build'
+            }
+        }
+        stage('Test: Prepare') {
+            steps {
+                sh 'make compose-prepare'
+            }
+            post {
+                always {
+                    sh 'make compose-logs'
+                }
+                failure {
+                    sh 'make compose-down'
+                }
+            }
+        }
+        stage('Test: Run') {
+            environment {
+                COMPOSE_ENV = "test"
+            }
+            steps {
+                parallel(
+                    python: {
+                        sh 'make compose-test-python'
+                    },
+                    postman: {
+                        sh 'make compose-test-postman'
+                    },
+                    helm: {
+                        sh 'make helm-test'
+                    }
+                )
+            }
+            post {
+                always {
+                    junit 'reports/*junit.xml'
+                    step([$class: 'CoberturaPublisher', coberturaReportFile: 'reports/coverage.xml'])
+                    sh 'make compose-test-cleanup'
+                }
+                failure {
+                    sh 'make compose-down'
+                }
+            }
+        }
+        stage('Distribution: Prepare') {
+            environment {
+                DEVOPS_AWS_REPO = "https://github.com/polestarglobal/devops-aws.git"
+                DEVOPS_AWS_REPO_CREDS_ID = "2e249059-9e76-4fdf-b3cb-1f2e74bdb29e"
+                DEVOPS_AWS_BRANCHES = "*/${DEVOPS_AWS_BRANCH}"
+            }
+            steps {
+                dir(env.DEVOPS_AWS_WORKSPACE) {
+                    checkout([
+                        $class: 'GitSCM',
+                        branches: [[name: env.DEVOPS_AWS_BRANCHES]],
+                        doGenerateSubmoduleConfigurations: false,
+                        submoduleCfg: [],
+                        userRemoteConfigs: [[url: env.DEVOPS_AWS_REPO, credentialsId: env.DEVOPS_AWS_REPO_CREDS_ID]]
+                    ])
+                }
+            }
+        }
+        stage('Distribution: Build') {
+            environment {
+                DEVOPS_AWS_CONFIGDIR = "${DEVOPS_AWS_WORKSPACE}/cloudformation/Screening/${DEVOPS_PROJECT_NAME}_appspec"
+                IMAGEDIR = "${WORKSPACE}/images"
+            }
+            steps {
+                parallel(
+                    image: {
+                        sh 'mkdir -p ${IMAGEDIR}/${DEVOPS_PROJECT_NAME}/files/ ${IMAGEDIR}/scripts'
+                        sh 'echo "${VERSION_REVISION}" > ${IMAGEDIR}/APP-VERSION'
+                        sh 'cp ${DEVOPS_AWS_CONFIGDIR}/${DEVOPS_PROJECT_NAME}.appspec.yml ${IMAGEDIR}/appspec.yml'
+                        sh 'cp ${DEVOPS_AWS_CONFIGDIR}/scripts/*.sh ${IMAGEDIR}/scripts/'
+                        sh 'rsync -av --progress ${WORKSPACE}/ ${IMAGEDIR}/${DEVOPS_PROJECT_NAME}/ --exclude .git --exclude .gitignore --exclude images --exclude build --exclude devops-aws --exclude tests'
+                        sh 'echo "${DEVOPS_AWS_BRANCH}" > ${IMAGEDIR}/${DEVOPS_PROJECT_NAME}/DEVOPS_BRANCH'
+                    },
+                    docker: {
+                        sh 'make docker-tag'
+                    },
+                )
+            }
+            post {
+                always {
+                    sh 'make compose-down'
+                }
+            }
+        }
+        stage('Distribution: Publish') {
+            environment {
+                AWS_S3_BUCKET = "polestar-images"
+                AWS_S3_PREFIX = "${DEVOPS_PROJECT_NAME}"
+                AWS_APPLICATION_NAME = "${DEVOPS_PROJECT_NAME}"
+                AWS_DEPLOYMENT_GROUP_NAME = "test-screening-api"
+                AWS_DEPLOYMENT_CONFIG = "CodeDeployDefault.OneAtATime"
+                AWS_REGION = "us-east-1"
+                AWS_PACKAGE_NAME = "${PROJECT_NAME}"
+
+                HELM_VALUES_FILE = "${DEVOPS_AWS_PROJECTDIR}/test-values.yaml"
+            }
+            steps {
+                parallel(
+                    // wheel: {
+                    //     unstash 'wheel'
+                    //     sh 'twine upload -r testing dist/*.whl'
+                    // },
+                    image: {
+                        // zip package name hack
+                        script {
+                            currentBuild.displayName = env.AWS_PACKAGE_NAME
+                        }
+                        step([
+                            $class: 'AWSCodeDeployPublisher',
+                            s3bucket: env.AWS_S3_BUCKET,
+                            s3prefix: env.AWS_S3_PREFIX,
+                            applicationName: env.AWS_APPLICATION_NAME,
+                            deploymentGroupName: env.AWS_DEPLOYMENT_GROUP_NAME,
+                            deploymentConfig: env.AWS_DEPLOYMENT_CONFIG,
+                            deploymentGroupAppspec: false,
+                            waitForCompletion: false,
+                            region: env.AWS_REGION,
+                            includes: '**',
+                            subdirectory: 'images',
+                            packageName: env.AWS_PACKAGE_NAME,
+                            versionFileName: 'APP-VERSION'
+                        ])
+                    },
+                    docker: {
+                        sh 'make docker-push'
+                    },
+                    eks: {
+                        sh 'make helm-upgrade'
+                    }
+                )
+            }
+            post {
+                always {
+                    // zip package name hack (rollback)
+                    script {
+                        currentBuild.displayName = env.DISPLAY_NAME
+                    }
+                    sh 'make clean-image'
+                }
+            }
+        }
+    }
+    post {
+        success {
+            wrap([$class: 'BuildUser']) {
+                script {
+                    slack.notify(
+                        "Screening API from branch *${env.BRANCH_NAME}* was successfully deployed on <https://screening.polestar-testing.com|testing environment> by ${BUILD_USER_ID}",
+                        "#screening",
+                        "good"
+                    )
+                }
+            }
+        }
+        failure {
+            wrap([$class: 'BuildUser']) {
+                script {
+                    slack.notify(
+                        "Screening API from branch *${env.BRANCH_NAME}* failed to deploy on testing environment by ${BUILD_USER_ID}",
+                        "#screening-journal",
+                        "danger"
+                    )
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,30 @@
+{
+    "type": "object",
+    "properties": {
+        "sanctions": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "sanction_name", "listed_since", "listed_to", "sanction_severity"
+                ],
+                "properties": {
+                    "sanction_name": {
+                        "type": "string"
+                    },
+                    "listed_since": {
+                        "type": ["string", "null"],
+                        "format": "date"
+                    },
+                    "listed_to": {
+                        "type": ["string", "null"],
+                        "format": "date"
+                    },
+                    "sanction_severity": {
+                        "$ref": "openapi.json#/components/schemas/Severity"
+                    }
+                }
+            }
+        }
+    }
+}
